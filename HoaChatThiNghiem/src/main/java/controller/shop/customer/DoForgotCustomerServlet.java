@@ -1,7 +1,7 @@
 package controller.shop.customer;
 
 import mail.Email;
-import mail.sendMail;
+import mail.SendMail;
 import model.CustomerSecurity;
 import service.CustomerService;
 
@@ -26,6 +26,11 @@ public class DoForgotCustomerServlet extends HttpServlet {
             request.getServletContext().getRequestDispatcher("/shop/forgot-pass.jsp").forward(request, response);
             return;
         }
+        if(!CustomerService.checkExist(email)){
+            request.setAttribute("error_forgot", "Email không tồn tại trong hệ thống");
+            request.getServletContext().getRequestDispatcher("/shop/forgot-pass.jsp").forward(request, response);
+            return;
+        }
         if(CustomerService.checkExist(email)){
             UUID uuid = UUID.randomUUID();
             String id = uuid.toString();
@@ -43,7 +48,7 @@ public class DoForgotCustomerServlet extends HttpServlet {
 
             Email sendEmailForForgot = new Email("nguyenphutai840@gmail.com", "nlrtjmzdmlihnlrz",
                     "Hỗ trợ khách hàng quên mật khẩu của LAB CHEMICALS", body);
-            sendMail.sendMail(email, sendEmailForForgot);
+            SendMail.sendMail(email, sendEmailForForgot);
             request.setAttribute("success_forgot", "Vui lòng kiểm tra lại hộp thư trong email mà bạn đăng ký");
             request.getServletContext().getRequestDispatcher("/shop/forgot-pass.jsp").forward(request, response);
         }else{

@@ -1717,7 +1717,10 @@ a:focus {
 
 .no-data #btn-cart-buy {
     display: inline-block;
-    padding: 8px 24px;
+    padding: 8px 34px;
+    background-color: white;
+    border: 1px solid var(--main-color);
+    color: var(--main-color);
 }
 
 /* ============================================
@@ -1875,6 +1878,24 @@ a:focus {
 
 .shopping-cart .total-amount .buy {
     background-color: var(--main-color);
+}
+
+.in-cart {
+    padding-top: 50px;
+    padding-bottom: 100px;
+}
+
+.in-cart img {
+    width: 200px;
+}
+
+.in-cart p {
+    font-size: 20px;
+    color: #595959 !important;
+}
+
+.in-cart a {
+    text-transform: uppercase !important;
 }
 
 /* ============================================
@@ -3457,7 +3478,7 @@ a:focus {
 ============================================ */
 #purchase-history {
     background-color: #fefefe;
-    padding: 60px 0;
+    padding: 20px 0 60px 0;
 }
 
 .item {
@@ -3635,4 +3656,55 @@ a:focus {
 
 #purchase-history .no-rating {
     color: rgb(96, 96, 96);
+}
+
+#purchase-history .b-active {
+    display: block !important;
+}
+
+#purchase-history .order-tab {
+    height: 50px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0 2px 8px 0;
+}
+
+#purchase-history .order-tab-links {
+    border: none;
+    border-bottom: 2px solid white;
+    background-color: white;
+    padding: 14px 0;
+    color: #333;
+    cursor: pointer;
+    font-size: 17px;
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: auto;
+    transition: ease color .3s;
+    outline: unset !important;
+    padding-top: 12px !important;
+}
+
+#purchase-history .order-tab-links.active {
+    border: none;
+    border-bottom: 2px solid var(--main-color);
+    color: var(--main-color);
+}
+
+#purchase-history .order-tab-links:hover {
+    color: var(--main-color);
+}
+
+#purchase-history .order-tab-content {
+    display: none;
+}
+
+#purchase-history .empty-order {
+    height: 500px;
+}
+
+#purchase-history .empty-order img {
+    width: 150px;
+}
+
+#purchase-history .empty-order p {
+    color: #505050;
 }

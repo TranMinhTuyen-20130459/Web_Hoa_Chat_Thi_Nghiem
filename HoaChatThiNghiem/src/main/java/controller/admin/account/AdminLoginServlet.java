@@ -18,7 +18,7 @@ public class AdminLoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        request.getRequestDispatcher("/admin-jsp/login.jsp").forward(request,response);
+        request.getRequestDispatcher("/admin-jsp/login.jsp").forward(request, response);
     }
 
     @Override
@@ -34,14 +34,18 @@ public class AdminLoginServlet extends HttpServlet {
 
             HttpSession session = request.getSession(true);
             session.setAttribute(CommonString.ADMIN_SESSION, admin);
-            int role_admin = admin.getId_role_admin();
-            if (role_admin == 1) {
+            int status_acc = admin.getId_status_acc();
+            if (status_acc == 1) {
+                /*
+                 *-- trạng thái tài khoản phải là "Bình thường"
+                 *-- => mới có thể đăng nhập được vào hệ thống
+                 */
+                response.sendRedirect(request.getContextPath() + "/admin/trang-chu");
 
-                response.sendRedirect(request.getContextPath()+"/admin/root-trang-chu");
+            } else {
 
-            } else if (role_admin != 1) {
-
-                response.sendRedirect(request.getContextPath()+"/admin/trang-chu");
+                request.setAttribute("Alert","login_fail");
+                request.getRequestDispatcher("/admin-jsp/login.jsp").forward(request, response);
 
             }
 

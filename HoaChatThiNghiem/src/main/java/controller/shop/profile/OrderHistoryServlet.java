@@ -13,7 +13,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @WebServlet(name = "OrderHistoryServlet", urlPatterns = "/shop/profile/order-history")
 public class OrderHistoryServlet extends HttpServlet {
@@ -23,6 +25,7 @@ public class OrderHistoryServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Customer customer = (Customer) req.getSession().getAttribute("auth_customer");
         if (customer != null) {
+            // for re-buy
             String orderId = req.getParameter("order_id");
             if (orderId != null) {
                 List<CartItem> cartItems = CustomerService.getCartItemsByBillId(Integer.parseInt(orderId));
@@ -34,8 +37,7 @@ public class OrderHistoryServlet extends HttpServlet {
                 req.getSession().setAttribute("cart", cart);
                 resp.sendRedirect(req.getContextPath() + "/shop/cart");
             } else {
-                List<Order> orders = CustomerService.getOrderByUser(customer.getId());
-                req.setAttribute("orders", orders);
+                prepareOrders(req, customer.getId());
                 req.getRequestDispatcher("/shop/order-history.jsp").forward(req, resp);
             }
         }
@@ -48,5 +50,31 @@ public class OrderHistoryServlet extends HttpServlet {
             customerDao.cancelOrder(Integer.parseInt(id));
         }
         resp.sendRedirect(req.getContextPath() + "/shop/profile/order-history");
+    }
+
+
+    private void prepareOrders(HttpServletRequest req, int customerId) {
+        List<Order> orders = CustomerService.getOrderByUser(customerId);
+        req.setAttribute("all_orders", orders);
+
+        List<Order> progressOrders = new ArrayList<>(orders).stream()
+                .filter(order -> order.getStatus().equalsIgnoreCase("Chờ xử lý"))
+                .collect(Collectors.toList());
+        req.setAttribute("progress_orders", progressOrders);
+
+        List<Order> transportOrders = new ArrayList<>(orders).stream()
+                .filter(order -> order.getStatus().equalsIgnoreCase("Đang vận chuyển"))
+                .collect(Collectors.toList());
+        req.setAttribute("transport_orders", transportOrders);
+
+        List<Order> completedOrders = new ArrayList<>(orders).stream()
+                .filter(order -> order.getStatus().equalsIgnoreCase("Đã giao"))
+                .collect(Collectors.toList());
+        req.setAttribute("completed_orders", completedOrders);
+
+        List<Order> canceledOrders = new ArrayList<>(orders).stream()
+                .filter(order -> order.getStatus().equalsIgnoreCase("Đã hủy"))
+                .collect(Collectors.toList());
+        req.setAttribute("canceled_orders", canceledOrders);
     }
 }

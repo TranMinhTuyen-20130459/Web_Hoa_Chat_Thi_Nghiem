@@ -5,7 +5,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
-public class sendMail {
+public class SendMail {
     public static void sendMail(String toEmail, Email email){
         Properties pro = new Properties();
         pro.put("mail.smtp.host", "smtp.gmail.com");

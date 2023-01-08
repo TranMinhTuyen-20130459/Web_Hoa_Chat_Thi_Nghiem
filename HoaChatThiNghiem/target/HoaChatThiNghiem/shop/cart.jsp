@@ -44,9 +44,9 @@
 <!-- Empty Cart -->
 <%--suppress ELSpecValidationInJSP--%>
 <c:if test="${!sessionScope.containsKey('cart') || sessionScope.cart.map.size() == 0}">
-    <div class="no-data text-center my-5">
-        <img src="${context}/shop/images/empty_cart.png" alt="No data">
-        <p class="empty-search">Không có sản phẩm nào</p>
+    <div class="no-data text-center my-5 in-cart">
+        <img src="${context}/shop/images/empty_cart.jpg" alt="No data">
+        <p class="mt-3">Không có sản phẩm nào</p>
         <a href="${context}/shop/home" id="btn-cart-buy">Mua ngay</a>
     </div>
 </c:if>

@@ -1,6 +1,7 @@
 package service;
 
 import database.DbConnection;
+import model.Account;
 import model.Admin;
 import model.Bill;
 import model.Product;
@@ -187,6 +188,28 @@ public class AdminService {
             return rs.getInt(1);
         } catch (SQLException e) {
             return 0;
+        }
+    }
+
+    public static List<Account> getAllAccounts() {
+        List<Account> accounts = new ArrayList<>();
+        try (var ps = DbConnection.getInstance().getPreparedStatement(
+                "SELECT id_user_customer, username, pass, name_status_acc, email_customer, time_created\n" +
+                        "FROM account_customer a JOIN status_acc s ON a.id_status_acc = s.id_status_acc"
+        )) {
+            var rs = ps.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("id_user_customer");
+                String username = rs.getString("username");
+                String password = rs.getString("pass");
+                String status = rs.getString("name_status_acc");
+                String email = rs.getString("email_customer");
+                Date time = rs.getDate("time_created");
+                accounts.add(new Account(id, username, password, status, email, time));
+            }
+            return accounts;
+        } catch (SQLException e) {
+            return new ArrayList<>();
         }
     }
 }

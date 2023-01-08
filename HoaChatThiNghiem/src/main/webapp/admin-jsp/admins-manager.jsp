@@ -58,17 +58,27 @@
                             <th>Trạng thái</th>
                             <th>Quyền</th>
                             <th>Họ tên</th>
-                            <th>Sửa</th>
+                            <th>Chức năng</th>
                         </tr>
                         </thead>
                         <tbody>
                         <c:forEach var="a" items="${requestScope.adminList}">
+                            <c:choose>
+                                <c:when test="${a.name_status_acc=='Bình thường'}"><c:set var="bg"
+                                                                                          value="bg-success"></c:set></c:when>
+                                <c:when test="${a.name_status_acc=='Tạm khóa'}"><c:set var="bg"
+                                                                                       value="bg-warning"></c:set></c:when>
+                                <c:when test="${a.name_status_acc=='Khóa vĩnh viễn'}"><c:set var="bg"
+                                                                                             value="bg-danger"></c:set></c:when>
+                            </c:choose>
                             <tr>
                                 <td class="UserName">${a.username}</td>
-                                <td>${a.name_status_acc}</td>
+                                <td><span class="badge ${bg}">${a.name_status_acc}</span></td>
                                 <td>${a.name_role_admin}</td>
                                 <td>${a.fullname}</td>
                                 <td>
+                                    <button class="btn btn-primary btn-sm trash" type="button" title="Xóa"
+                                            onclick=""><i class="fas fa-trash-alt"></i></button>
                                     <button class="btn btn-primary btn-sm edit" type="button" title="Sửa" id="show-emp"
                                             data-toggle="modal" data-target="#modal-up"><i
                                             class="fas fa-edit"></i></button>
@@ -130,11 +140,20 @@
 <!-- ===== JAVASCRIPT ===== -->
 <jsp:include page="../common/admin-js.jsp"/>
 <script>
-    <%--  Hiển thị danh sách thông tin admin sử dụng DataTable  --%>
+    <%--  Hiển thị danh sách sản phẩm sử dụng DataTable  --%>
     $(document).ready(function () {
         $('#sampleTable').DataTable();
     });
 
+    $('#sampleTable .trash').on('click', function () {
+        swal({
+            title: 'Cảnh báo !!!',
+            text: 'Chức năng này đang được phát triển.',
+            icon: 'warning',
+            timer: 3000,
+            buttons: false
+        })
+    })
     <%-- Lấy dữ liệu từ row khi vừa click vào icon edit của row đó --%>
     var username;
     $('#sampleTable .edit').on('click', function () {

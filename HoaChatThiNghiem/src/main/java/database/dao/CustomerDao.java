@@ -9,6 +9,36 @@ import java.util.concurrent.Executors;
 
 public class CustomerDao {
 
+    public void deleteAccount(int id) {
+        Executors.newSingleThreadExecutor().execute(() -> {
+            try (var ps = DbConnection.getInstance().getPreparedStatement(
+                    "DELETE FROM account_customer WHERE id_user_customer = ?"
+            )) {
+                ps.setInt(1, id);
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    public void updateAccount(int id, String username, String password, int status, String email) {
+        Executors.newSingleThreadExecutor().execute(() -> {
+            try (var ps = DbConnection.getInstance().getPreparedStatement(
+                    "UPDATE account_customer SET username = ?, pass = ?, id_status_acc = ?, email_customer = ? " +
+                            "WHERE id_user_customer = ?")) {
+                ps.setString(1, username);
+                ps.setString(2, password);
+                ps.setInt(3, status);
+                ps.setString(4, email);
+                ps.setInt(5, id);
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
     public int addBill(int userId, int cityId, String name, String phone, String email,
                               String address, double price, double totalPrice) {
         try (var ps = DbConnection.getInstance()

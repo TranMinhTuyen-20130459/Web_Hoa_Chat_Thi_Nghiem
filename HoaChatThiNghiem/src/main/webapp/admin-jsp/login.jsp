@@ -1,3 +1,4 @@
+<%@ page import="utils.CommonString" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="context" value="${pageContext.request.contextPath}"/>
@@ -12,6 +13,7 @@
     <link rel="stylesheet" href="${context}/admin-assets/css/login.css"/>
     <link rel="stylesheet" href="${context}/admin-assets/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
 </head>
 
 <body>
@@ -64,8 +66,10 @@
 </section>
 
 <!-- ====== JAVASCRIPT ===== -->
-<script src="${context}/admin-assets/js/bootstrap.min.js"/>"></script>
-<script src="${context}/admin-assets/vendor/jquery/jquery-3.2.1.min.js"/>"></script>
+<script src="${context}/admin-assets/js/bootstrap.min.js"/>
+"></script>
+<script src="${context}/admin-assets/vendor/jquery/jquery-3.2.1.min.js"/>
+"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 <script>
     function validateFormLogin() {
@@ -77,6 +81,15 @@
         }
     }
 </script>
-
+<script>
+    <c:set var="alert" value="${requestScope.Alert}"/>
+    <c:if test="${alert.equals('login_fail')}">
+        swal({
+            title: "Thông báo",
+            text: "Tài khoản của bạn đã bị khóa",
+            type: "warning"
+        })
+    </c:if>
+</script>
 </body>
 </html>

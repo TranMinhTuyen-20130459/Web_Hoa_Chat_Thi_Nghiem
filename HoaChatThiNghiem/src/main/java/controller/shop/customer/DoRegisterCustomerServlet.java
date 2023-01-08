@@ -1,7 +1,7 @@
 package controller.shop.customer;
 
 import mail.Email;
-import mail.sendMail;
+import mail.SendMail;
 import model.CustomerSecurity;
 import service.CustomerService;
 
@@ -44,7 +44,7 @@ public class DoRegisterCustomerServlet extends HttpServlet {
                         "<a href='http://localhost:8080/HoaChatThiNghiem_war/shop/verify-register?key=" + id + "'>nhấn vào đây!</a>";
                 Email sendEmailForVerify = new Email("nguyenphutai840@gmail.com", "nlrtjmzdmlihnlrz",
                         "Chào mừng bạn trở thành một phần của LAB CHEMICALS", body);
-                sendMail.sendMail(email, sendEmailForVerify);
+                SendMail.sendMail(email, sendEmailForVerify);
                 request.setAttribute("success_register", "Vui lòng kiểm tra lại hộp thư trong email mà bạn đăng ký");
                 request.getServletContext().getRequestDispatcher("/shop/register.jsp").forward(request, response);
             } else {
