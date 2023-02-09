@@ -17,30 +17,32 @@
 
 <body>
 <%String error = (String) request.getAttribute("error");%>
-    <!-- ===== HEADER ===== -->
-    <header class="header-account">
-        <div class="container">
-            <div class="row py-3">
-                <div class="col-lg-7 col-md-7 col-12">
-                    <div class="title-left d-flex justify-content-start h-100 align-items-center">
-                        <a class="w-25 mr-4" href="${context}/shop/home"><img src="images/labchemicals-logo.png" alt="" /></a>
-                        <span class="d-inline-block mt-1">Đăng Nhập</span>
-                    </div>
+<!-- ===== HEADER ===== -->
+<header class="header-account">
+    <div class="container">
+        <div class="row py-3">
+            <div class="col-lg-7 col-md-7 col-12">
+                <div class="title-left d-flex justify-content-start h-100 align-items-center">
+                    <a class="w-25 mr-4" href="${context}/shop/home"><img src="images/labchemicals-logo.png"
+                                                                          alt=""/></a>
+                    <span class="d-inline-block mt-1">Đăng Nhập</span>
                 </div>
-                <div class="col-lg-5 col-md-5 col-12">
-                    <div class="title-right d-flex h-100 justify-content-end align-items-center">
-                        <a href="${context}/admin/dang-nhap">Đăng nhập với tài khoản admin</a>
-                    </div>
+            </div>
+            <div class="col-lg-5 col-md-5 col-12">
+                <div class="title-right d-flex h-100 justify-content-end align-items-center">
+                    <a href="${context}/admin/dang-nhap">Đăng nhập với tài khoản admin</a>
                 </div>
             </div>
         </div>
-    </header>
+    </div>
+</header>
 
 <!-- ===== BREADCRUMBS ===== -->
 <div class="breadcrumbs py-4">
     <div class="container text-left">
         <ul class="bread-list d-inline-block">
-            <li class="d-inline-block text-capitalize"><a href="${context}/shop/home">Trang chủ<i class="ti-arrow-right mx-2"></i></a></li>
+            <li class="d-inline-block text-capitalize"><a href="${context}/shop/home">Trang chủ<i
+                    class="ti-arrow-right mx-2"></i></a></li>
             <li class="d-inline-block text-capitalize"><a href="">Đăng nhập</a></li>
         </ul>
     </div>
@@ -55,20 +57,25 @@
             </div>
             <div class="col-lg-5 col-md-5 col-12">
                 <div class="h-100 d-flex align-items-center">
-                    <form class="m-0 p-5 text-center" action="/HoaChatThiNghiem_war/shop/login" method="post" name="form_login">
+                    <form class="m-0 p-5 text-center" action="/HoaChatThiNghiem_war/shop/login" method="post"
+                          name="form_login">
                         <h5 class="mb-4">Đăng Nhập</h5>
-                            <%if(error != null){%>
-                                <div class="w-100 mb-3 alert alert-danger" role="alert">
-                                    <%=error%>
-                                </div>
-                            <%}%>
-                            <input class="w-100 mb-3" type="email" placeholder="Email" name="email"
-                                value="<%=request.getParameter("email") != null ? request.getParameter("email"):""%>"/>
-                            <input class="w-100 mb-4" type="password" placeholder="Mật khẩu" name="password"/>
-                            <button class="btn next w-100">Đăng nhập</button>
+                        <%if (error != null) {%>
+                        <div class="w-100 mb-3 alert alert-danger" role="alert">
+                            <%=error%>
+                        </div>
+                        <%}%>
+                        <input class="w-100 mb-3" type="email" placeholder="Email" name="email"
+                               value="<%=request.getParameter("email") != null ? request.getParameter("email"):""%>"/>
+                        <input class="w-100 mb-4" type="password" placeholder="Mật khẩu" name="password"/>
+                        <button class="btn next w-100">Đăng nhập</button>
                         <span class="or d-inline-block text-uppercase my-4 position-relative">Hoặc</span>
-                        <a class="google d-flex justify-content-center w-100 mb-3"><img width="25px" class="mr-2" src="images/logo-google.png"
-                                                                                        alt=""/>Google</a>
+                        <a id="google-login-button" class="google d-flex justify-content-center w-100 mb-3"><img
+                                width="25px" class="mr-2" src="images/logo-google.png"
+                                alt=""/>Google</a>
+                        <a id="fb-login-button" class="google d-flex justify-content-center w-100 mb-3"><img
+                                width="30px" class="mr-2" src="images/logo-fb.png"
+                                alt=""/>Facebook</a>
                         <span class="shotcut">
                                 <a class="mr-3" href="${context}/shop/forgot-password">Quên mật khẩu?</a>
                                 <a href="${context}/shop/register">Đăng ký?</a></span>
@@ -89,5 +96,16 @@
 <jsp:include page="../common/shop-js.jsp"/>
 
 </body>
+
+<script>
+    <c:set var="appId" value="${initParam.facebookAppId}" />
+    <c:set var="redirectUri" value="${initParam.facebookRedirectUri}" />
+
+    $('#fb-login-button').click(function () {
+        window.location.href = "https://www.facebook.com/dialog/oauth?client_id=${appId}&redirect_uri=${redirectUri}&response_type=token&scope=public_profile,email"
+    })
+
+
+</script>
 
 </html>

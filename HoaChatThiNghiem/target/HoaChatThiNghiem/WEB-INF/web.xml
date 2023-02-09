@@ -49,5 +49,21 @@
         </url-pattern>
     </servlet-mapping>
 
+
+    <!-- Sử dụng FacebookApp Developer để xác thực đăng nhập của người dùng -->
+    <context-param>
+        <param-name>facebookAppId</param-name>
+        <param-value>1572977559871866</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>facebookRedirectUri</param-name>
+        <param-value>https://localhost:8080/it-nlu/FacebookCallbackServlet</param-value>
+    </context-param>
+
+    <session-config>
+        <tracking-mode>COOKIE</tracking-mode>
+    </session-config>
+
 </web-app>
 
