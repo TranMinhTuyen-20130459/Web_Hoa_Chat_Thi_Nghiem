@@ -10,14 +10,13 @@ public class FacebookLoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String appId = getServletConfig().getInitParameter("facebook-app-id");
-        String appSecret = getServletConfig().getInitParameter("facebook-app-secret");
-        String redirectUri = request.getRequestURL().toString();
+        String code = request.getParameter("code"); // receive code from Facebook
+        if (code != null) {
 
-        String loginUrl = "https://www.facebook.com/v7.0/dialog/oauth?client_id=" + appId +
-                "&redirect_uri=" + redirectUri + "&state=facebook_login";
+        } else {
 
-        response.sendRedirect(loginUrl);
+        }
+
     }
 
     @Override

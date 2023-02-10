@@ -98,14 +98,8 @@
 </body>
 
 <script>
-    <c:set var="appId" value="${initParam.facebookAppId}" />
-    <c:set var="redirectUri" value="${initParam.facebookRedirectUri}" />
-
-    $('#fb-login-button').click(function () {
-        window.location.href = "https://www.facebook.com/dialog/oauth?client_id=${appId}&redirect_uri=${redirectUri}&response_type=token&scope=public_profile,email"
+    $('fb-login-button').click(function () {
+        window.location = ${context}/FacebookLoginServlet
     })
-
-
 </script>
-
 </html>

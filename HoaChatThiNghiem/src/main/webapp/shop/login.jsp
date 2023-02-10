@@ -99,7 +99,7 @@
 
 <script>
     $('fb-login-button').click(function () {
-        window.location = ${context}/FacebookLoginServlet
+        window.location = 'https://www.facebook.com/dialog/oauth?client_id=1572977559871866&redirect_uri=https://localhost:8080/it-nlu/FacebookLoginServlet'
     })
 </script>
 </html>
