@@ -73,7 +73,8 @@
                         <a id="google-login-button" class="google d-flex justify-content-center w-100 mb-3"><img
                                 width="25px" class="mr-2" src="images/logo-google.png"
                                 alt=""/>Google</a>
-                        <a id="fb-login-button" class="google d-flex justify-content-center w-100 mb-3"><img
+                        <a onclick="loginFB()" id="fb-login-button"
+                           class="google d-flex justify-content-center w-100 mb-3"><img
                                 width="30px" class="mr-2" src="images/logo-fb.png"
                                 alt=""/>Facebook</a>
                         <span class="shotcut">
@@ -98,8 +99,13 @@
 </body>
 
 <script>
-    $('fb-login-button').click(function () {
-        window.location = 'https://www.facebook.com/dialog/oauth?client_id=1572977559871866&redirect_uri=https://localhost:8080/it-nlu/FacebookLoginServlet'
-    })
+    function loginFB() {
+        var appId = '1572977559871866'
+        var redirectUri = 'https://localhost:8080/it-nlu/FacebookLoginServlet'
+        var linkAuthentication = 'https://www.facebook.com/dialog/oauth?client_id='
+            + appId + '&redirect_uri=' + redirectUri + '&scope=public_profile,email'
+
+        window.location = linkAuthentication
+    }
 </script>
 </html>

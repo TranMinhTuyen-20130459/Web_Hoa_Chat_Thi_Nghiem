@@ -21,11 +21,11 @@ public class RestFB {
                                     ConstantsString.FACEBOOK_REDIRECT_URL,
                                     code);
 
-        // Gửi yêu cầu lấy token và lấy kết quả trả về dưới dạng chuỗi
-        String response = Request.Get(link).execute().returnContent().asString();
+        // Gửi yêu cầu lấy token và lấy kết quả trả về dưới dạng chuỗi JSON
+        String response_json_text = Request.Get(link).execute().returnContent().asString();
 
-        // Chuyển kết quả trả về từ dạng chuỗi sang đối tượng JsonObject sử dụng thư viện Gson
-        JsonObject jobj = new Gson().fromJson(response, JsonObject.class);
+        // Chuyển kết quả trả về từ dạng chuỗi JSON sang đối tượng JsonObject sử dụng thư viện Gson
+        JsonObject jobj = new Gson().fromJson(response_json_text, JsonObject.class);
 
         // Lấy giá trị của access_token trong JsonObject và loại bỏ ký tự ""
         String accessToken = jobj.get("access_token").toString().replaceAll("\"", "");
@@ -36,7 +36,7 @@ public class RestFB {
     // Hàm getUserInfor sử dụng để lấy thông tin người dùng từ token
     public static User getUserInfor(String accessToken) {
 
-        // Tạo đối tượng FacebookClient sử dụng token và app secret để truy vấn dữ liệu
+        // Tạo đối tượng FacebookClient sử dụng token và app-secret để truy vấn dữ liệu
         FacebookClient fbClient = new DefaultFacebookClient(accessToken,
                                                             ConstantsString.FACEBOOK_APP_SECRET,
                                                             Version.LATEST);
