@@ -4,9 +4,11 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
+import com.restfb.Parameter;
 import com.restfb.Version;
 import com.restfb.types.User;
 import org.apache.http.client.fluent.Request;
+
 import java.io.IOException;
 
 public class RestFB {
@@ -41,7 +43,14 @@ public class RestFB {
                                                             ConstantsString.FACEBOOK_APP_SECRET,
                                                             Version.LATEST);
 
-        return fbClient.fetchObject("me", User.class);
+        return fbClient.fetchObject("me", User.class, Parameter.with("fields", "id, name, email, gender"));
+
+        /*
+        nếu không có đoạn code này
+        Parameter.with("fields", "id, name, email")
+        ==> chỉ lấy được thông tin cơ bản của người dùng như id,name
+         */
+
     }
 
 

@@ -14,7 +14,18 @@ public class FacebookLoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String code = request.getParameter("code"); // receive code from Facebook
+        /* Tham số này chứa mã lỗi nếu việc đăng nhập bị hủy bởi người dùng.*/
+        String error = request.getParameter("error");
+
+        /* Tham số này chứa mã xác thực dùng để lấy thông tin người dùng Facebook nếu việc đăng nhập thành công.*/
+        String code = request.getParameter("code");
+
+        // khi người dùng hủy đăng nhập bằng Facebook
+        if (error != null && error.equals("access_denied")) {
+            response.sendRedirect(request.getContextPath() + "/shop/login");
+        }
+
+        // khi người dùng đăng nhập thành công bằng Facebook
         if (code != null) {
             String accessToken = RestFB.getToken(code);
             User userFacebook = RestFB.getUserInfor(accessToken);
@@ -24,14 +35,9 @@ public class FacebookLoginServlet extends HttpServlet {
             customer.setSex(userFacebook.getGender());
             customer.setEmail_customer(userFacebook.getEmail());
 
-
-            request.getSession().setAttribute("auth_customer",customer);
-            response.sendRedirect(request.getContextPath()+"/shop/home");
-
-        } else {
-            response.sendRedirect(request.getContextPath() + "/shop/login");
+            request.getSession().setAttribute("auth_customer", customer);
+            response.sendRedirect(request.getContextPath() + "/shop/home");
         }
-
     }
 
     @Override
