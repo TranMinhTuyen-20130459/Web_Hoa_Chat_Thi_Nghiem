@@ -1,16 +1,15 @@
 package controller.authentication;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import model.Customer;
 import model.GooglePojo;
 import utils.GoogleUtils;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.*;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.zip.CheckedOutputStream;
 
 @WebServlet(name = "GoogleLoginServlet", value = "/GoogleLoginServlet")
 public class GoogleLoginServlet extends HttpServlet {
