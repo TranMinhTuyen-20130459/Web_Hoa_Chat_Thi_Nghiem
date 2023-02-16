@@ -70,7 +70,7 @@
                         <input class="w-100 mb-4" type="password" placeholder="Mật khẩu" name="password"/>
                         <button class="btn next w-100">Đăng nhập</button>
                         <span class="or d-inline-block text-uppercase my-4 position-relative">Hoặc</span>
-                        <a id="google-login-button" class="google d-flex justify-content-center w-100 mb-3"><img
+                        <a onclick="loginGg()" id="google-login-button" class="google d-flex justify-content-center w-100 mb-3"><img
                                 width="25px" class="mr-2" src="images/logo-google.png"
                                 alt=""/>Google</a>
                         <a onclick="loginFB()" id="fb-login-button"
@@ -99,12 +99,19 @@
 </body>
 
 <script>
+    function loginGg() {
+        var redirectUri = 'https://localhost:8080/it-nlu/GoogleLoginServlet'
+        var clientId = '482392281996-220kv6ebj29hqk0ot270448ea6mrtj2i.apps.googleusercontent.com'
+        var linkAuthentication = 'https://accounts.google.com/o/oauth2/auth?scope=profile&redirect_uri='
+            + redirectUri + '&response_type=code&client_id=' + clientId + '&approval_prompt=force'
+        window.location = linkAuthentication
+    }
+
     function loginFB() {
         var appId = '1572977559871866'
         var redirectUri = 'https://localhost:8080/it-nlu/FacebookLoginServlet'
         var linkAuthentication = 'https://www.facebook.com/dialog/oauth?client_id='
             + appId + '&redirect_uri=' + redirectUri + '&scope=public_profile,email'
-
         window.location = linkAuthentication
     }
 </script>

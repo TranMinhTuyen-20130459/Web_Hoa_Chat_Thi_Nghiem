@@ -2,7 +2,7 @@ package controller.authentication;
 
 import com.restfb.types.User;
 import model.Customer;
-import utils.RestFB;
+import utils.FacebookUtils;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -27,8 +27,8 @@ public class FacebookLoginServlet extends HttpServlet {
 
         // khi người dùng đăng nhập thành công bằng Facebook
         if (code != null) {
-            String accessToken = RestFB.getToken(code);
-            User userFacebook = RestFB.getUserInfor(accessToken);
+            String accessToken = FacebookUtils.getToken(code);
+            User userFacebook = FacebookUtils.getUserInfor(accessToken);
 
             Customer customer = new Customer();
             customer.setFullname(userFacebook.getName());

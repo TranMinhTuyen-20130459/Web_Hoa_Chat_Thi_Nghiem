@@ -72,7 +72,7 @@
                             <div class="col-lg-6 col-12">
                                 <div class="form-group mb-4">
                                     <label>Email<span>*</span></label>
-                                    <input name="email" type="email" value="${sessionScope.auth_customer.email}"/>
+                                    <input name="email" type="email" value="${sessionScope.auth_customer.email_customer}"/>
                                 </div>
                             </div>
                             <div class="col-lg-8 col-12">
