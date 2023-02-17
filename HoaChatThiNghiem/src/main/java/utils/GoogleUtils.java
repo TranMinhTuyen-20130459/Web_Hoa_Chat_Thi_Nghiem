@@ -11,6 +11,8 @@ import java.io.IOException;
 public class GoogleUtils {
 
     public static String getToken(final String code) throws IOException {
+
+        /* gửi một Request dùng phương thức POST đến Google và nhận kết quả trả về là một chuỗi JSON có chứa accessToken */
         String response_json_text = Request.Post(ConstantsString.GOOGLE_LINK_GET_TOKEN)
                 .bodyForm(Form.form().add("client_id", ConstantsString.GOOGLE_CLIENT_ID)
                         .add("client_secret", ConstantsString.GOOGLE_CLIENT_SECRET)
@@ -25,6 +27,7 @@ public class GoogleUtils {
     public static GooglePojo getUserInfor(String accessToken) throws IOException {
 
         String link = ConstantsString.GOOGLE_LINK_GET_USER_INFOR + accessToken;
+        /* gửi một Request dùng phương thức GET đến Google và nhận kết quả trả về là một chuỗi JSON có chứa thông tin của người dùng GG */
         String response_json_text = Request.Get(link).execute().returnContent().asString();
         GooglePojo googlePojo = new Gson().fromJson(response_json_text, GooglePojo.class);
         return googlePojo;

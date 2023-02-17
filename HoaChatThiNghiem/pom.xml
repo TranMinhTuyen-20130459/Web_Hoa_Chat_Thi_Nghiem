@@ -34,11 +34,6 @@
             <version>1.2</version>
         </dependency>
         <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>1.9.3</version>
-        </dependency>
-        <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.31</version>
@@ -48,16 +43,19 @@
             <artifactId>jdbi3-core</artifactId>
             <version>3.35.0</version>
         </dependency>
+        <!--Đây là thư viện dùng để gửi mail trong Java-->
         <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>
             <version>1.5.5</version>
         </dependency>
+        <!-- RestFB là một Java API cho phép tương tác với Facebook Graph API -->
         <dependency>
             <groupId>com.restfb</groupId>
             <artifactId>restfb</artifactId>
             <version>1.19.0</version>
         </dependency>
+        <!--Thư viện dùng để thực hiện các yêu cầu HTTP và HTTPS trong các ứng dụng Java-->
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
@@ -68,6 +66,7 @@
             <artifactId>fluent-hc</artifactId>
             <version>4.5.12</version>
         </dependency>
+        <!--Đây là thư viện để chuyển đổi các đối tượng Java sang chuỗi JSON và ngược lại-->
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
