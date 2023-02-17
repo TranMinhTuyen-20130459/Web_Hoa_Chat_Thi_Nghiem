@@ -102,7 +102,7 @@
     function loginGg() {
         var redirectUri = 'https://localhost:8080/it-nlu/GoogleLoginServlet'
         var clientId = '482392281996-220kv6ebj29hqk0ot270448ea6mrtj2i.apps.googleusercontent.com'
-        var linkAuthentication = 'https://accounts.google.com/o/oauth2/auth?scope=profile&redirect_uri='
+        var linkAuthentication = 'https://accounts.google.com/o/oauth2/auth?scope=profile%20email&redirect_uri='
             + redirectUri + '&response_type=code&client_id=' + clientId + '&approval_prompt=force'
         window.location = linkAuthentication
     }
