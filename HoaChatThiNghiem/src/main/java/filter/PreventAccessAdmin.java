@@ -1,6 +1,6 @@
 package filter;
 
-import model.Admin;
+import model.admin.Admin;
 import utils.CommonString;
 
 import javax.servlet.*;

@@ -2,7 +2,7 @@ package test.dao;
 
 import database.dao.ProductDAO;
 import database.DbConnection;
-import model.Product;
+import model.shop.Product;
 
 public class TestProductDAO {
 

@@ -1,10 +1,10 @@
 package service;
 
 import database.DbConnection;
-import model.Account;
-import model.Admin;
-import model.Bill;
-import model.Product;
+import model.common.Account;
+import model.admin.Admin;
+import model.shop.Bill;
+import model.shop.Product;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

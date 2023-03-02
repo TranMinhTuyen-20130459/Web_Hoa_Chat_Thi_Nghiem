@@ -1,7 +1,6 @@
 package controller.admin.account;
 
-import model.Admin;
-import service.AdminService;
+import model.admin.Admin;
 import service.AdminService_MT;
 import utils.CommonString;
 

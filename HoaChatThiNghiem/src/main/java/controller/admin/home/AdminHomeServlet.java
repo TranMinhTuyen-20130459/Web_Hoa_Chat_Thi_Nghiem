@@ -1,7 +1,7 @@
 package controller.admin.home;
 
-import model.Bill;
-import model.Customer;
+import model.shop.Bill;
+import model.shop.Customer;
 import service.AdminService;
 import service.CustomerService;
 import service.ProductService;

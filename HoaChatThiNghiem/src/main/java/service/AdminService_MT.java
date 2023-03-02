@@ -2,9 +2,9 @@ package service;
 
 import database.DbConnection;
 import database.dao.AdminDAO;
-import model.Admin;
-import model.RoleAdmin;
-import model.StatusAcc;
+import model.admin.Admin;
+import model.common.RoleAdmin;
+import model.common.StatusAcc;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

@@ -1,8 +1,8 @@
 package controller.shop.customer;
 
-import mail.Email;
-import mail.SendMail;
-import model.CustomerSecurity;
+import model.common.mail.Email;
+import model.common.mail.SendMail;
+import model.shop.CustomerSecurity;
 import service.CustomerService;
 
 import javax.servlet.*;

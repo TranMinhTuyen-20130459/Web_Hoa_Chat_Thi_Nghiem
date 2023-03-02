@@ -1,6 +1,6 @@
 package controller.shop.product;
 
-import model.Product;
+import model.shop.Product;
 import service.ProductService;
 
 import javax.servlet.ServletException;

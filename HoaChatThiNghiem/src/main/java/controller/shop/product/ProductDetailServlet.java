@@ -1,8 +1,8 @@
 package controller.shop.product;
 
 import database.dao.ProductDAO;
-import model.Product;
-import model.Review;
+import model.shop.Product;
+import model.shop.Review;
 import service.ProductService;
 
 import javax.servlet.ServletException;

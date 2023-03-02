@@ -1,6 +1,6 @@
 package controller.shop.profile;
 
-import model.Customer;
+import model.shop.Customer;
 import service.CustomerService;
 
 import javax.servlet.*;

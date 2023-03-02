@@ -1,7 +1,6 @@
 package test.service;
 
-import model.Admin;
-import service.AdminService;
+import model.admin.Admin;
 import service.AdminService_MT;
 
 import java.util.List;

@@ -1,6 +1,6 @@
 package controller.shop.checkout;
 
-import model.Customer;
+import model.shop.Customer;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

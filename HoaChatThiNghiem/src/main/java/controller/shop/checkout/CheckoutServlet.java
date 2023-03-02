@@ -1,9 +1,9 @@
 package controller.shop.checkout;
 
 import database.dao.CustomerDao;
-import model.Cart;
-import model.CartItem;
-import model.Customer;
+import model.shop.Cart;
+import model.shop.CartItem;
+import model.shop.Customer;
 import service.CustomerService;
 
 import javax.servlet.ServletException;

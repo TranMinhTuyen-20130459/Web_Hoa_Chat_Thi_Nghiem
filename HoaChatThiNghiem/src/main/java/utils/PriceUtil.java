@@ -1,6 +1,6 @@
 package utils;
 
-import model.Product;
+import model.shop.Product;
 
 import java.text.NumberFormat;
 import java.util.List;

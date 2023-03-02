@@ -1,6 +1,6 @@
 package controller.shop;
 
-import model.Product;
+import model.shop.Product;
 import service.ProductService;
 import utils.PriceUtil;
 

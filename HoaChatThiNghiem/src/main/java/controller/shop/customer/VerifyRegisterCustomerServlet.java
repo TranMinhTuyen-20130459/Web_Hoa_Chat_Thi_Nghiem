@@ -1,6 +1,6 @@
 package controller.shop.customer;
 
-import model.CustomerSecurity;
+import model.shop.CustomerSecurity;
 import service.CustomerService;
 
 import javax.servlet.*;

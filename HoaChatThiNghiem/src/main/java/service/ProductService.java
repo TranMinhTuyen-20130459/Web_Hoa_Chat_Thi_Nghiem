@@ -2,7 +2,12 @@ package service;
 
 import database.DbConnection;
 import database.dao.ProductDAO;
-import model.*;
+import model.admin.Admin;
+import model.admin.StatusProduct;
+import model.admin.SubTypeProduct;
+import model.admin.Supplier;
+import model.shop.Product;
+import model.shop.ProductReview;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

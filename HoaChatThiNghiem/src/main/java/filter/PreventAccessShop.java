@@ -1,6 +1,6 @@
 package filter;
 
-import model.Customer;
+import model.shop.Customer;
 
 import javax.servlet.*;
 import javax.servlet.annotation.*;
