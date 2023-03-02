@@ -1,4 +1,4 @@
-package mail;
+package model.common.mail;
 
 public class Email {
     private String username;

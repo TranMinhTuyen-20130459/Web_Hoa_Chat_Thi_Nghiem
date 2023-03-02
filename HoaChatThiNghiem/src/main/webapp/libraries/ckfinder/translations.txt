@@ -10,4 +10,4 @@ http://docs.cksource.com/CKFinder_2.x/Localization
 
 All localization contributions are most welcome by CKSource and much appreciated by the international audience of our product as well as your users. The same goes for all efforts to improve existing translations and complete them. Feel free to contact us if you have any questions about the localization process or would like to send us your submission.
 
-Our e-mail address is available at http://cksource.com/contact where you will also find the contact form that you can use.
+Our e-model.common.mail address is available at http://cksource.com/contact where you will also find the contact form that you can use.

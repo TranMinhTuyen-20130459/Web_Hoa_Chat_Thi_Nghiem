@@ -1,10 +1,10 @@
 package controller.shop.profile;
 
 import database.dao.CustomerDao;
-import model.Cart;
-import model.CartItem;
-import model.Customer;
-import model.Order;
+import model.shop.Cart;
+import model.shop.CartItem;
+import model.shop.Customer;
+import model.shop.Order;
 import service.CustomerService;
 
 import javax.servlet.ServletException;

@@ -1,7 +1,7 @@
-<%@ page import="model.SubTypeProduct" %>
+<%@ page import="model.admin.SubTypeProduct" %>
 <%@ page import="java.util.List" %>
-<%@ page import="model.StatusProduct" %>
-<%@ page import="model.Supplier" %>
+<%@ page import="model.admin.StatusProduct" %>
+<%@ page import="model.admin.Supplier" %>
 <%@ page import="utils.CommonString" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -218,6 +218,20 @@
                                     Chọn ảnh
                                 </a>
                                 <a id="myfileupload">
+                                    <input type="text" name="UrlImage" style="min-width:300px" value="<%=UrlImg%>"/>
+                                    <c:set var="ErrorUploadImg" value="<%=ErrorUploadImg%>"/>
+                                    <c:if test="${ErrorUploadImg!=null}">
+                                        <div class="text-danger">${ErrorUploadImg.toString()}</div>
+                                    </c:if>
+                                </a>
+                                <a id="myfileupload2">
+                                    <input type="text" name="UrlImage" style="min-width:300px" value="<%=UrlImg%>"/>
+                                    <c:set var="ErrorUploadImg" value="<%=ErrorUploadImg%>"/>
+                                    <c:if test="${ErrorUploadImg!=null}">
+                                        <div class="text-danger">${ErrorUploadImg.toString()}</div>
+                                    </c:if>
+                                </a>
+                                <a id="myfileupload3">
                                     <input type="text" name="UrlImage" style="min-width:300px" value="<%=UrlImg%>"/>
                                     <c:set var="ErrorUploadImg" value="<%=ErrorUploadImg%>"/>
                                     <c:if test="${ErrorUploadImg!=null}">

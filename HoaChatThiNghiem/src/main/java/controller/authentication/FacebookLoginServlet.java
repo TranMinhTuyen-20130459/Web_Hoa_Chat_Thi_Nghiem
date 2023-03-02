@@ -1,7 +1,7 @@
 package controller.authentication;
 
 import com.restfb.types.User;
-import model.Customer;
+import model.shop.Customer;
 import utils.FacebookUtils;
 
 import javax.servlet.*;

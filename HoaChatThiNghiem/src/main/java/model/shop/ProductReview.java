@@ -1,4 +1,4 @@
-package model;
+package model.shop;
 
 import java.io.Serializable;
 import java.text.DecimalFormat;

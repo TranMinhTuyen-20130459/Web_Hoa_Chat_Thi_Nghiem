@@ -1,4 +1,4 @@
-package mail;
+package model.common.mail;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -8,10 +8,10 @@ import java.util.Properties;
 public class SendMail {
     public static void sendMail(String toEmail, Email email){
         Properties pro = new Properties();
-        pro.put("mail.smtp.host", "smtp.gmail.com");
-        pro.put("mail.smtp.port", "587");
-        pro.put("mail.smtp.auth", "true");
-        pro.put("mail.smtp.starttls.enable", "true");
+        pro.put("model.common.mail.smtp.host", "smtp.gmail.com");
+        pro.put("model.common.mail.smtp.port", "587");
+        pro.put("model.common.mail.smtp.auth", "true");
+        pro.put("model.common.mail.smtp.starttls.enable", "true");
 
         Session session_send = Session.getInstance(pro, new Authenticator() {
             @Override
@@ -32,7 +32,7 @@ public class SendMail {
     }
     public static void main(String[] args) {
         Email em = new Email("nguyenphutai840@gmail.com", "nlrtjmzdmlihnlrz",
-                "text gửi mail mà hơi khó á",
+                "text gửi model.common.mail mà hơi khó á",
                 "Để tạo tài khoản và sử dụng các dịch vụ của chúng tôi hãy <a href='#'>nhấn vào đây!</a>");
         sendMail("nguyenphutai1234@gmail.com", em);
     }

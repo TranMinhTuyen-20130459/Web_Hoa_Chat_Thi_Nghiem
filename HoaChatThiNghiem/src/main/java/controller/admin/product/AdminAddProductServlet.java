@@ -1,6 +1,10 @@
 package controller.admin.product;
 
-import model.*;
+import model.admin.Admin;
+import model.admin.StatusProduct;
+import model.admin.SubTypeProduct;
+import model.admin.Supplier;
+import model.shop.Product;
 import service.ProductService;
 import utils.CommonString;
 
@@ -11,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /*

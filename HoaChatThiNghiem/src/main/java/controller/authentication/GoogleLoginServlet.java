@@ -1,7 +1,7 @@
 package controller.authentication;
 
-import model.Customer;
-import model.GooglePojo;
+import model.shop.Customer;
+import model.common.GooglePojo;
 import utils.GoogleUtils;
 
 import javax.servlet.ServletException;

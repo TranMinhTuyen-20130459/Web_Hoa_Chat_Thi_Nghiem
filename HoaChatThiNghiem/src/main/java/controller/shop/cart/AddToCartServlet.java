@@ -1,8 +1,8 @@
 package controller.shop.cart;
 
 import database.dao.ProductDAO;
-import model.Cart;
-import model.Product;
+import model.shop.Cart;
+import model.shop.Product;
 import service.ProductService;
 
 import javax.servlet.ServletException;

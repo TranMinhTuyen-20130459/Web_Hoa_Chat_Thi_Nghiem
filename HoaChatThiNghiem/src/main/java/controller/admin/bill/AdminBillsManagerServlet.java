@@ -1,7 +1,7 @@
 package controller.admin.bill;
 
 import database.dao.CustomerDao;
-import model.Bill;
+import model.shop.Bill;
 import service.CustomerService;
 
 import javax.servlet.*;

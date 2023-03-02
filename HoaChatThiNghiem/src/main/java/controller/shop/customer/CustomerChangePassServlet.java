@@ -1,13 +1,12 @@
 package controller.shop.customer;
 
-import model.Customer;
+import model.shop.Customer;
 import service.CustomerService;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 @WebServlet(name = "CustomerChangePassServlet", value = "/shop/change-password")
 public class CustomerChangePassServlet extends HttpServlet {

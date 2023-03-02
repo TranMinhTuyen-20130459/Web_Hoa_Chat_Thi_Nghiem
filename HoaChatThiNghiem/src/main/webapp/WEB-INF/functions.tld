@@ -24,7 +24,7 @@
     <function>
         <name>inList</name>
         <function-class>utils.PriceUtil</function-class>
-        <function-signature>boolean inList(model.Product,java.util.List)</function-signature>
+        <function-signature>boolean inList(model.shop.Product,java.util.List)</function-signature>
     </function>
 
     <function>

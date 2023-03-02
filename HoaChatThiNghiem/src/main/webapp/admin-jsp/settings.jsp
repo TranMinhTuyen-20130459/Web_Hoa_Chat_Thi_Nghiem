@@ -1,4 +1,4 @@
-<%@ page import="model.Admin" %>
+<%@ page import="model.admin.Admin" %>
 <%@ page import="utils.CommonString" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>

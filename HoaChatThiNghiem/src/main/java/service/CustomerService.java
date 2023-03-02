@@ -1,10 +1,10 @@
 package service;
 
 import database.DbConnection;
-import model.Bill;
-import model.CartItem;
-import model.Customer;
-import model.Order;
+import model.shop.Bill;
+import model.shop.CartItem;
+import model.shop.Customer;
+import model.shop.Order;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

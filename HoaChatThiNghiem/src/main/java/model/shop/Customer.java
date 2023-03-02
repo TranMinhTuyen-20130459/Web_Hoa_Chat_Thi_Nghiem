@@ -1,4 +1,4 @@
-package model;
+package model.shop;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -17,6 +17,7 @@ public class Customer implements Serializable {
     private String address;
     private String status;
     private Date timeCreated;
+    private TypeAcc type_acc;
 
     public Customer() {}
 
@@ -45,6 +46,14 @@ public class Customer implements Serializable {
 
     public String getEmail() {
         return email;
+    }
+
+    public TypeAcc getType_acc() {
+        return type_acc;
+    }
+
+    public void setType_acc(TypeAcc type_acc) {
+        this.type_acc = type_acc;
     }
 
     public String getPassword() {

@@ -43,7 +43,7 @@
             <artifactId>jdbi3-core</artifactId>
             <version>3.35.0</version>
         </dependency>
-        <!--Đây là thư viện dùng để gửi mail trong Java-->
+        <!--Đây là thư viện dùng để gửi model.common.mail trong Java-->
         <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>

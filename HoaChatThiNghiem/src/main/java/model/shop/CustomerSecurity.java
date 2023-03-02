@@ -1,4 +1,4 @@
-package model;
+package model.shop;
 
 public class CustomerSecurity {
     private String id;

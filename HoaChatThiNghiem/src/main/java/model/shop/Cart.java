@@ -1,4 +1,4 @@
-package model;
+package model.shop;
 
 import database.dao.ProductDAO;
 import service.ProductService;

@@ -1,4 +1,6 @@
-package model;
+package model.shop;
+
+import model.shop.CartItem;
 
 import java.io.Serializable;
 import java.sql.Timestamp;

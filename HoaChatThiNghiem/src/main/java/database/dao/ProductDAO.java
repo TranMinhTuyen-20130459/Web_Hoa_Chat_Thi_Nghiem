@@ -1,7 +1,11 @@
 package database.dao;
 
 import database.DbConnection;
-import model.*;
+import model.admin.StatusProduct;
+import model.admin.SubTypeProduct;
+import model.admin.Supplier;
+import model.shop.Product;
+import model.shop.Review;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

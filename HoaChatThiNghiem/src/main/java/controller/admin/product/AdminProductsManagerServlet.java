@@ -1,7 +1,6 @@
 package controller.admin.product;
 
-import model.Product;
-import model.SubTypeProduct;
+import model.shop.Product;
 import service.ProductService;
 
 import javax.servlet.*;

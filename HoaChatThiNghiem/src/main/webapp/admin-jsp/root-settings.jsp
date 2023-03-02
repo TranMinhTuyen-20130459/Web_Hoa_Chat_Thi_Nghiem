@@ -1,4 +1,4 @@
-<%@ page import="model.Admin" %>
+<%@ page import="model.admin.Admin" %>
 <%@ page import="utils.CommonString" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>

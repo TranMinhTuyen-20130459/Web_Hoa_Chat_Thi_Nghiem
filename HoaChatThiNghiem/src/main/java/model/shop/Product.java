@@ -5,24 +5,30 @@
  * Lớp Product thể hiện một sản phẩm
  */
 
-package model;
+package model.shop;
+
+import model.admin.StatusProduct;
+import model.admin.SubTypeProduct;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class Product implements Serializable {
-    private int idProduct;
+    private int idProduct;//co
     private String imgPath;
-    private String name;
+    private String name;//co
     private ProductReview review;
     private String status;
-    private String desc;
+    private int id_status;
+    private String desc;//co
     private int quantity;
     private String type;
     private String subtype;
+    private int id_subtype;
     private String supply;
     private int sold;
-    private Date date;
+    private Date date;//co nhung no date_insert trong database
     private int views;
     private double oldPrice;
     private double newPrice;
@@ -36,7 +42,10 @@ public class Product implements Serializable {
     private SubTypeProduct subTypeP;
 
     private StatusProduct statusP;
-
+    private String warning_text;
+    private String country;
+    private Timestamp date_updated;
+    private double weight, length, width, height;
 
     public Product() {
     }
@@ -52,6 +61,7 @@ public class Product implements Serializable {
         this.statusP = statusP;
 
         //Author : Minh Tuyên
+
     }
 
     public Product(String imgPath, String name, String desc, int quantity, int listed_price, int current_price, int type_product, int status_product, int supplier) {
@@ -269,6 +279,86 @@ public class Product implements Serializable {
 
     public void setSupplier(int supplier) {
         this.supplier = supplier;
+    }
+
+    public int getId_status() {
+        return id_status;
+    }
+
+    public void setId_status(int id_status) {
+        this.id_status = id_status;
+    }
+
+    public int getId_subtype() {
+        return id_subtype;
+    }
+
+    public void setId_subtype(int id_subtype) {
+        this.id_subtype = id_subtype;
+    }
+
+    public void setSubTypeP(SubTypeProduct subTypeP) {
+        this.subTypeP = subTypeP;
+    }
+
+    public void setStatusP(StatusProduct statusP) {
+        this.statusP = statusP;
+    }
+
+    public String getWarning_text() {
+        return warning_text;
+    }
+
+    public void setWarning_text(String warning_text) {
+        this.warning_text = warning_text;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public Timestamp getDate_updated() {
+        return date_updated;
+    }
+
+    public void setDate_updated(Timestamp date_updated) {
+        this.date_updated = date_updated;
+    }
+
+    public double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(double weight) {
+        this.weight = weight;
+    }
+
+    public double getLength() {
+        return length;
+    }
+
+    public void setLength(double length) {
+        this.length = length;
+    }
+
+    public double getWidth() {
+        return width;
+    }
+
+    public void setWidth(double width) {
+        this.width = width;
+    }
+
+    public double getHeight() {
+        return height;
+    }
+
+    public void setHeight(double height) {
+        this.height = height;
     }
 
     @Override

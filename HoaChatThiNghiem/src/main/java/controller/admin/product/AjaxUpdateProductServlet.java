@@ -1,7 +1,7 @@
 package controller.admin.product;
 
-import model.Admin;
-import model.Product;
+import model.admin.Admin;
+import model.shop.Product;
 import service.ProductService;
 import utils.CommonString;
 
