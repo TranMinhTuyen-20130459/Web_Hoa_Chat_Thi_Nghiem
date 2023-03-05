@@ -1,10 +1,13 @@
 package service;
 
+import bean.Log;
 import database.DbConnection;
+import database.JDBiConnector;
 import model.common.Account;
 import model.admin.Admin;
 import model.shop.Bill;
 import model.shop.Product;
+import org.jdbi.v3.core.Jdbi;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,6 +16,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AdminService {
 
@@ -211,5 +215,21 @@ public class AdminService {
         } catch (SQLException e) {
             return new ArrayList<>();
         }
+
+    }
+    public static List<Log> getAllLog() {
+        return JDBiConnector.me().withHandle(handle ->
+                handle.createQuery("SELECT `id_log` ,`id_level`, `user_id`, src, content, ip_address, web_browser, create_at, `status` FROM logs")
+                        .mapToBean(Log.class)
+                        .stream().collect(Collectors.toList())
+        );
+    }
+    public static List<Log> getLogsByLevel(int id_level) {
+        return JDBiConnector.me().withHandle(handle ->
+                handle.createQuery("SELECT `id_log` ,`id_level`, `user_id`, src, content, ip_address, web_browser, create_at, `status` FROM logs WHERE id_level = :id_level")
+                        .bind("id_level", id_level)
+                        .mapToBean(Log.class)
+                        .stream().collect(Collectors.toList())
+        );
     }
 }

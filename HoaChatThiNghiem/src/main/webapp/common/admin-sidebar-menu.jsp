@@ -6,7 +6,7 @@
 <%
     Admin admin = (Admin) session.getAttribute(CommonString.ADMIN_SESSION);%>
 <%
-    String url = request.getRequestURL().toString(), c1 = "", c2 = "", c3 = "", c4 = "", c5 = "", c6 = "", c7 = "";
+    String url = request.getRequestURL().toString(), c1 = "", c2 = "", c3 = "", c4 = "", c5 = "", c6 = "", c7 = "",c8 ="";
     if (url.contains("index")) c1 = "haha";
     else if (url.contains("product")) c2 = "haha";
     else if (url.contains("bills")) c3 = "haha";
@@ -14,6 +14,7 @@
     else if (url.contains("admins-manager")) c5 = "haha";
     else if (url.contains("settings")) c6 = "haha";
     else if (url.contains("account")) c7 = "haha";
+    else if (url.contains("LoggingServlet")) c8 = "haha";
 %>
 <div class="app-sidebar-overlay" data-toggle="sidebar"></div>
 <aside class="app-sidebar">
@@ -47,6 +48,10 @@
         <li>
             <a class="app-menu-item <%=c5%>" href="#" onclick="funcAjax()"><i class='bx bxs-user-account'></i>
                 <span class="app-menu-label">Quản lý admin</span></a>
+        </li>
+        <li>
+            <a class="app-menu-item <%=c8%>" href="#" onclick="funcAjax1()"><i class='bx bxs-edit'></i>
+                <span class="app-menu-label">Bảng Logging</span></a>
         </li>
         <li>
             <a class="app-menu-item <%=c6%>" href="${context}/admin/doi-mat-khau"><i class='bx bx-cog'></i>
@@ -88,4 +93,28 @@
                 })
             })
     }
+    function funcAjax1() {
+        var idRoleAdmin = <%=admin.getId_role_admin()%>
+            $.ajax({
+                url: '${context}/AjaxLoggingServlet',
+                type: 'POST',                           //-- mặc định type của ajax là GET
+                data: {IdRoleAdmin: idRoleAdmin},
+                data_type: "text",
+                success: (function (resultData) {
+                    if (resultData.toString() == 'fail') {
+                        swal({
+                            text: 'Bạn không có quyền sử dụng chức năng này',
+                            icon: 'error',
+                            timer: 1000,
+                            buttons: false
+                        });
+                    } else {
+                        // alert(resultData)
+                        window.location = resultData;
+                    }
+                }),
+                error: (function () {
+                    // error no call ajax
+                })
+            })}
 </script>
