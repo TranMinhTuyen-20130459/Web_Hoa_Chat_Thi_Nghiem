@@ -23,7 +23,7 @@
 <!-- Sidebar Menu -->
 <jsp:include page="../common/admin-sidebar-menu.jsp"/>
 
-<main class="app-content" id="bill-page">
+<main class="app-content" id="log-page">
     <div class="app-title">
         <ul class="app-breadcrumb breadcrumb side">
             <li class="breadcrumb-item active"><a href="#"><b>Quản lý logging</b></a></li>
@@ -46,6 +46,13 @@
                         <div class="col-sm-2">
                             <a class="btn btn-delete btn-sm pdf-file" type="button" title="In"
                                onclick="myApp.printTable()"><i class="fas fa-file-pdf"></i> Xuất PDF</a>
+                        </div>
+                        <div class="col-sm-3">
+                            <select class="custom-select mr-sm-2" id="sorted">
+                                <option selected value="0">Sắp xếp</option>
+                                <option value="1">Mức độ</option>
+                                <option value="2">Thời gian</option>
+                            </select>
                         </div>
                     </div>
                     <table class="table table-hover table-bordered bill-table" id="sampleTable">
@@ -80,7 +87,7 @@
                                         <c:set var="bg" value="bg-danger"/>
                                     </c:when>
                                 </c:choose>
-                                <td> <span class ="badge ${bg}">${b.getLevelWithName()}</span></td>
+                                <td><span class="badge ${bg}">${b.getLevelWithName()}</span></td>
                                 <td>${b.user_id}</td>
                                 <td>${b.src}</td>
                                 <td>${b.content}</td>
@@ -113,10 +120,30 @@
         }
     }
 
+    // sort
     $('#sampleTable').dataTable({
-        // order: false,
-        order: [[ 0, 'asc' ]]
+        order: [[0, 'asc']]
     });
+    $('#sorted').change(function () {
+        if ($(this).val() == 0) {
+            $('#sampleTable').dataTable({
+                destroy: true,
+                order: [[0, 'asc']]
+            });
+            } else if ($(this).val() == 1) {
+                $('#sampleTable').dataTable({
+                    destroy: true,
+                    order: false
+                });
+            } else if ($(this).val() == 2) {
+                $('#sampleTable').dataTable({
+                    destroy: true,
+                    order: [[1, 'asc']]
+                });
+            }
+        }
+    )
+
 
     $('.btn-excel').on('click', function () {
         TableToExcel.convert(document.getElementById('sampleTable'), {

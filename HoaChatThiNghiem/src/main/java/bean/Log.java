@@ -18,6 +18,22 @@ public class Log extends AbBean<Log> implements Serializable {
     private String web_browser;
     private Timestamp create_at;
     private String status;
+
+    @Override
+    public String toString() {
+        return "Log{" +
+                "id_log=" + id_log +
+                ", id_level=" + id_level +
+                ", user_id=" + user_id +
+                ", src='" + src + '\'' +
+                ", content='" + content + '\'' +
+                ", ip_address='" + ip_address + '\'' +
+                ", web_browser='" + web_browser + '\'' +
+                ", create_at=" + create_at +
+                ", status='" + status + '\'' +
+                '}';
+    }
+
     public Log(int id_level, long user_id, String src, String content, String ip_address, String web_browser, String status) {
         this.id_level = id_level;
         this.user_id = user_id;
@@ -31,10 +47,10 @@ public class Log extends AbBean<Log> implements Serializable {
     public static final Map<Integer, String> levelMapping = new HashMap<>();
 
     static {
-        levelMapping.put(0, "INFO");
-        levelMapping.put(1, "ALERT");
-        levelMapping.put(2, "WARNING");
-        levelMapping.put(3, "DANGER");
+        levelMapping.put(1, "INFO");
+        levelMapping.put(2, "ALERT");
+        levelMapping.put(3, "WARNING");
+        levelMapping.put(4, "DANGER");
     }
 
     public static int INFO = 1;
@@ -116,7 +132,6 @@ public class Log extends AbBean<Log> implements Serializable {
 
     public Log() {
     }
-
     public String getLevelWithName() {
         return levelMapping.get(levelMapping.containsKey(this.id_level) ? this.id_level : 0);
     }

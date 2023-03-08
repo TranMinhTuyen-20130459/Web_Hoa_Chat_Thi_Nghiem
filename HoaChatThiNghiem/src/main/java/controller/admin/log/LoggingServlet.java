@@ -10,6 +10,8 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.stream.Collectors;
 
 @WebServlet(name = "LoggingServlet", value = "/admin/logging")
 public class LoggingServlet extends HttpServlet {
@@ -18,7 +20,9 @@ public class LoggingServlet extends HttpServlet {
 
         Admin admin = (Admin) request.getSession().getAttribute(CommonString.ADMIN_SESSION);
         if (admin.getId_role_admin() == 3) {
-            ArrayList<Log> listLog = (ArrayList<Log>) AdminService.getAllLog();
+            // lấy danh sách log sắp xếp giảm dần theo level
+            ArrayList<Log> listLog = (ArrayList<Log>) AdminService.getAllLog().
+                    stream().sorted(Comparator.comparing(Log::getId_level).reversed()).collect(Collectors.toList());
             request.setAttribute("ListLog", listLog);
             request.getRequestDispatcher("/admin-jsp/logging.jsp").forward(request, response);
         } else {
