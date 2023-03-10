@@ -5,6 +5,7 @@ import database.DbConnection;
 import database.JDBiConnector;
 import model.common.Account;
 import model.admin.Admin;
+import model.common.Voucher;
 import model.shop.Bill;
 import model.shop.Product;
 import org.jdbi.v3.core.Jdbi;
@@ -231,5 +232,11 @@ public class AdminService {
                         .mapToBean(Log.class)
                         .stream().collect(Collectors.toList())
         );
+    }
+    public static List<Voucher> getAllVoucher(){
+        return JDBiConnector.me().withHandle(handle ->
+                handle.createQuery("SELECT `id_voucher`, `code`, `discount`,`start_date`,`end_date`,`create_at` FROM vouchers"))
+                .mapToBean(Voucher.class)
+                .stream().collect(Collectors.toList());
     }
 }

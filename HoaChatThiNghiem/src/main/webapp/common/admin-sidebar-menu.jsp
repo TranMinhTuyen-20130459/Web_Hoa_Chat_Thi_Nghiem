@@ -6,7 +6,8 @@
 <%
     Admin admin = (Admin) session.getAttribute(CommonString.ADMIN_SESSION);%>
 <%
-    String url = request.getRequestURL().toString(), c1 = "", c2 = "", c3 = "", c4 = "", c5 = "", c6 = "", c7 = "",c8 ="";
+    String url = request.getRequestURL().toString(), c1 = "", c2 = "", c3 = "", c4 = "", c5 = "", c6 = "", c7 = "",
+            c8 ="";
     if (url.contains("index")) c1 = "haha";
     else if (url.contains("product")) c2 = "haha";
     else if (url.contains("bills")) c3 = "haha";
@@ -14,7 +15,7 @@
     else if (url.contains("admins-manager")) c5 = "haha";
     else if (url.contains("settings")) c6 = "haha";
     else if (url.contains("account")) c7 = "haha";
-    else if (url.contains("LoggingServlet")) c8 = "haha";
+    else if (url.contains("logging")) c8 = "haha";
 %>
 <div class="app-sidebar-overlay" data-toggle="sidebar"></div>
 <aside class="app-sidebar">
@@ -40,6 +41,10 @@
             <a class="app-menu-item <%=c3%>" href="${context}/admin/quan-ly-don-hang"><i class='bx bx-task'></i>
                 <span class="app-menu-label">Quản lý đơn hàng</span></a>
         </li>
+<%--        <li>--%>
+<%--            <a class="app-menu-item <%=c9%>" href="${context}/admin/voucher"><i class='bx bx-task'></i>--%>
+<%--                <span class="app-menu-label">Quản lý voucher</span></a>--%>
+<%--        </li>--%>
         <li>
             <a class="app-menu-item <%=c4%>" href="${context}/admin/bao-cao-doanh-thu"><i
                     class='bx bx-pie-chart-alt-2'></i>

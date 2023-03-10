@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Log extends AbBean<Log> implements Serializable {
+public class Log extends AbBean implements Serializable {
     private long id_log;
 
     private int id_level;

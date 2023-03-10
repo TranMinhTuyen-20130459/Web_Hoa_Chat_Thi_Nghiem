@@ -58,7 +58,7 @@
                     <table class="table table-hover table-bordered bill-table" id="sampleTable">
                         <thead>
                         <tr>
-                            <th class="text-center">ID log</th>
+                            <th class="text-center">ID</th>
                             <th class="text-center">Cấp độ</th>
                             <th class="text-center">ID User</th>
                             <th class="text-center">Người thực hiện</th>
@@ -72,7 +72,7 @@
                         <tbody>
                         <c:forEach var="b" items="${ListLog}">
                             <tr>
-                                <td data-bbid="${b.id_log}" class="text-center">#${b.id_log}</td>
+                                <td data-bbid="${b.id_log}" class="text-center">${b.id_log}</td>
                                 <c:choose>
                                     <c:when test="${b.id_level == 1}">
                                         <c:set var="bg" value="bg-success"/>
@@ -122,13 +122,13 @@
 
     // sort
     $('#sampleTable').dataTable({
-        order: [[0, 'asc']]
+        order: [[0, 'desc']]
     });
     $('#sorted').change(function () {
         if ($(this).val() == 0) {
             $('#sampleTable').dataTable({
                 destroy: true,
-                order: [[0, 'asc']]
+                order: [[0, 'desc']]
             });
             } else if ($(this).val() == 1) {
                 $('#sampleTable').dataTable({
@@ -138,12 +138,11 @@
             } else if ($(this).val() == 2) {
                 $('#sampleTable').dataTable({
                     destroy: true,
-                    order: [[1, 'asc']]
+                    order: [[7, 'desc']]
                 });
             }
         }
     )
-
 
     $('.btn-excel').on('click', function () {
         TableToExcel.convert(document.getElementById('sampleTable'), {
