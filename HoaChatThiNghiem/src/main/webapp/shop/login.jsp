@@ -57,7 +57,7 @@
             </div>
             <div class="col-lg-5 col-md-5 col-12">
                 <div class="h-100 d-flex align-items-center">
-                    <form class="m-0 p-5 text-center" action="/HoaChatThiNghiem_war/shop/login" method="post"
+                    <form class="m-0 p-5 text-center" action="<%=request.getContextPath()%>/shop/login" method="post"
                           name="form_login">
                         <h5 class="mb-4">Đăng Nhập</h5>
                         <%if (error != null) {%>

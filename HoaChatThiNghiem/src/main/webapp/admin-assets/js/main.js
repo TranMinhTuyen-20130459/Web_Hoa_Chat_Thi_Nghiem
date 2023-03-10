@@ -41,5 +41,6 @@
             $('.search-bar span.quantity').html(String(rows - 1))
         })
     })
+
 })();
 
