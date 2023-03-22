@@ -13,7 +13,7 @@ public class JDBiConnector {
         if (jdbi == null) makeConnect();
         return jdbi;
     }
-    //
+
     private static void makeConnect() {
         try {
             MysqlDataSource source = new MysqlDataSource();

@@ -1,6 +1,11 @@
 package model.shop;
 
+import org.jdbi.v3.core.mapper.RowMapper;
+import org.jdbi.v3.core.statement.StatementContext;
+
 import java.io.Serializable;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 
 public class Customer implements Serializable {
@@ -19,7 +24,16 @@ public class Customer implements Serializable {
     private Date timeCreated;
     private TypeAcc type_acc;
 
-    public Customer() {}
+    private String id_user_fb;
+
+    private String id_user_gg;
+
+    public Customer() {
+    }
+
+    public Customer(String email) {
+        this.email = email;
+    }
 
     public Customer(int id, String email, String password, int id_status_acc, int id_city, String fullname, String phone, String address) {
         this.id = id;
@@ -136,6 +150,22 @@ public class Customer implements Serializable {
         this.timeCreated = timeCreated;
     }
 
+    public String getId_user_fb() {
+        return id_user_fb;
+    }
+
+    public void setId_user_fb(String id_user_fb) {
+        this.id_user_fb = id_user_fb;
+    }
+
+    public String getId_user_gg() {
+        return id_user_gg;
+    }
+
+    public void setId_user_gg(String id_user_gg) {
+        this.id_user_gg = id_user_gg;
+    }
+
     @Override
     public String toString() {
         return "Customer{" +
@@ -150,3 +180,4 @@ public class Customer implements Serializable {
                 '}';
     }
 }
+

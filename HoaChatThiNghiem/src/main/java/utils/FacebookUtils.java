@@ -13,15 +13,16 @@ import java.io.IOException;
 
 public class FacebookUtils {
 
+    public static int ACC_FACEBOOK = 2;
 
     // Hàm getToken sử dụng để lấy token từ mã đã nhận được sau khi xác thực
     public static String getToken(final String code) throws IOException {
         // Tạo link để gửi yêu cầu lấy token
         String link = String.format(ConstantsString.FACEBOOK_LINK_GET_TOKEN,
-                                    ConstantsString.FACEBOOK_APP_ID,
-                                    ConstantsString.FACEBOOK_APP_SECRET,
-                                    ConstantsString.FACEBOOK_REDIRECT_URL,
-                                    code);
+                ConstantsString.FACEBOOK_APP_ID,
+                ConstantsString.FACEBOOK_APP_SECRET,
+                ConstantsString.FACEBOOK_REDIRECT_URL,
+                code);
 
         // Gửi yêu cầu lấy token và lấy kết quả trả về dưới dạng chuỗi JSON
         String response_json_text = Request.Get(link).execute().returnContent().asString();
@@ -40,8 +41,8 @@ public class FacebookUtils {
 
         // Tạo đối tượng FacebookClient sử dụng token và app-secret để truy vấn dữ liệu
         FacebookClient fbClient = new DefaultFacebookClient(accessToken,
-                                                            ConstantsString.FACEBOOK_APP_SECRET,
-                                                            Version.LATEST);
+                ConstantsString.FACEBOOK_APP_SECRET,
+                Version.LATEST);
 
         return fbClient.fetchObject("me", User.class, Parameter.with("fields", "id, name, email, gender"));
 
@@ -51,4 +52,6 @@ public class FacebookUtils {
         ==> chỉ lấy được thông tin cơ bản của người dùng như id,name
          */
     }
+
+
 }

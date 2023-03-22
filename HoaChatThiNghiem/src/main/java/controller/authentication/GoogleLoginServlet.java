@@ -1,7 +1,10 @@
 package controller.authentication;
 
+import bean.Log;
+import database.JDBiConnector;
 import model.shop.Customer;
 import model.common.GooglePojo;
+import service.FacebookGoogleService;
 import utils.GoogleUtils;
 
 import javax.servlet.ServletException;
@@ -24,11 +27,39 @@ public class GoogleLoginServlet extends HttpServlet {
             GooglePojo userGoogle = GoogleUtils.getUserInfor(accessToken);
 
             Customer customer = new Customer();
+            customer.setId_user_gg(userGoogle.getId());
             customer.setFullname(userGoogle.getName());
             customer.setEmail_customer(userGoogle.getEmail());
 
-            request.getSession().setAttribute("auth_customer", customer);
-            response.sendRedirect(request.getContextPath() + "/shop/home");
+            // kiểm tra id_user_gg của người dùng có tồn tại trong hệ thống hay chưa ?
+            boolean checkExistAcc = FacebookGoogleService.checkExistAcc(JDBiConnector.me(), userGoogle.getId(), 3);
+            if (checkExistAcc == true) {
+
+                Log logSignIn = new Log(Log.ALERT, customer.getId_user_gg(), "", "đăng nhập hệ thống bằng tài khoản Gg", "", "", "");
+                logSignIn.insert(JDBiConnector.me()); // ghi lịch sử đăng nhập vào bảng Log
+
+                request.getSession().setAttribute("auth_customer", customer);
+                response.sendRedirect(request.getContextPath() + "/shop/home");
+
+            } else if (checkExistAcc == false) {
+
+                Log logCreateAcc = new Log(Log.DANGER, customer.getId_user_gg(), "", "tạo tài khoản bằng Gg", "", "", "");
+                Log logSignIn = new Log(Log.ALERT, customer.getId_user_gg(), "", "đăng nhập hệ thống bằng tài khoản Gg", "", "", "");
+                int checkCreateAcc = FacebookGoogleService.createAccPro(JDBiConnector.me(), customer, 3, logCreateAcc, logSignIn);
+                if (checkCreateAcc == 1) {
+                    // tạo tài khoản thành công đồng thời đăng nhập vào hệ thống
+
+                    request.getSession().setAttribute("auth_customer", customer);
+                    response.sendRedirect(request.getContextPath() + "/shop/home");
+
+                } else {
+                    // tạo tài khoản không thành công <=> không thể đăng nhập vào hệ thống
+
+                    response.sendRedirect(request.getContextPath() + "/shop/login");
+
+                }
+
+            }
         }
 
     }
