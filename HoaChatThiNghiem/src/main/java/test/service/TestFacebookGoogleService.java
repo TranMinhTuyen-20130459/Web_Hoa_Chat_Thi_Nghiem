@@ -47,8 +47,8 @@ public class TestFacebookGoogleService {
 
     public static void main(String[] args) {
 
-        TestFacebookGoogleService.Test_CheckExistAcc();
-//        TestFacebookGoogleService.Test_CreateAccPro_FB();
-//        TestFacebookGoogleService.Test_CreateAccPro_GG();
+        //TestFacebookGoogleService.Test_CheckExistAcc();
+        TestFacebookGoogleService.Test_CreateAccPro_FB();
+        TestFacebookGoogleService.Test_CreateAccPro_GG();
     }
 }

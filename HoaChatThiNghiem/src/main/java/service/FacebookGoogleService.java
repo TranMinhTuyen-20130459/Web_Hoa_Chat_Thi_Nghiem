@@ -106,11 +106,14 @@ public class FacebookGoogleService {
 
                         logCreateAcc.insert(jdbi); // -> ghi log tạo tài khoản vào bảng Log
                         logSignIn.insert(jdbi); // -> ghi log đăng nhập vào bảng Log
+
                         handle.commit();
                         return 1;
                     }
                 } catch (Exception e) {
+
                     handle.rollback();
+                    return -1;
                 }
 
                 return 0;
