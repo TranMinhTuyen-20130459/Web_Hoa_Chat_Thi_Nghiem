@@ -9,3 +9,6 @@ ALTER TABLE account_customers
 -- đổi giá trị của cột user_id trong bảng log từ bigint sang varchar(50) 		
 ALTER TABLE `logs`
 	MODIFY COLUMN user_id VARCHAR(50);
+	
+ALTER TABLE account_admins
+			ADD COLUMN full_name varchar(50);
