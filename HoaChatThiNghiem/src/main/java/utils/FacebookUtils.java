@@ -13,8 +13,6 @@ import java.io.IOException;
 
 public class FacebookUtils {
 
-    public static int ACC_FACEBOOK = 2;
-
     // Hàm getToken sử dụng để lấy token từ mã đã nhận được sau khi xác thực
     public static String getToken(final String code) throws IOException {
         // Tạo link để gửi yêu cầu lấy token

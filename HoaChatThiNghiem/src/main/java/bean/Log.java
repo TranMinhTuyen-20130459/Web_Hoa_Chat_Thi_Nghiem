@@ -54,7 +54,6 @@ public class Log extends AbBean implements Serializable {
     }
 
     public static int INFO = 1;
-
     public static int ALERT = 2;
     public static int WARNING = 3;
     public static int DANGER = 4;

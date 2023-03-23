@@ -10,8 +10,6 @@ import java.io.IOException;
 
 public class GoogleUtils {
 
-    public static int ACC_GOOGLE = 3;
-
     public static String getToken(final String code) throws IOException {
 
         /* gửi một Request dùng phương thức POST đến Google và nhận kết quả trả về là một chuỗi JSON có chứa accessToken */

@@ -3,6 +3,7 @@ package test.service;
 import bean.Log;
 import database.JDBiConnector;
 import model.shop.Customer;
+import model.shop.TypeAcc;
 import service.FacebookGoogleService;
 import utils.FacebookUtils;
 import utils.GoogleUtils;
@@ -11,8 +12,8 @@ public class TestFacebookGoogleService {
 
     public static void Test_CheckExistAcc() {
 
-        System.out.println(FacebookGoogleService.checkExistAcc(JDBiConnector.me(), "0002", FacebookUtils.ACC_FACEBOOK));
-        System.out.println(FacebookGoogleService.checkExistAcc(JDBiConnector.me(), "0002", GoogleUtils.ACC_GOOGLE));
+        System.out.println(FacebookGoogleService.checkExistAcc(JDBiConnector.me(), "0002", TypeAcc.ACC_FACEBOOK));
+        System.out.println(FacebookGoogleService.checkExistAcc(JDBiConnector.me(), "0002", TypeAcc.ACC_GOOGLE));
 
     }
 

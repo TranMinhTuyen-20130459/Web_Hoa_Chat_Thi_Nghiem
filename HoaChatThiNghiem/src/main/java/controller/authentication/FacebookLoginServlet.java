@@ -4,6 +4,7 @@ import bean.Log;
 import com.restfb.types.User;
 import database.JDBiConnector;
 import model.shop.Customer;
+import model.shop.TypeAcc;
 import org.jdbi.v3.core.Jdbi;
 import service.FacebookGoogleService;
 import utils.FacebookUtils;
@@ -33,6 +34,8 @@ public class FacebookLoginServlet extends HttpServlet {
             String accessToken = FacebookUtils.getToken(code);
             User userFacebook = FacebookUtils.getUserInfor(accessToken);
 
+            String webBrowser = request.getHeader("User-Agent");
+
             Customer customer = new Customer();
             customer.setId_user_fb(userFacebook.getId());
             customer.setFullname(userFacebook.getName());
@@ -40,10 +43,10 @@ public class FacebookLoginServlet extends HttpServlet {
             customer.setEmail_customer(userFacebook.getEmail());
 
             // kiểm tra id_user_fb của người dùng có tồn tại trong hệ thống hay chưa ?
-            boolean checkExistAcc = FacebookGoogleService.checkExistAcc(JDBiConnector.me(), userFacebook.getId(), 2);
+            boolean checkExistAcc = FacebookGoogleService.checkExistAcc(JDBiConnector.me(), userFacebook.getId(), TypeAcc.ACC_FACEBOOK);
             if (checkExistAcc == true) {
 
-                Log logSignIn = new Log(Log.ALERT, customer.getId_user_fb(), "", "đăng nhập hệ thống bằng tài khoản Fb", "", "", "");
+                Log logSignIn = new Log(Log.ALERT, customer.getId_user_fb(), "", "đăng nhập hệ thống bằng tài khoản Fb", "", webBrowser, "");
                 logSignIn.insert(JDBiConnector.me()); // ghi lịch sử đăng nhập vào bảng Log
 
                 request.getSession().setAttribute("auth_customer", customer);
@@ -51,9 +54,9 @@ public class FacebookLoginServlet extends HttpServlet {
 
             } else if (checkExistAcc == false) {
 
-                Log logCreateAcc = new Log(Log.DANGER, customer.getId_user_fb(), "", "tạo tài khoản bằng Fb", "", "", "");
-                Log logSignIn = new Log(Log.ALERT, customer.getId_user_fb(), "", "đăng nhập hệ thống bằng tài khoản Fb", "", "", "");
-                int checkCreateAcc = FacebookGoogleService.createAccPro(JDBiConnector.me(), customer, 2, logCreateAcc, logSignIn);
+                Log logCreateAcc = new Log(Log.DANGER, customer.getId_user_fb(), "", "tạo tài khoản bằng Fb", "", webBrowser, "");
+                Log logSignIn = new Log(Log.ALERT, customer.getId_user_fb(), "", "đăng nhập hệ thống bằng tài khoản Fb", "", webBrowser, "");
+                int checkCreateAcc = FacebookGoogleService.createAccPro(JDBiConnector.me(), customer, TypeAcc.ACC_FACEBOOK, logCreateAcc, logSignIn);
                 if (checkCreateAcc == 1) {
                     // tạo tài khoản thành công đồng thời đăng nhập vào hệ thống
 

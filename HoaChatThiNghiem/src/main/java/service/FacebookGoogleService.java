@@ -3,13 +3,11 @@ package service;
 import bean.Log;
 import model.shop.Customer;
 import model.shop.CustomerRowMapper;
+import model.shop.TypeAcc;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.statement.Query;
 import org.jdbi.v3.core.statement.Update;
-import utils.FacebookUtils;
-import utils.GoogleUtils;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public class FacebookGoogleService {
@@ -23,9 +21,9 @@ public class FacebookGoogleService {
 
         try {
 
-            jdbi.registerRowMapper(new CustomerRowMapper());
+            jdbi.registerRowMapper(new CustomerRowMapper()); // -> dùng để map danh sách các kết quả truy vấn thành các đối tượng Customer(username)
 
-            if (typeAcc == FacebookUtils.ACC_FACEBOOK) {
+            if (typeAcc == TypeAcc.ACC_FACEBOOK) {
 
                 List<Customer> customers = jdbi.withHandle(handle -> {
                     Query query = handle.createQuery("SELECT username FROM account_customers WHERE id_user_fb = :id_user_fb_gg AND id_type_acc= :typeAcc");
@@ -38,7 +36,7 @@ public class FacebookGoogleService {
                     return true;
                 }
 
-            } else if (typeAcc == GoogleUtils.ACC_GOOGLE) {
+            } else if (typeAcc == TypeAcc.ACC_GOOGLE) {
 
                 List<Customer> customers = jdbi.withHandle(handle -> {
                     Query query = handle.createQuery("SELECT username FROM account_customers WHERE id_user_gg = :id_user_fb_gg AND id_type_acc= :typeAcc");
@@ -77,24 +75,24 @@ public class FacebookGoogleService {
             return jdbi.withHandle(handle -> {
 
                 Update update = null;
-                if (typeAcc == FacebookUtils.ACC_FACEBOOK) {
+                if (typeAcc == TypeAcc.ACC_FACEBOOK) {
 
                     update = handle.createUpdate("INSERT INTO account_customers(id_status_acc,id_city,username,pass,full_name,emai_customer,id_type_acc,id_user_fb) VALUES (1,0,:username,:pass,:full_name,:email_customer,:id_type_acc,:id_user_fb)");
                     update.bind("username", "FB" + infor.getId_user_fb())
                             .bind("pass", infor.getId_user_fb() + "@fb123")
                             .bind("full_name", infor.getFullname())
                             .bind("email_customer", infor.getEmail_customer())
-                            .bind("id_type_acc", FacebookUtils.ACC_FACEBOOK)
+                            .bind("id_type_acc", TypeAcc.ACC_FACEBOOK)
                             .bind("id_user_fb", infor.getId_user_fb());
 
-                } else if (typeAcc == GoogleUtils.ACC_GOOGLE) {
+                } else if (typeAcc == TypeAcc.ACC_GOOGLE) {
 
                     update = handle.createUpdate("INSERT INTO account_customers(id_status_acc,id_city,username,pass,full_name,emai_customer,id_type_acc,id_user_gg) VALUES (1,0,:username,:pass,:full_name,:email_customer,:id_type_acc,:id_user_gg)");
                     update.bind("username", "GG" + infor.getId_user_gg())
                             .bind("pass", infor.getId_user_gg() + "@gg123")
                             .bind("full_name", infor.getFullname())
                             .bind("email_customer", infor.getEmail_customer())
-                            .bind("id_type_acc", GoogleUtils.ACC_GOOGLE)
+                            .bind("id_type_acc", TypeAcc.ACC_GOOGLE)
                             .bind("id_user_gg", infor.getId_user_gg());
 
                 }

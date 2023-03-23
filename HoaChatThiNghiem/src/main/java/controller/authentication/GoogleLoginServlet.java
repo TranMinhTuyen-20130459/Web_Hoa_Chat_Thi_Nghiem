@@ -4,6 +4,7 @@ import bean.Log;
 import database.JDBiConnector;
 import model.shop.Customer;
 import model.common.GooglePojo;
+import model.shop.TypeAcc;
 import service.FacebookGoogleService;
 import utils.GoogleUtils;
 
@@ -26,16 +27,18 @@ public class GoogleLoginServlet extends HttpServlet {
             String accessToken = GoogleUtils.getToken(code);
             GooglePojo userGoogle = GoogleUtils.getUserInfor(accessToken);
 
+            String webBrowser = request.getHeader("User-Agent");
+
             Customer customer = new Customer();
             customer.setId_user_gg(userGoogle.getId());
             customer.setFullname(userGoogle.getName());
             customer.setEmail_customer(userGoogle.getEmail());
 
             // kiểm tra id_user_gg của người dùng có tồn tại trong hệ thống hay chưa ?
-            boolean checkExistAcc = FacebookGoogleService.checkExistAcc(JDBiConnector.me(), userGoogle.getId(), 3);
+            boolean checkExistAcc = FacebookGoogleService.checkExistAcc(JDBiConnector.me(), userGoogle.getId(), TypeAcc.ACC_GOOGLE);
             if (checkExistAcc == true) {
 
-                Log logSignIn = new Log(Log.ALERT, customer.getId_user_gg(), "", "đăng nhập hệ thống bằng tài khoản Gg", "", "", "");
+                Log logSignIn = new Log(Log.ALERT, customer.getId_user_gg(), "", "đăng nhập hệ thống bằng tài khoản Gg", "", webBrowser, "");
                 logSignIn.insert(JDBiConnector.me()); // ghi lịch sử đăng nhập vào bảng Log
 
                 request.getSession().setAttribute("auth_customer", customer);
@@ -43,9 +46,9 @@ public class GoogleLoginServlet extends HttpServlet {
 
             } else if (checkExistAcc == false) {
 
-                Log logCreateAcc = new Log(Log.DANGER, customer.getId_user_gg(), "", "tạo tài khoản bằng Gg", "", "", "");
-                Log logSignIn = new Log(Log.ALERT, customer.getId_user_gg(), "", "đăng nhập hệ thống bằng tài khoản Gg", "", "", "");
-                int checkCreateAcc = FacebookGoogleService.createAccPro(JDBiConnector.me(), customer, 3, logCreateAcc, logSignIn);
+                Log logCreateAcc = new Log(Log.DANGER, customer.getId_user_gg(), "", "tạo tài khoản bằng Gg", "", webBrowser, "");
+                Log logSignIn = new Log(Log.ALERT, customer.getId_user_gg(), "", "đăng nhập hệ thống bằng tài khoản Gg", "", webBrowser, "");
+                int checkCreateAcc = FacebookGoogleService.createAccPro(JDBiConnector.me(), customer, TypeAcc.ACC_GOOGLE, logCreateAcc, logSignIn);
                 if (checkCreateAcc == 1) {
                     // tạo tài khoản thành công đồng thời đăng nhập vào hệ thống
 
