@@ -50,7 +50,7 @@ public class ProductsServlet extends HttpServlet {
             }
             // LOG LẠI LỊCH SỬ SEARCH
 //           (int id_level, long user_id, String src, String content, String ip_address, String web_browser, String status)
-            Log log = new Log(Log.INFO, idUser, nameUser, "Searched with content: " + name, ipAddress, webBrowser, statusLog);
+            Log log = new Log(Log.INFO, idUser+"", nameUser, "Searched with content: " + name, ipAddress, webBrowser, statusLog);
             DB.me().insert(log);
             req.getSession().removeAttribute("type");
             products = ProductService.searchProductsByName(name);
