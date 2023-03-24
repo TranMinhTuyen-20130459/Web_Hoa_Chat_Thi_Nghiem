@@ -54,7 +54,7 @@ public class FacebookLoginServlet extends HttpServlet {
 
             } else if (checkExistAcc == false) {
 
-                Log logCreateAcc = new Log(Log.DANGER, customer.getId_user_fb(), "", "tạo tài khoản bằng Fb", "", webBrowser, "");
+                Log logCreateAcc = new Log(Log.WARNING, customer.getId_user_fb(), "", "tạo tài khoản bằng Fb", "", webBrowser, "");
                 Log logSignIn = new Log(Log.ALERT, customer.getId_user_fb(), "", "đăng nhập hệ thống bằng tài khoản Fb", "", webBrowser, "");
                 int checkCreateAcc = FacebookGoogleService.createAccPro(JDBiConnector.me(), customer, TypeAcc.ACC_FACEBOOK, logCreateAcc, logSignIn);
                 if (checkCreateAcc == 1) {

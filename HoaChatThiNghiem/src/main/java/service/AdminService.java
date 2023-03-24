@@ -221,9 +221,7 @@ public class AdminService {
     public static List<Log> getAllLog() {
         return JDBiConnector.me().withHandle(handle ->
                 handle.createQuery("SELECT `id_log` ,`id_level`, `user_id`, src, content, ip_address, web_browser, create_at, `status` FROM logs")
-                        .mapToBean(Log.class)
-                        .stream().collect(Collectors.toList())
-        );
+                        .mapToBean(Log.class).list());
     }
     public static List<Log> getLogsByLevel(int id_level) {
         return JDBiConnector.me().withHandle(handle ->
