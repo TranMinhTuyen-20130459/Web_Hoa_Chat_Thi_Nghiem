@@ -46,7 +46,7 @@ public class GoogleLoginServlet extends HttpServlet {
 
             } else if (checkExistAcc == false) {
 
-                Log logCreateAcc = new Log(Log.DANGER, customer.getId_user_gg(), "", "tạo tài khoản bằng Gg", "", webBrowser, "");
+                Log logCreateAcc = new Log(Log.WARNING, customer.getId_user_gg(), "", "tạo tài khoản bằng Gg", "", webBrowser, "");
                 Log logSignIn = new Log(Log.ALERT, customer.getId_user_gg(), "", "đăng nhập hệ thống bằng tài khoản Gg", "", webBrowser, "");
                 int checkCreateAcc = FacebookGoogleService.createAccPro(JDBiConnector.me(), customer, TypeAcc.ACC_GOOGLE, logCreateAcc, logSignIn);
                 if (checkCreateAcc == 1) {

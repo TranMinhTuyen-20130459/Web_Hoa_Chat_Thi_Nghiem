@@ -15,7 +15,7 @@ import java.util.List;
 public class AdminDAO {
 
     public boolean updateAccount(DbConnection connectDB, Admin admin) {
-        String sql = "UPDATE account_admin SET id_role_admin=?,id_status_acc=?,passwordAD=?,time_change_pass=CURRENT_TIMESTAMP WHERE username=?";
+        String sql = "UPDATE account_admins SET id_role_admin=?,id_status_acc=?,password=?,time_change_pass=CURRENT_TIMESTAMP WHERE username=?";
         PreparedStatement preState = connectDB.getPreparedStatement(sql);
         try {
             preState.setInt(1, admin.getId_role_admin());
@@ -32,16 +32,16 @@ public class AdminDAO {
 
     public List<Admin> getAllAdmin(DbConnection connectDB) {
         List<Admin> result = new ArrayList<>();
-        String sql = "SELECT username,fullname,R.id_role_admin,R.name_role,S.id_status_acc,S.name_status_acc" +
-                " FROM account_admin A" +
-                " JOIN role_admin R ON A.id_role_admin = R.id_role_admin" +
-                " JOIN status_acc S ON A.id_status_acc = S.id_status_acc";
+        String sql = "SELECT username,full_name,R.id_role_admin,R.name_role,S.id_status_acc,S.name_status_acc" +
+                " FROM account_admins A" +
+                " JOIN role_admins R ON A.id_role_admin = R.id_role_admin" +
+                " JOIN status_accs S ON A.id_status_acc = S.id_status_acc";
         Statement statement = connectDB.getStatement();
         try {
             ResultSet rs = statement.executeQuery(sql);
             while (rs.next()) {
                 String username = rs.getString("username");
-                String fullname = rs.getString("fullname");
+                String fullname = rs.getString("full_name");
                 int id_role = rs.getInt("id_role_admin");
                 String name_role = rs.getString("name_role");
                 int id_status = rs.getInt("id_status_acc");
