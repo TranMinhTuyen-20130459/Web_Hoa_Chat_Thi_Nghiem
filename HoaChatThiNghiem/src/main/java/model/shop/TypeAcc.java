@@ -37,4 +37,8 @@ public class TypeAcc implements Serializable {
                 ", name_type_acc='" + name_type_acc + '\'' +
                 '}';
     }
+
+    public static int ACC_NORMAL = 1;
+    public static int ACC_FACEBOOK = 2;
+    public static int ACC_GOOGLE = 3;
 }
