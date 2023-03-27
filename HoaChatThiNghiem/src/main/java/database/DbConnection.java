@@ -12,6 +12,7 @@ public class DbConnection {
             Class.forName("com.mysql.cj.jdbc.Driver");
             conn = DriverManager.getConnection(url, DbProperties.user(), DbProperties.pass());
         } catch (ClassNotFoundException | SQLException e) {
+            System.out.println("Lỗi ở đây !!!");
             throw new RuntimeException(e);
         }
     }
