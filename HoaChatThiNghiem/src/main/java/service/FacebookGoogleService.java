@@ -53,6 +53,7 @@ public class FacebookGoogleService {
             return false;
 
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return false;
         }
     }
@@ -77,7 +78,7 @@ public class FacebookGoogleService {
                 Update update = null;
                 if (typeAcc == TypeAcc.ACC_FACEBOOK) {
 
-                    update = handle.createUpdate("INSERT INTO account_customers(id_status_acc,id_city,username,pass,full_name,emai_customer,id_type_acc,id_user_fb) VALUES (1,0,:username,:pass,:full_name,:email_customer,:id_type_acc,:id_user_fb)");
+                    update = handle.createUpdate("INSERT INTO account_customers(id_status_acc,id_city,username,pass,full_name,email_customer,id_type_acc,id_user_fb) VALUES (1,0,:username,:pass,:full_name,:email_customer,:id_type_acc,:id_user_fb)");
                     update.bind("username", "FB" + infor.getId_user_fb())
                             .bind("pass", infor.getId_user_fb() + "@fb123")
                             .bind("full_name", infor.getFullname())
@@ -87,7 +88,7 @@ public class FacebookGoogleService {
 
                 } else if (typeAcc == TypeAcc.ACC_GOOGLE) {
 
-                    update = handle.createUpdate("INSERT INTO account_customers(id_status_acc,id_city,username,pass,full_name,emai_customer,id_type_acc,id_user_gg) VALUES (1,0,:username,:pass,:full_name,:email_customer,:id_type_acc,:id_user_gg)");
+                    update = handle.createUpdate("INSERT INTO account_customers(id_status_acc,id_city,username,pass,full_name,email_customer,id_type_acc,id_user_gg) VALUES (1,0,:username,:pass,:full_name,:email_customer,:id_type_acc,:id_user_gg)");
                     update.bind("username", "GG" + infor.getId_user_gg())
                             .bind("pass", infor.getId_user_gg() + "@gg123")
                             .bind("full_name", infor.getFullname())
@@ -109,7 +110,7 @@ public class FacebookGoogleService {
                         return 1;
                     }
                 } catch (Exception e) {
-
+                    System.out.println(e.getMessage());
                     handle.rollback();
                     return -1;
                 }
@@ -118,7 +119,7 @@ public class FacebookGoogleService {
             });
 
         } catch (Exception e) {
-
+            System.out.println(e.getMessage());
             return -1;
         }
 
