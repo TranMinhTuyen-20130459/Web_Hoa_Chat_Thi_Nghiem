@@ -139,7 +139,10 @@ public class ProductDAO {
         -- yêu cầu giá của sản phẩm phải là mới nhất
         */
         List<Product> list = new ArrayList<>();
-        String query = "SELECT P.id_product,P.name_product,P.url_img_product,P.quantity_product,P.id_subtype,SP.id_status_product,SP.name_status_product,PP.listed_price,PP.current_price " + "FROM products P " + "JOIN price_product PP ON P.id_product=PP.id_product " + "JOIN status_product SP ON P.id_status_product = SP.id_status_product " + "WHERE PP.date = (SELECT MAX(date) " + "FROM price_product PP2 " + "WHERE PP2.id_product = PP.id_product)";
+        String query = "SELECT P.id_product,P.name_product,P.url_img_product,P.quantity_product,P.id_subtype,SP.id_status_product,SP.name_status_product,PP.listed_price,PP.current_price "
+                + "FROM products P " + "JOIN price_products PP ON P.id_product=PP.id_product " +
+                "JOIN status_products SP ON P.id_status_product = SP.id_status_product "
+                + "WHERE PP.date = (SELECT MAX(date) " + "FROM price_products PP2 " + "WHERE PP2.id_product = PP.id_product)";
         Statement statement = connectDB.getStatement();
         try {
             ResultSet rs = statement.executeQuery(query);
@@ -160,7 +163,7 @@ public class ProductDAO {
 
     public List<StatusProduct> getStatusProducts(DbConnection connectDB) {
         List<StatusProduct> result = new ArrayList<>();
-        String sql = "select id_status_product,name_status_product from status_product";
+        String sql = "select id_status_product,name_status_product from status_products";
         Statement statement = connectDB.getStatement();
         try {
             ResultSet rs = statement.executeQuery(sql);

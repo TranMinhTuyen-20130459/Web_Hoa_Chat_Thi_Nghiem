@@ -37,6 +37,11 @@
                     <!-- Action Buttons -->
                     <div class="row element-button">
                         <div class="col-sm-2">
+                            <a class="btn btn-add btn-sm" href="#"
+                               title="Thêm" data-toggle="modal" data-target="#form-add-admin"><i
+                                    class="fas fa-plus"></i> Thêm admin mới</a>
+                        </div>
+                        <div class="col-sm-2">
                             <a class="btn btn-delete btn-sm print-file" type="button" title="In"><i
                                     class="fas fa-print"></i> In dữ liệu</a>
                         </div>
@@ -136,6 +141,59 @@
     </div>
 </div>
 </div>
+<div class="modal fade" id="form-add-admin" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static"
+     data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group  col-md-12">
+                            <span class="thong-tin-thanh-toan">
+                                <h5>Thêm tài khoản Admin</h5>
+                            </span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label class="control-label">Tên đăng nhập</label>
+                        <input id="InputUsername" class="form-control" type="text" placeholder="Nhập tên đăng nhập">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="control-label">Mật khẩu</label>
+                        <input id="InputPassword" class="form-control" type="text" placeholder="Nhập mật khẩu">
+                    </div>
+                    <%--                <div class="form-group col-md-6">--%>
+                    <%--                    <label class="control-label">Xác nhận mật khẩu</label>--%>
+                    <%--                    <input id="Confirmpassword" class="form-control" type="text" placeholder="Xác nhận mật khẩu">--%>
+                    <%--                </div>--%>
+                    <div class="form-group col-md-6">
+                        <label for="SelectRole" class="control-label">Quyền</label>
+                        <select class="form-control" id="UserRole">
+                            <option value="0">-- Chọn quyền tài khoản --</option>
+                            <c:forEach var="r" items="${requestScope.allRoleAdmin}">
+                                <option value="${r.id_role}">${r.name_role}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="SelectStatus" class="control-label">Trạng thái tài khoản</label>
+                        <select class="form-control" id="UserStatus">
+                            <option value="0">-- Chọn trạng thái tài khoản --</option>
+                            <c:forEach var="stt" items="${requestScope.allStatusAcc}">
+                                <option value="${stt.id_status}">${stt.name_status}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-end mt-3">
+                <button id="btnAdd" class="btn btn-save mr-3">Thêm</button>
+                <button id="btnCancel" class="btn btn-cancel" data-dismiss="modal">Hủy bỏ</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
 
 <!-- ===== JAVASCRIPT ===== -->
 <jsp:include page="../common/admin-js.jsp"/>
@@ -165,6 +223,12 @@
         $('#InputPass').val('')
         $('#SelectRole').val('0')
         $('#SelectStatus').val('0')
+    })
+    $('#btnCancel').on('click', function () {
+        $('#InputUsername').val('')
+        $('#InputPassword').val('')
+        $('#UserStatus').val('0')
+        $('#UserRole').val('0')
     })
 
     <%-- Chỉnh sửa thông tin Admin sử dụng Ajax --%>
@@ -215,6 +279,73 @@
             })
         }
 
+    })
+    $('#btnAdd').on('click', function () {
+        var user_name = $('#InputUsername').val().trim()
+        var pass_admin = $('#InputPassword').val().trim()
+        var id_role_admin = $('#UserRole').val()
+        var id_status_acc = $('#UserStatus').val()
+        if (user_name == '' || pass_admin == '' || id_role_admin == 0 || id_status_acc == 0) {
+            swal({
+                title: 'Cảnh báo !!!',
+                text: 'Bạn hãy nhập đầy đủ thông tin cho tài khoản này',
+                icon: 'error',
+                timer: 3000,
+                buttons: false
+            })
+        } else {
+            $.ajax({
+                url: '${context}/AddAccountAdminServlet',
+                type: 'POST',
+                data: {
+                    UserName: user_name,
+                    PassAd: pass_admin,
+                    IdRole: id_role_admin,
+                    IdStatus: id_status_acc
+                },
+                data_type: 'text',
+                success: function (resultData) {
+                    if (resultData.toString() == 'success') {
+                        $('#btnAdd').on('click', function () {
+                            $('#InputUsername').val('')
+                            $('#InputPassword').val('')
+                            $('#UserStatus').val('0')
+                            $('#UserRole').val('0')
+                        })
+                        swal({
+                            text: 'Thêm thành công.',
+                            icon: 'success',
+                            timer: 2000,
+                            buttons: false
+                        });
+                        $('btnCancel').click()
+                        setTimeout(function() {
+                            location.replace(location.href);
+                        }, 2000);
+                    } else if (resultData.toString() == 'exits') {
+                        swal({
+                            text: 'Thêm thất bại! Tên tài khoản này đã tồn tại.',
+                            icon: 'error',
+                            timer: 2000,
+                            buttons: false
+                        });
+                        $('#btnAdd').on('click', function () {
+                            $('#InputUsername').val('')
+                        })
+                    } else if (resultData.toString() == 'fail'){
+                        swal({
+                            text: 'Thêm thất bại.',
+                            icon: 'error',
+                            timer: 2000,
+                            buttons: false
+                        });
+                    }
+                },
+                error: function () {
+                    // error no call ajax
+                }
+            })
+        }
     })
 
 </script>

@@ -16,8 +16,8 @@ public class CustomerService {
     public static Customer checkLogin(String email, String password) {
         List<Customer> customers = new ArrayList<>();
         DbConnection connectDB = DbConnection.getInstance();
-        String sql = "SELECT id_user_customer, username, pass, id_status_acc, id_city, fullname, phone_customer, address, sex, email_customer " +
-                "from account_customer where username = ?";
+        String sql = "SELECT id_user_customer, username, pass, id_status_acc, id_city, full_name, phone_customer, address, sex, email_customer " +
+                "from account_customers where username = ?";
         PreparedStatement preState = connectDB.getPreparedStatement(sql);
         try {
             preState.setString(1, email);
@@ -28,7 +28,7 @@ public class CustomerService {
                 String password_customer = rs.getString("pass");
                 int id_status_acc_customer = rs.getInt("id_status_acc");
                 int id_city_customer = rs.getInt("id_city");
-                String fullname_customer = rs.getString("fullname");
+                String fullname_customer = rs.getString("full_name");
                 if (fullname_customer == null) {
                     fullname_customer = email_customer;
                 }
@@ -60,7 +60,7 @@ public class CustomerService {
 
     public static boolean changePass(String newPass, String email) {
         DbConnection connectDb = DbConnection.getInstance();
-        String sql = "UPDATE account_customer " +
+        String sql = "UPDATE account_customers " +
                 "SET pass = ?, time_change_pass = current_timestamp()" +
                 " WHERE username = ?";
         PreparedStatement preState = connectDb.getPreparedStatement(sql);
@@ -97,8 +97,8 @@ public class CustomerService {
     public static boolean profile(String email, String fullname, int city, String sex,
                                String email_customer, String phone, String address){
         DbConnection connnectDb = DbConnection.getInstance();
-        String sql = "update account_customer " +
-                "set fullname = ?, id_city = ?, sex = ?, email_customer = ?, phone_customer = ?, address = ? " +
+        String sql = "update account_customers " +
+                "set full_name = ?, id_city = ?, sex = ?, email_customer = ?, phone_customer = ?, address = ? " +
                 "where username = ?";
         PreparedStatement pre = connnectDb.getPreparedStatement(sql);
         try{
@@ -120,8 +120,8 @@ public class CustomerService {
     public static boolean checkExist(String email) {
         DbConnection connectDb = DbConnection.getInstance();
         List<Customer> customers = new ArrayList<>();
-        String sql = "SELECT id_user_customer, username, pass, id_status_acc, id_city, fullname, phone_customer, address " +
-                "from account_customer where username = ?";
+        String sql = "SELECT id_user_customer, username, pass, id_status_acc, id_city, full_name, phone_customer, address " +
+                "from account_customers where username = ?";
         PreparedStatement preState = connectDb.getPreparedStatement(sql);
         try {
             preState.setString(1, email);
@@ -132,7 +132,7 @@ public class CustomerService {
                 String password_customer = rs.getString("pass");
                 int id_status_acc_customer = rs.getInt("id_status_acc");
                 int id_city_customer = rs.getInt("id_city");
-                String fullname_customer = rs.getString("fullname");
+                String fullname_customer = rs.getString("full_name");
                 String phone = rs.getString("phone_customer");
                 String address = rs.getString("address");
                 Customer customer = new Customer(id_customer, email_customer, password_customer,
@@ -149,7 +149,7 @@ public class CustomerService {
 
     public static void signUp(String email, String password) {
         DbConnection connectDb = DbConnection.getInstance();
-        String sql = "INSERT INTO account_customer(username, pass, id_status_acc, id_city) " +
+        String sql = "INSERT INTO account_customers(username, pass, id_status_acc, id_city) " +
                 "VALUES(?, ?, 1, 1)";
         PreparedStatement preState = connectDb.getPreparedStatement(sql);
         try {
@@ -167,9 +167,9 @@ public class CustomerService {
     // return customers created within the last ? days
     public static List<Customer> getRecentCustomers(int day) {
         List<Customer> customers = new ArrayList<>();
-        try (var ps = DbConnection.getInstance().getPreparedStatement("SELECT id_user_customer, fullname, " +
+        try (var ps = DbConnection.getInstance().getPreparedStatement("SELECT id_user_customer, full_name, " +
                 "sex, phone_customer, address, time_created, s.name_status_acc " +
-                        "FROM account_customer a JOIN status_acc s ON a.id_status_acc = s.id_status_acc " +
+                        "FROM account_customers a JOIN status_acc s ON a.id_status_acc = s.id_status_acc " +
                         "WHERE DATE(time_created) > (NOW() - INTERVAL ? DAY)")) {
             ps.setInt(1, day);
             ResultSet rs = ps.executeQuery();

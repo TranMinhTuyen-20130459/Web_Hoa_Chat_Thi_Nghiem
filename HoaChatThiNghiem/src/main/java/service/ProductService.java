@@ -18,11 +18,11 @@ public final class ProductService {
             "SELECT p.id_product, url_img_product, name_product, description_product, quantity_product, " +
                     "date_inserted, name_status_product, name_type_product, name_subtype, " +
                     "name_supplier, views, pp.current_price, pp.listed_price " +
-                    "FROM products p JOIN price_product pp ON p.id_product = pp.id_product " +
-                    "JOIN status_product sp ON p.id_status_product = sp.id_status_product " +
+                    "FROM products p JOIN price_products pp ON p.id_product = pp.id_product " +
+                    "JOIN status_products sp ON p.id_status_product = sp.id_status_product " +
                     "JOIN subtype_product st ON p.id_subtype = st.id_subtype " +
                     "JOIN suppliers s ON p.id_supplier = s.id_supplier " +
-                    "JOIN type_product tp ON st.id_type_product = tp.id_type_product\t";
+                    "JOIN type_products tp ON st.id_type_product = tp.id_type_product\t";
 
     public static List<Product> queryProducts(String query, Object... params) {
         try (var ps = DbConnection.getInstance().getPreparedStatement(query)) {
@@ -103,7 +103,7 @@ public final class ProductService {
 
     public static List<Product> getTodayDiscountProducts() {
         return queryProducts(QUERY_PRODUCTS + "WHERE p.id_product IN (" +
-                "SELECT p.id_product FROM products p JOIN price_product pp on p.id_product = pp.id_product " +
+                "SELECT p.id_product FROM products p JOIN price_products pp on p.id_product = pp.id_product " +
                 "WHERE DATE(date) = DATE(NOW()))");
     }
 
