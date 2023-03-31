@@ -65,9 +65,11 @@
                             <%=error%>
                         </div>
                         <%}%>
-                        <input class="w-100 mb-3" type="email" placeholder="Email" name="email"
+                        <span id="error-email" class="text-danger"></span>
+                        <input id="email" class="w-100 mb-3" type="email" placeholder="Email" name="email"
                                value="<%=request.getParameter("email") != null ? request.getParameter("email"):""%>"/>
-                        <input class="w-100 mb-4" type="password" placeholder="Mật khẩu" name="password"/>
+                        <span id="error-password" class="text-danger"></span>
+                        <input id="password" class="w-100 mb-4" type="password" placeholder="Mật khẩu" name="password"/>
                         <button class="btn next w-100">Đăng nhập</button>
                         <span class="or d-inline-block text-uppercase my-4 position-relative">Hoặc</span>
                         <a onclick="loginGg()" id="google-login-button" class="google d-flex justify-content-center w-100 mb-3"><img
@@ -97,7 +99,15 @@
 <jsp:include page="../common/shop-js.jsp"/>
 
 </body>
+<script src="./js/processInputText.js">
+    var email = document.getElementById("email");
+    var error_email = document.getElementById("error-email");
+    notEmpty(email, error_email);
 
+    var password = document.getElementById("password");
+    var error_password = document.getElementById("error-password");
+    notEmpty(password, error_password);
+</script>
 <script>
     function loginGg() {
         var redirectUri = 'https://localhost:8080/it-nlu/GoogleLoginServlet'
