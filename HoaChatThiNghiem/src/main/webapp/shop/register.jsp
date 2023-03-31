@@ -57,7 +57,7 @@
             </div>
             <div class="col-lg-5 col-md-5 col-12">
                 <div class="h-100 d-flex align-items-center">
-                    <form class="m-0 p-5 text-center" action="${context}/shop/register" method="post">
+                    <form id="form-register" class="m-0 p-5 text-center" action="${context}/shop/register" method="post">
                         <h5 class="mb-4">Đăng Ký</h5>
                         <%if(text != null){%>
                         <div class="w-100 mb-3 alert alert-danger notification" role="alert">
@@ -108,6 +108,9 @@
     var error_confirm_pass = document.getElementById("error-confirm-pass");
     notEmpty(confirm_pass, error_confirm_pass);
     notEmptyAndMinimum(confirm_pass, error_confirm_pass, "Mật khẩu nhập lại")
+
+    var form_register = document.getElementById("form-register");
+    preventSubmitForRegister(form_register, email, password, confirm_pass)
 </script>
 </body>
 

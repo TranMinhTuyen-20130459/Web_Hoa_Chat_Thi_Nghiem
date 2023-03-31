@@ -8,10 +8,10 @@ import java.util.Properties;
 public class SendMail {
     public static void sendMail(String toEmail, Email email){
         Properties pro = new Properties();
-        pro.put("model.common.mail.smtp.host", "smtp.gmail.com");
-        pro.put("model.common.mail.smtp.port", "587");
-        pro.put("model.common.mail.smtp.auth", "true");
-        pro.put("model.common.mail.smtp.starttls.enable", "true");
+        pro.put("mail.smtp.host", "smtp.gmail.com");
+        pro.put("mail.smtp.port", "587");
+        pro.put("mail.smtp.auth", "true");
+        pro.put("mail.smtp.starttls.enable", "true");
 
         Session session_send = Session.getInstance(pro, new Authenticator() {
             @Override
