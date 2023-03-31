@@ -108,7 +108,7 @@
 
     var password = document.getElementById("password");
     var error_password = document.getElementById("error-password");
-    notEmpty(password, error_password);
+    notEmptyAndMinimum(password, error_password, "Mật khẩu");
 </script>
 <%--xu ly chuyen huong den trang danh nhap facebook, google--%>
 <script>

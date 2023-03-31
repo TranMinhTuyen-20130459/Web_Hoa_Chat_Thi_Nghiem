@@ -69,7 +69,8 @@
                             <%=success%>
                         </div>
                         <%}%>
-                        <input class="w-100 mb-4" type="text" placeholder="Email" name="email"
+                        <span id="error-email" class="text-danger"></span>
+                        <input id="email" class="w-100 mb-4" type="text" placeholder="Email" name="email"
                                value="<%=request.getParameter("email") != null ? request.getParameter("email") : ""%>"/>
                         <button type="submit" class="btn next w-100 mb-3">Xác nhận</button>
                         <span class="shotcut">
@@ -90,7 +91,13 @@
 
 <!-- ===== JAVASCRIPT ===== -->
 <jsp:include page="../common/shop-js.jsp"/>
-
+<script src="./js/processInputText.js"></script>
+<%--xu ly inputText--%>
+<script>
+    var email = document.getElementById("email");
+    var error_email = document.getElementById("error-email");
+    notEmpty(email, error_email);
+</script>
 </body>
 
 </html>

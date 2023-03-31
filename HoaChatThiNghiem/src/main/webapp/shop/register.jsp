@@ -69,10 +69,13 @@
                             <%=success%>
                         </div>
                         <%}%>
-                        <input class="w-100 mb-3" type="text" placeholder="Email" name="email"
+                        <span id="error-email" class="text-danger"></span>
+                        <input id="email" class="w-100 mb-3" type="text" placeholder="Email" name="email"
                                value="<%=request.getParameter("email") != null ? request.getParameter("email") : ""%>"/>
-                        <input class="w-100 mb-3" type="password" placeholder="Mật khẩu" name="password"/>
-                        <input class="w-100 mb-4" type="password" placeholder="Nhập lại mật khẩu" name="confirm-pass"/>
+                        <span id="error-password" class="text-danger"></span>
+                        <input id="password" class="w-100 mb-3" type="password" placeholder="Mật khẩu" name="password"/>
+                        <span id="error-confirm-pass" class="text-danger"></span>
+                        <input id="confirm-pass" class="w-100 mb-4" type="password" placeholder="Nhập lại mật khẩu" name="confirm-pass"/>
                         <button class="btn next w-100 mb-3">Tiếp theo</button>
                         <span class="shotcut">Bạn đã có tài khoản? <a href="${context}/shop/login">Đăng nhập</a></span>
                     </form>
@@ -90,7 +93,22 @@
 
 <!-- ===== JAVASCRIPT ===== -->
 <jsp:include page="../common/shop-js.jsp"/>
+<script src="./js/processInputText.js"></script>
+<script>
+    var email = document.getElementById("email");
+    var error_email = document.getElementById("error-email");
+    notEmpty(email, error_email);
 
+    var password = document.getElementById("password");
+    var error_password = document.getElementById("error-password");
+    notEmpty(password, error_password);
+    notEmptyAndMinimum(password, error_password, "Mật khẩu")
+
+    var confirm_pass = document.getElementById("confirm-pass");
+    var error_confirm_pass = document.getElementById("error-confirm-pass");
+    notEmpty(confirm_pass, error_confirm_pass);
+    notEmptyAndMinimum(confirm_pass, error_confirm_pass, "Mật khẩu nhập lại")
+</script>
 </body>
 
 </html>
