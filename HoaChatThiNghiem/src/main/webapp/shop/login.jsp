@@ -99,7 +99,9 @@
 <jsp:include page="../common/shop-js.jsp"/>
 
 </body>
-<script src="./js/processInputText.js">
+<script src="./js/processInputText.js"></script>
+<%--xu ly inputText--%>
+<script>
     var email = document.getElementById("email");
     var error_email = document.getElementById("error-email");
     notEmpty(email, error_email);
@@ -108,6 +110,7 @@
     var error_password = document.getElementById("error-password");
     notEmpty(password, error_password);
 </script>
+<%--xu ly chuyen huong den trang danh nhap facebook, google--%>
 <script>
     function loginGg() {
         var redirectUri = 'https://localhost:8080/it-nlu/GoogleLoginServlet'
