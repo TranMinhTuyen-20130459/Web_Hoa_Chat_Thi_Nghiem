@@ -54,7 +54,6 @@ public class ProductsServlet extends HttpServlet {
             // nếu độ dài trên 255 thì cảnh báo nguy hiểm. có thể là đoạn mã độc, trong khi độ dài tối đa của tên sản phẩm là 255
             if(name.length() > 255){
                  log = new Log(Log.DANGER, idUser+"", nameUser, "Searched with content: " + name, ipAddress, webBrowser, statusLog);
-                DB.me().insert(log);
             }else {
                 log = new Log(Log.INFO, idUser + "", nameUser, "Searched with content: " + name, ipAddress, webBrowser, statusLog);
             }
