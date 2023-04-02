@@ -20,7 +20,7 @@ public final class ProductService {
                     "name_supplier, views, pp.current_price, pp.listed_price " +
                     "FROM products p JOIN price_products pp ON p.id_product = pp.id_product " +
                     "JOIN status_products sp ON p.id_status_product = sp.id_status_product " +
-                    "JOIN subtype_product st ON p.id_subtype = st.id_subtype " +
+                    "JOIN subtype_products st ON p.id_subtype = st.id_subtype " +
                     "JOIN suppliers s ON p.id_supplier = s.id_supplier " +
                     "JOIN type_products tp ON st.id_type_product = tp.id_type_product\t";
 
@@ -89,7 +89,7 @@ public final class ProductService {
     // return most purchased products in the last ? days
     public static List<Product> getSellingProducts(int day) {
         return queryProducts(QUERY_PRODUCTS + "WHERE p.id_product IN (" +
-                "SELECT id_product FROM bills b JOIN bill_detail bd ON b.id_bill = bd.id_bill " +
+                "SELECT id_product FROM bills b JOIN bill_details bd ON b.id_bill = bd.id_bill " +
                 "WHERE DATE(time_order) > (NOW() - INTERVAL ? DAY) " +
                 "GROUP BY id_product ORDER BY SUM(quantity) DESC)", day);
     }
@@ -97,7 +97,7 @@ public final class ProductService {
     // return best-selling product of all time
     public static List<Product> getBestSellingProducts() {
         return queryProducts(QUERY_PRODUCTS + "WHERE p.id_product IN (" +
-                "SELECT id_product FROM bills b JOIN bill_detail bd ON b.id_bill = bd.id_bill " +
+                "SELECT id_product FROM bills b JOIN bill_details bd ON b.id_bill = bd.id_bill " +
                 "GROUP BY id_product ORDER BY SUM(quantity) DESC)");
     }
 
@@ -127,21 +127,21 @@ public final class ProductService {
 
     public static List<Product> getProductsByBillId(int id) {
         return queryProducts(QUERY_PRODUCTS +
-                "JOIN bill_detail b ON b.id_product = p.id_product WHERE id_bill = ?", id);
+                "JOIN bill_details b ON b.id_product = p.id_product WHERE id_bill = ?", id);
     }
 
     public static int getTotalSold() {
-        return queryInt("SELECT SUM(quantity) FROM bill_detail");
+        return queryInt("SELECT SUM(quantity) FROM bill_details");
     }
 
     public static int getTotalSoldIn(int month) {
-        return queryInt("SELECT SUM(quantity) FROM bills b JOIN bill_detail bd ON b.id_bill = bd.id_bill " +
+        return queryInt("SELECT SUM(quantity) FROM bills b JOIN bill_details bd ON b.id_bill = bd.id_bill " +
                 "WHERE MONTH(time_order) = ? AND YEAR(time_order) = YEAR(CURRENT_DATE)", month);
     }
 
     public static int getTotalSoldOf(int productId) {
         return queryInt(
-                "SELECT SUM(quantity) FROM bill_detail WHERE id_product = ? GROUP BY id_product", productId);
+                "SELECT SUM(quantity) FROM bill_details WHERE id_product = ? GROUP BY id_product", productId);
     }
 
     public static int getRemainQuantity(int productId) {
@@ -153,15 +153,15 @@ public final class ProductService {
     }
 
     public static int getTypeBySubtypeId(int subtypeId) {
-        return queryInt("SELECT id_type_product FROM subtype_product WHERE id_subtype = ?", subtypeId);
+        return queryInt("SELECT id_type_product FROM subtype_products WHERE id_subtype = ?", subtypeId);
     }
 
     public static Map<Integer, String> getSubtypesByType(int type) {
-        return queryMap("SELECT id_subtype, name_subtype FROM subtype_product WHERE id_type_product=?", type);
+        return queryMap("SELECT id_subtype, name_subtype FROM subtype_products WHERE id_type_product=?", type);
     }
 
     public static Map<Integer, String> getTypes() {
-        return queryMap("SELECT id_type_product, name_type_product FROM type_product");
+        return queryMap("SELECT id_type_product, name_type_product FROM type_products");
     }
 
     public static Map<Integer, String> getSuppliers() {
@@ -198,7 +198,7 @@ public final class ProductService {
 
     public static String getTypeName(int typeId) {
         try (var ps = DbConnection.getInstance().getPreparedStatement(
-                "SELECT name_type_product FROM type_product WHERE id_type_product=?")) {
+                "SELECT name_type_product FROM type_products WHERE id_type_product=?")) {
             ps.setInt(1, typeId);
             var rs = ps.executeQuery();
             rs.next();
@@ -210,7 +210,7 @@ public final class ProductService {
 
     public static ProductReview getReviewByProductId(int id) {
         try (var ps = DbConnection.getInstance().getPreparedStatement(
-                "SELECT COUNT(*) FROM review_product WHERE id_product=? AND stars=?")) {
+                "SELECT COUNT(*) FROM review_products WHERE id_product=? AND stars=?")) {
             int[] stars = new int[5];
             for (int i = 0; i < 5; i++) {
                 ps.setInt(1, id);
