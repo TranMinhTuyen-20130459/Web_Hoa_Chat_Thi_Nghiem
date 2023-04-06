@@ -6,13 +6,20 @@ import model.shop.CartItem;
 import model.shop.Customer;
 import model.shop.Order;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
 public class CustomerService {
-
+    public static String hashPasswordInput(String password) throws NoSuchAlgorithmException {
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        byte[] hash = md.digest(password.getBytes());
+        return Base64.getEncoder().encodeToString(hash);
+    }
     public static Customer checkLogin(String email, String password) {
         List<Customer> customers = new ArrayList<>();
         DbConnection connectDB = DbConnection.getInstance();
@@ -46,11 +53,12 @@ public class CustomerService {
                 return null;
             } else {
                 Customer unique = customers.get(0);
-                if (unique.getPassword().equals(password)) {
+                String hashedInputPass = hashPasswordInput(password);
+                if (unique.getPassword().equals(hashedInputPass)) {
                     return unique;
                 }
             }
-        } catch (SQLException e) {
+        } catch (SQLException | NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         } finally {
             connectDB.close();
@@ -146,15 +154,27 @@ public class CustomerService {
             connectDb.close();
         }
     }
-
-    public static void signUp(String email, String password) {
+    public static String hashPass(String password){
+        try{
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] hashedBytes = md.digest(password.getBytes(StandardCharsets.UTF_8));
+            StringBuilder sb = new StringBuilder();
+            for(byte b : hashedBytes){
+                sb.append(String.format("%02x", b));
+            }
+            return sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public static void signUp(String email, String hashedPass) {
         DbConnection connectDb = DbConnection.getInstance();
         String sql = "INSERT INTO account_customer(username, pass, id_status_acc, id_city) " +
                 "VALUES(?, ?, 1, 1)";
         PreparedStatement preState = connectDb.getPreparedStatement(sql);
         try {
             preState.setString(1, email);
-            preState.setString(2, password);
+            preState.setString(2, hashedPass);
             preState.executeUpdate();
             System.out.println("success");
         } catch (Exception e) {
