@@ -57,18 +57,20 @@
             </div>
             <div class="col-lg-5 col-md-5 col-12">
                 <div class="h-100 d-flex align-items-center">
-                    <form class="m-0 p-5 text-center" action="<%=request.getContextPath()%>/shop/login" method="post"
+                    <form id="form-login" class="m-0 p-5 text-center" action="<%=request.getContextPath()%>/shop/login" method="post"
                           name="form_login">
                         <h5 class="mb-4">Đăng Nhập</h5>
                         <%if (error != null) {%>
-                        <div class="w-100 mb-3 alert alert-danger" role="alert">
+                        <div class="error-mess w-100 mb-3 alert alert-danger" role="alert">
                             <%=error%>
                         </div>
                         <%}%>
-                        <input class="w-100 mb-3" type="email" placeholder="Email" name="email"
+                        <span id="error-email" class="error-mess text-danger"></span>
+                        <input id="email" class="w-100 mb-3" type="email" placeholder="Email" name="email"
                                value="<%=request.getParameter("email") != null ? request.getParameter("email"):""%>"/>
-                        <input class="w-100 mb-4" type="password" placeholder="Mật khẩu" name="password"/>
-                        <button class="btn next w-100">Đăng nhập</button>
+                        <span id="error-password" class="error-mess text-danger"></span>
+                        <input id="password" class="w-100 mb-4" type="password" placeholder="Mật khẩu" name="password"/>
+                        <button type="submit" class="btn next w-100">Đăng nhập</button>
                         <span class="or d-inline-block text-uppercase my-4 position-relative">Hoặc</span>
                         <a onclick="loginGg()" id="google-login-button" class="google d-flex justify-content-center w-100 mb-3"><img
                                 width="25px" class="mr-2" src="images/logo-google.png"
@@ -97,7 +99,18 @@
 <jsp:include page="../common/shop-js.jsp"/>
 
 </body>
+<script src="./js/processInputText.js"></script>
+<%--xu ly inputText--%>
+<script>
+    var email = document.getElementById("email");
+    var error_email = document.getElementById("error-email");
+    notEmpty(email, error_email);
 
+    var password = document.getElementById("password");
+    var error_password = document.getElementById("error-password");
+    notEmptyAndMinimum(password, error_password, "Mật khẩu");
+</script>
+<%--xu ly chuyen huong den trang danh nhap facebook, google--%>
 <script>
     function loginGg() {
         var redirectUri = 'https://localhost:8080/it-nlu/GoogleLoginServlet'

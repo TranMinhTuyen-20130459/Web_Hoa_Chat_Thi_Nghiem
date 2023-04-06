@@ -19,11 +19,6 @@ public class DoLoginCustomerServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
-        if(email.equals("") || password.equals("")){
-            request.setAttribute("error","Email hoặc mật khẩu đang bị trống");
-            request.getServletContext().getRequestDispatcher("/shop/login.jsp").forward(request,response);
-            return;
-        }
         Customer customer = CustomerService.checkLogin(email, password);
         if(customer != null){
             if(customer.getId_status_acc() == 1) {

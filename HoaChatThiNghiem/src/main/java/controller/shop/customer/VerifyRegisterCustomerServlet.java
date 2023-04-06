@@ -19,7 +19,8 @@ public class VerifyRegisterCustomerServlet extends HttpServlet {
             if(request.getQueryString().equals("key="+ cus.getId())){
                 String email = cus.getEmail();
                 String password = cus.getPassword();
-                CustomerService.signUp(email,password);
+                String hashPassword = CustomerService.hashPass(password);
+                CustomerService.signUp(email,hashPassword);
                 session.invalidate();
                 request.getServletContext().getRequestDispatcher("/shop/login").forward(request, response);
             }else{
