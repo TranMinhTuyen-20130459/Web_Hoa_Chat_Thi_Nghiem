@@ -14,11 +14,6 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-
--- Dumping database structure for hoa_chat_thi_nghiem
-CREATE DATABASE IF NOT EXISTS `hoa_chat_thi_nghiem` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
-USE `hoa_chat_thi_nghiem`;
-
 -- Dumping structure for table hoa_chat_thi_nghiem.account_admins
 CREATE TABLE IF NOT EXISTS `account_admins` (
   `username` varchar(50) NOT NULL,
