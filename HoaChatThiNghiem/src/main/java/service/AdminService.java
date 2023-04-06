@@ -24,7 +24,7 @@ public class AdminService {
     public static boolean updatePassword(String username, String new_pass) {
 
         DbConnection connectDB = DbConnection.getInstance();
-        String sql = "update account_admin set passwordAD = ?, time_change_pass = current_timestamp() where username = ?";
+        String sql = "update account_admins set password = ?, time_change_pass = current_timestamp() where username = ?";
         PreparedStatement preState = connectDB.getPreparedStatement(sql);
         try {
             preState.setString(1, new_pass);
@@ -45,17 +45,17 @@ public class AdminService {
     public static Admin checkLogin(String username, String passAD) {
         List<Admin> admins = new ArrayList<>();
         DbConnection connectDB = DbConnection.getInstance();
-        String sql = "select username,passwordAD,id_role_admin,id_status_acc,fullname from account_admin where username = ?";
+        String sql = "select username,password,id_role_admin,id_status_acc,full_name from account_admins where username = ?";
         PreparedStatement preState = connectDB.getPreparedStatement(sql);
         try {
             preState.setString(1, username);
             ResultSet rs = preState.executeQuery();
             while (rs.next()) {
                 String user_name = rs.getString("username");
-                String password = rs.getString("passwordAD");
+                String password = rs.getString("password");
                 int id_role_admin = rs.getInt("id_role_admin");
                 int id_status_acc = rs.getInt("id_status_acc");
-                String full_name = rs.getString("fullname");
+                String full_name = rs.getString("full_name");
                 Admin admin = new Admin(user_name, password, id_role_admin, id_status_acc, full_name);
                 admins.add(admin);
             }
@@ -99,7 +99,7 @@ public class AdminService {
     public static List<Bill> getBillsOrderedIn(int month) {
         List<Bill> bills = new ArrayList<>();
         try (var ps = DbConnection.getInstance().getPreparedStatement(
-                "SELECT id_bill, name_status_bill, fullname_customer, total_price, address_customer, time_order " +
+                "SELECT id_bill, name_status_bill, fullname, total_price, address_customer, time_order " +
                         "FROM bills b JOIN status_bill s ON b.id_status_bill = s.id_status_bill " +
                         "WHERE MONTH(time_order) = ? AND YEAR(time_order) = YEAR(CURRENT_DATE)")) {
             ps.setInt(1, month);
@@ -109,7 +109,7 @@ public class AdminService {
                 List<Product> products = ProductService.getProductsByBillId(billId);
                 String status = rs.getString("name_status_bill");
                 String address = rs.getString("address_customer");
-                String customer = rs.getString("fullname_customer");
+                String customer = rs.getString("fullname");
                 int quantity = CustomerService.getQuantityByBillId(billId);
                 double totalPrice = rs.getDouble("total_price");
                 Date timeOrder = rs.getDate("time_order");
@@ -124,7 +124,7 @@ public class AdminService {
 
     public static int getCustomersCreatedIn(int month) {
         try (var ps = DbConnection.getInstance().getPreparedStatement(
-                "SELECT DISTINCT COUNT(*) FROM account_customer " +
+                "SELECT DISTINCT COUNT(*) FROM account_customers " +
                         "WHERE MONTH(time_created) = ? AND YEAR(time_created) = YEAR(CURRENT_DATE)")) {
             ps.setInt(1, month);
             ResultSet rs = ps.executeQuery();
@@ -152,7 +152,7 @@ public class AdminService {
     public static List<Bill> getRecentOrderedBills(int day) {
         List<Bill> bills = new ArrayList<>();
         try (PreparedStatement ps = DbConnection.getInstance().getPreparedStatement(
-                "SELECT b.id_bill, name_status_bill, fullname_customer, total_price, time_order, " +
+                "SELECT b.id_bill, name_status_bill, fullname, total_price, time_order, " +
                         "address_customer FROM bills b JOIN status_bill s ON b.id_status_bill = s.id_status_bill " +
                         "WHERE DATE(time_order) > (NOW() - INTERVAL ? DAY) ORDER BY time_order DESC LIMIT 0,4")) {
             ps.setInt(1, day);
@@ -161,7 +161,7 @@ public class AdminService {
                 int id = rs.getInt("id_bill");
                 List<Product> products = ProductService.getProductsByBillId(id);
                 String status = rs.getString("name_status_bill");
-                String customerName = rs.getString("fullname_customer");
+                String customerName = rs.getString("fullname");
                 String address = rs.getString("address_customer");
                 int quantity = CustomerService.getQuantityByBillId(id);
                 double totalPrice = rs.getDouble("total_price");
@@ -179,7 +179,7 @@ public class AdminService {
     }
 
     public static int getCustomerCounts() {
-        return getNumberOf("account_customer");
+        return getNumberOf("account_customers");
     }
 
     public static int getProductCounts() {
@@ -200,7 +200,7 @@ public class AdminService {
         List<Account> accounts = new ArrayList<>();
         try (var ps = DbConnection.getInstance().getPreparedStatement(
                 "SELECT id_user_customer, username, pass, name_status_acc, email_customer, time_created\n" +
-                        "FROM account_customer a JOIN status_acc s ON a.id_status_acc = s.id_status_acc"
+                        "FROM account_customers a JOIN status_acc s ON a.id_status_acc = s.id_status_acc"
         )) {
             var rs = ps.executeQuery();
             while (rs.next()) {

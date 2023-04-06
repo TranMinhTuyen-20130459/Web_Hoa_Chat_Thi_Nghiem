@@ -14,6 +14,22 @@ import java.util.List;
 
 public class AdminDAO {
 
+    public int addAccoutAdmin(DbConnection connectDB,Admin admin){
+        String sql = "INSERT INTO account_admins(username, password, id_role_admin, id_status_acc, full_name) VALUES (?,?,?,?,?)";
+        PreparedStatement pre = connectDB.getPreparedStatement(sql);
+        try {
+            pre.setString(1,admin.getUsername());
+            pre.setString(2,admin.getPassAD());
+            pre.setInt(3, admin.getId_role_admin());
+            pre.setInt(4,admin.getId_status_acc());
+            pre.setString(5,admin.getFullname());
+            return pre.executeUpdate();
+
+        }catch (SQLException e){
+            return 0;
+        }
+
+    }
     public boolean updateAccount(DbConnection connectDB, Admin admin) {
         String sql = "UPDATE account_admins SET id_role_admin=?,id_status_acc=?,password=?,time_change_pass=CURRENT_TIMESTAMP WHERE username=?";
         PreparedStatement preState = connectDB.getPreparedStatement(sql);
@@ -57,7 +73,7 @@ public class AdminDAO {
 
     public List<RoleAdmin> getAllRoleAdmin(DbConnection connectDB) {
         List<RoleAdmin> result = new ArrayList<>();
-        String sql = "SELECT id_role_admin,name_role FROM role_admin";
+        String sql = "SELECT id_role_admin,name_role FROM role_admins";
         Statement statement = connectDB.getStatement();
         try {
             ResultSet rs = statement.executeQuery(sql);
@@ -73,7 +89,7 @@ public class AdminDAO {
 
     public List<StatusAcc> getAllStatusAcc(DbConnection connectDB) {
         List<StatusAcc> result = new ArrayList<>();
-        String sql = "SELECT id_status_acc,name_status_acc FROM status_acc";
+        String sql = "SELECT id_status_acc,name_status_acc FROM status_accs";
         Statement statement = connectDB.getStatement();
         try {
             ResultSet rs = statement.executeQuery(sql);
