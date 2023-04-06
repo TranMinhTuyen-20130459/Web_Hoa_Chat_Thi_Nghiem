@@ -35,6 +35,7 @@ public class ProductsServlet extends HttpServlet {
         String name = req.getParameter("search");
 
         if (name != null) {
+            Log log = null;
             Customer cus = (Customer) req.getSession().getAttribute("auth_customer");
             long idUser = -1;
             String nameUser = "Unknown";
@@ -50,7 +51,12 @@ public class ProductsServlet extends HttpServlet {
             }
             // LOG LẠI LỊCH SỬ SEARCH
 //           (int id_level, long user_id, String src, String content, String ip_address, String web_browser, String status)
-            Log log = new Log(Log.INFO, idUser+"", nameUser, "Searched with content: " + name, ipAddress, webBrowser, statusLog);
+            // nếu độ dài trên 255 thì cảnh báo nguy hiểm. có thể là đoạn mã độc, trong khi độ dài tối đa của tên sản phẩm là 255
+            if(name.length() > 255){
+                 log = new Log(Log.DANGER, idUser+"", nameUser, "Searched with content: " + name, ipAddress, webBrowser, statusLog);
+            }else {
+                log = new Log(Log.INFO, idUser + "", nameUser, "Searched with content: " + name, ipAddress, webBrowser, statusLog);
+            }
             DB.me().insert(log);
             req.getSession().removeAttribute("type");
             products = ProductService.searchProductsByName(name);
