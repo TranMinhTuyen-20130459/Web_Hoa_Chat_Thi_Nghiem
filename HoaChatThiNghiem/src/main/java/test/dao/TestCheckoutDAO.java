@@ -1,9 +1,9 @@
 package test.dao;
 
 import database.JDBiConnector;
+import database.dao.CheckoutDAO;
 import model.shop.BillDetail_MT;
 import model.shop.Bill_MT;
-import database.dao.CheckoutDAO;
 import org.jdbi.v3.core.Handle;
 
 public class TestCheckoutDAO {
@@ -23,7 +23,7 @@ public class TestCheckoutDAO {
     public static void main(String[] args) {
 
 
-            // TestAddNewBill();
+            TestAddNewBill();
             TestAddBillDetail();
 
     }

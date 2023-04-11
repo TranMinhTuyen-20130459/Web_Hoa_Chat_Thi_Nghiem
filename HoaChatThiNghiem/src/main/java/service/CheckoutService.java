@@ -1,4 +1,4 @@
-package test.service;
+package service;
 
 import bean.Log;
 import database.JDBiConnector;
@@ -23,7 +23,6 @@ public class CheckoutService {
 
             Log log = new Log(Log.ALERT, id_user, "Table bills and bill_details", "Insert bill to table bills and bill_details", "", "", "");
 
-            handle.begin();// bắt đầu một Transaction
             int id_bill = CheckoutDAO.addNewBill(handle, bill, id_user);
 
             for (Map.Entry<Integer, CartItem> item : cart.getMap().entrySet()) {
@@ -32,12 +31,9 @@ public class CheckoutService {
             }
             boolean insertLog = log.insert(jdbi); // ghi lại nhật ký thêm đơn hàng
 
-            handle.commit(); // kết thúc một Transaction
-
-            return true;
+            if (id_bill != -1) return true; //--> id_bill = -1 là đã xảy ra lỗi trong hàm addNewBill()
 
         } catch (Exception e) {
-            handle.rollback();
             System.out.println(e.getMessage());
         } finally {
             handle.close();
