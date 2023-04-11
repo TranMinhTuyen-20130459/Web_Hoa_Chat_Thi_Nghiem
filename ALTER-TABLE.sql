@@ -6,3 +6,5 @@ ALTER TABLE bills ALTER COLUMN from_ward_name SET DEFAULT "Linh Trung";
 ALTER TABLE bills ALTER COLUMN from_district_name SET DEFAULT "Thủ Đức";
 ALTER TABLE bills ALTER COLUMN from_province_name SET DEFAULT "Hồ Chí Minh";
 
+ALTER TABLE bills DROP FOREIGN KEY bills_ibfk_4;
+
