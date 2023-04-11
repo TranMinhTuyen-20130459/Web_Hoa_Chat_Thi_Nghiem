@@ -3,7 +3,6 @@ package database.dao;
 import model.shop.BillDetail_MT;
 import model.shop.Bill_MT;
 import org.jdbi.v3.core.Handle;
-import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.statement.Query;
 import org.jdbi.v3.core.statement.Update;
 
@@ -33,7 +32,6 @@ public class CheckoutDAO {
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return -1;
         }
         return -1;
     }
