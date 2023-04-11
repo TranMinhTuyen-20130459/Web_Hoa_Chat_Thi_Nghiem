@@ -42,8 +42,13 @@ public class Log extends AbBean implements Serializable {
         this.ip_address = ip_address;
         this.web_browser = web_browser;
         this.status = status;
+    } public Log(int id_level, String user_id, String src, String content, String status) {
+        this.id_level = id_level;
+        this.user_id = user_id;
+        this.src = src;
+        this.content = content;
+        this.status = status;
     }
-
     public static final Map<Integer, String> levelMapping = new HashMap<>();
 
     static {
