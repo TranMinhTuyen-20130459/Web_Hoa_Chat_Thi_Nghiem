@@ -124,4 +124,34 @@ public class FacebookGoogleService {
         }
 
     }
+
+    public static int checkExistAccReturnId(Jdbi jdbi, String id_user_fb_gg, int typeAcc) {
+        int id_user_customer = -1;
+        try {
+            if (typeAcc == TypeAcc.ACC_FACEBOOK) {
+
+                id_user_customer = jdbi.withHandle(handle -> {
+                    Query query = handle.createQuery("SELECT id_user_customer FROM account_customers WHERE id_user_fb = :id_user_fb_gg AND id_type_acc= :typeAcc");
+                    query.bind("id_user_fb_gg", id_user_fb_gg);
+                    query.bind("typeAcc", typeAcc);
+                    return query.mapTo(Integer.class).one();//--> Phương thức one() sẽ trả về giá trị của cột đầu tiên nếu có bản ghi được trả về từ câu truy vấn, ngược lại sẽ ném ra một ngoại lệ.
+                });
+
+            } else if (typeAcc == TypeAcc.ACC_GOOGLE) {
+
+                id_user_customer = jdbi.withHandle(handle -> {
+                    Query query = handle.createQuery("SELECT id_user_customer FROM account_customers WHERE id_user_gg = :id_user_fb_gg AND id_type_acc= :typeAcc");
+                    query.bind("id_user_fb_gg", id_user_fb_gg);
+                    query.bind("typeAcc", typeAcc);
+                    return query.mapTo(Integer.class).one();
+                });
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        return id_user_customer;
+    }
+
+
 }

@@ -4,6 +4,7 @@ import bean.Log;
 import database.JDBiConnector;
 import model.shop.Customer;
 import model.shop.TypeAcc;
+import org.jdbi.v3.core.Jdbi;
 import service.FacebookGoogleService;
 import utils.FacebookUtils;
 import utils.GoogleUtils;
@@ -45,11 +46,22 @@ public class TestFacebookGoogleService {
 
     }
 
+    public static void Test_CheckExistAccReturnId() {
+        System.out.println(FacebookGoogleService.checkExistAccReturnId(JDBiConnector.me(), "487782076904211", 2));
+        System.out.println(FacebookGoogleService.checkExistAccReturnId(JDBiConnector.me(), "487782076904211aa", 2));
+
+        System.out.println(FacebookGoogleService.checkExistAccReturnId(JDBiConnector.me(), "108327235615609948235", 3));
+        System.out.println(FacebookGoogleService.checkExistAccReturnId(JDBiConnector.me(), "108327235615609948235aa", 3));
+
+    }
+
 
     public static void main(String[] args) {
 
-        TestFacebookGoogleService.Test_CheckExistAcc();
-        TestFacebookGoogleService.Test_CreateAccPro_FB();
-        TestFacebookGoogleService.Test_CreateAccPro_GG();
+//        TestFacebookGoogleService.Test_CheckExistAcc();
+//        TestFacebookGoogleService.Test_CreateAccPro_FB();
+//        TestFacebookGoogleService.Test_CreateAccPro_GG();
+
+        Test_CheckExistAccReturnId();
     }
 }
