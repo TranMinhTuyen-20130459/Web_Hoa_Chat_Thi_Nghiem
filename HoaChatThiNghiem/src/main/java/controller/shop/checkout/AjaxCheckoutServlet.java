@@ -34,7 +34,7 @@ public class AjaxCheckoutServlet extends HttpServlet {
         Cart cart = (Cart) request.getSession().getAttribute("cart");
         Bill_MT bill = new Bill_MT(NameCustomer, PhoneCustomer, EmailCustomer, City, District, Ward, Address, Double.parseDouble(BillPriceBefore));
 
-        boolean addBillAndBillDetail = CheckoutService.addBillAndBillDetail(bill, cart, cus.getId() + "-1");
+        boolean addBillAndBillDetail = CheckoutService.addBillAndBillDetail(bill, cart, cus.getId() + "");
 
         if (addBillAndBillDetail)
             response.getWriter().write("true");
