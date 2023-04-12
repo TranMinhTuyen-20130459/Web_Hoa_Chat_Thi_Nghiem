@@ -242,6 +242,7 @@
         let district = $('#district').val()
         let ward = $('#ward').val()
         let address = $('#address').val()
+        let bill_price_before = ${requestScope['bill_price']};
 
         $.ajax({
             url: '${context}/AjaxCheckoutServlet', // -- địa chỉ của server
@@ -254,11 +255,31 @@
                 City: city,
                 District: district,
                 Ward: ward,
-                Address: address
+                Address: address,
+                BillPriceBefore: bill_price_before
 
             }, // -- tham số truyền đến server
-            data_type: text, // -- kiểu dữ liệu nhận về từ server
+            data_type: 'text', // -- kiểu dữ liệu nhận về từ server
             success: function (resultData) {
+
+                if (resultData.toString() == "true") {
+                    Swal.fire({
+                        title: 'Thông báo',
+                        text: 'Bạn hãy đặt hàng thành công ^.^',
+                        icon: 'success',
+                        timer: 3000,
+                        buttons: false
+                    })
+                } else {
+                    Swal.fire({
+                        title: 'Thông báo',
+                        text: 'Đơn hàng của bạn không được đặt !!!',
+                        icon: 'error',
+                        timer: 3000,
+                        buttons: false
+                    })
+                }
+
 
             },
             error: function () {
