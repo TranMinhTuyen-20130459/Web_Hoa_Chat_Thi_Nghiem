@@ -25,7 +25,7 @@ public class CheckoutDAO {
             int rowInsert = update.execute(); //--> insert bill vào bảng bills trong db
 
             if (rowInsert == 1) {
-                Query query = handle.createQuery("SELECT LAST_INSERT_ID()");
+                Query query = handle.createQuery("SELECT LAST_INSERT_ID()"); // Khi chèn dữ liệu vào bảng trong MySQL bằng câu lệnh INSERT, một giá trị ID mới thường được tạo ra tự động cho mỗi bản ghi. Giá trị này thường được tạo ra bởi một trường ID tự động trong bảng hoặc một cột có thuộc tính AUTO_INCREMENT. Nếu bạn muốn truy vấn giá trị ID vừa được tạo ra để sử dụng cho các mục đích khác, bạn có thể sử dụng câu lệnh SELECT LAST_INSERT_ID().
                 int first = (int) query.mapTo(Integer.class).one(); //--> Phương thức one() sẽ trả về giá trị của cột đầu tiên nếu có bản ghi được trả về từ câu truy vấn, ngược lại sẽ ném ra một ngoại lệ.
                 return first; //--> lấy ra id_bill vừa được insert vào
             }

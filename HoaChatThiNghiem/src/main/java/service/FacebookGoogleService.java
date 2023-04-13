@@ -125,6 +125,12 @@ public class FacebookGoogleService {
 
     }
 
+    /*
+        - Hàm này dùng để kiểm tra sự tồn tại của id_user_fb_gg trong Db
+        - Nếu
+            + tồn tại : => sẽ trả về id_user của tài khoản Fb/Gg đó
+            + không tồn tại or xảy ra ngoại lệ : => sẽ trả về giá trị là -1
+     */
     public static int checkExistAccReturnId(Jdbi jdbi, String id_user_fb_gg, int typeAcc) {
         int id_user_customer = -1;
         try {
@@ -153,5 +159,70 @@ public class FacebookGoogleService {
         return id_user_customer;
     }
 
+    /*
+        - Hàm này dùng để tạo tài khoản mới trong Db dựa vào thông tin trả về từ Fb/Gg
+        => kết quả trả về là id_user của tài khoản đó trong Db
+        - nếu xảy ra ngoại lệ thì giá trị trả về sẽ là -1
+        - ghi lại Log tạo tài khoản
+     */
+    public static int createAccProReturnId(Jdbi jdbi, Customer infor, int typeAcc, Log logCreateAcc) {
+        int id_user = -1;
+        try {
+            if (typeAcc == TypeAcc.ACC_FACEBOOK) {
+                id_user = jdbi.withHandle(handle -> {
+                    Update update = handle.createUpdate("INSERT INTO account_customers(id_status_acc,id_city,username,pass,full_name,email_customer,id_type_acc,id_user_fb) VALUES (1,0,:username,:pass,:full_name,:email_customer,:id_type_acc,:id_user_fb)");
+                    update.bind("username", "FB" + infor.getId_user_fb())
+                            .bind("pass", infor.getId_user_fb() + "@fb123")
+                            .bind("full_name", infor.getFullname())
+                            .bind("email_customer", infor.getEmail_customer())
+                            .bind("id_type_acc", TypeAcc.ACC_FACEBOOK)
+                            .bind("id_user_fb", infor.getId_user_fb());
+
+                    int row_insert = update.execute(); // trả về số dòng được insert vào bảng account_customers
+
+                    if (row_insert == 1) {
+                        Query query = handle.createQuery("SELECT LAST_INSERT_ID()"); // Khi chèn dữ liệu vào bảng trong MySQL bằng câu lệnh INSERT, một giá trị ID mới thường được tạo ra tự động cho mỗi bản ghi. Giá trị này thường được tạo ra bởi một trường ID tự động trong bảng hoặc một cột có thuộc tính AUTO_INCREMENT. Nếu bạn muốn truy vấn giá trị ID vừa được tạo ra để sử dụng cho các mục đích khác, bạn có thể sử dụng câu lệnh SELECT LAST_INSERT_ID().
+                        return query.mapTo(Integer.class).one(); // trả về id_user ở dòng mới được thêm vào
+                    }
+
+                    return -1;
+                });
+
+            } else if (typeAcc == TypeAcc.ACC_GOOGLE) {
+                id_user = jdbi.withHandle(handle -> {
+                    Update update = handle.createUpdate("INSERT INTO account_customers(id_status_acc,id_city,username,pass,full_name,email_customer,id_type_acc,id_user_gg) VALUES (1,0,:username,:pass,:full_name,:email_customer,:id_type_acc,:id_user_gg)");
+                    update.bind("username", "GG" + infor.getId_user_gg())
+                            .bind("pass", infor.getId_user_gg() + "@gg123")
+                            .bind("full_name", infor.getFullname())
+                            .bind("email_customer", infor.getEmail_customer())
+                            .bind("id_type_acc", TypeAcc.ACC_GOOGLE)
+                            .bind("id_user_gg", infor.getId_user_gg());
+
+                    int row_insert = update.execute(); // trả về số dòng được insert vào bảng account_customers
+
+                    if (row_insert == 1) {
+                        Query query = handle.createQuery("SELECT LAST_INSERT_ID()"); // Khi chèn dữ liệu vào bảng trong MySQL bằng câu lệnh INSERT, một giá trị ID mới thường được tạo ra tự động cho mỗi bản ghi. Giá trị này thường được tạo ra bởi một trường ID tự động trong bảng hoặc một cột có thuộc tính AUTO_INCREMENT. Nếu bạn muốn truy vấn giá trị ID vừa được tạo ra để sử dụng cho các mục đích khác, bạn có thể sử dụng câu lệnh SELECT LAST_INSERT_ID().
+                        return query.mapTo(Integer.class).one(); // trả về id_user ở dòng mới được thêm vào
+                    }
+
+                    return -1;
+                });
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+
+            logCreateAcc.setUser_id(id_user + "");
+            if (typeAcc == TypeAcc.ACC_FACEBOOK) {
+                logCreateAcc.setContent("Tạo tài khoản bằng thông tin tài khoản Fb");
+            } else if (typeAcc == TypeAcc.ACC_GOOGLE) {
+                logCreateAcc.setContent("Tạo tài khoản bằng thông tin tài khoản Gg");
+            }
+            logCreateAcc.insert(jdbi);
+
+        }
+        return id_user;
+    }
 
 }
