@@ -4,6 +4,7 @@ import bean.Log;
 import database.JDBiConnector;
 import model.shop.Customer;
 import model.shop.TypeAcc;
+import org.jdbi.v3.core.Jdbi;
 import service.FacebookGoogleService;
 import utils.FacebookUtils;
 import utils.GoogleUtils;
@@ -45,11 +46,46 @@ public class TestFacebookGoogleService {
 
     }
 
+    public static void Test_CheckExistAccReturnId() {
+        System.out.println(FacebookGoogleService.checkExistAccReturnId(JDBiConnector.me(), "487782076904211", 2));
+        System.out.println(FacebookGoogleService.checkExistAccReturnId(JDBiConnector.me(), "487782076904211aa", 2));
+
+        System.out.println(FacebookGoogleService.checkExistAccReturnId(JDBiConnector.me(), "108327235615609948235", 3));
+        System.out.println(FacebookGoogleService.checkExistAccReturnId(JDBiConnector.me(), "108327235615609948235aa", 3));
+
+    }
+
+    public static void Test_CreateAccProReturnId_Fb() {
+        Log logCreateAcc = new Log(Log.ALERT, "-1", "", "", "", "", "");
+        Customer customerFB = new Customer();
+        customerFB.setId_user_fb("0002");
+        customerFB.setFullname("tuyen_kun");
+        customerFB.setEmail_customer("tuyen@gmail.com");
+
+        System.out.println(FacebookGoogleService.createAccProReturnId(JDBiConnector.me(), customerFB, TypeAcc.ACC_FACEBOOK, logCreateAcc));
+    }
+
+    public static void Test_CreateAccProReturnId_Gg() {
+
+        Log logCreateAcc = new Log(Log.ALERT, "-1", "", "", "", "", "");
+        Customer customerGG = new Customer();
+        customerGG.setId_user_gg("0002");
+        customerGG.setFullname("tuyen_kun");
+        customerGG.setEmail_customer("tuyen@gmail.com");
+
+        System.out.println(FacebookGoogleService.createAccProReturnId(JDBiConnector.me(), customerGG, TypeAcc.ACC_GOOGLE, logCreateAcc));
+
+    }
+
 
     public static void main(String[] args) {
 
-        TestFacebookGoogleService.Test_CheckExistAcc();
-        TestFacebookGoogleService.Test_CreateAccPro_FB();
-        TestFacebookGoogleService.Test_CreateAccPro_GG();
+//        TestFacebookGoogleService.Test_CheckExistAcc();
+//        TestFacebookGoogleService.Test_CreateAccPro_FB();
+//        TestFacebookGoogleService.Test_CreateAccPro_GG();
+
+//        Test_CheckExistAccReturnId();
+        Test_CreateAccProReturnId_Fb();
+        Test_CreateAccProReturnId_Gg();
     }
 }
