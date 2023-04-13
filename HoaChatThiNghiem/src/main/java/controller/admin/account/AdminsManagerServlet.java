@@ -10,7 +10,7 @@ import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "AdminsManagerServlet", value = "/admin/quan-ly-admin")
+@WebServlet(name = "AdminsManagerServlet", value = "/admin/quan-ly-admin-super")
 public class AdminsManagerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

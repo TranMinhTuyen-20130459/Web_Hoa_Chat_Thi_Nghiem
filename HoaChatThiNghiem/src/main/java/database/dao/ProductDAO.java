@@ -89,7 +89,6 @@ public class ProductDAO {
         Author : Minh Tuyên
          */
     }
-
     public List<SubTypeProduct> getSubTypeProducts(DbConnection connectDB) {
         List<SubTypeProduct> result = new ArrayList<>();
         String sql = "select id_subtype,name_subtype from subtype_products";

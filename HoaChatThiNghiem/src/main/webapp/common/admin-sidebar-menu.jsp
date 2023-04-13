@@ -76,7 +76,7 @@
     function funcAjax() {
         var idRoleAdmin = <%=admin.getId_role_admin()%>
             $.ajax({
-                url: '${context}/AjaxAdminsManagerServlet',
+                url: '${context}/admin/check-role',
                 type: 'POST',                           //-- mặc định type của ajax là GET
                 data: {IdRoleAdmin: idRoleAdmin},
                 data_type: "text",
@@ -101,7 +101,7 @@
     function funcAjax1() {
         var idRoleAdmin = <%=admin.getId_role_admin()%>
             $.ajax({
-                url: '${context}/AjaxLoggingServlet',
+                url: '${context}/admin/check-role-log',
                 type: 'POST',                           //-- mặc định type của ajax là GET
                 data: {IdRoleAdmin: idRoleAdmin},
                 data_type: "text",
