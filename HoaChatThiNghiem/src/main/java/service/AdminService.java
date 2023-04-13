@@ -99,7 +99,7 @@ public class AdminService {
     public static List<Bill> getBillsOrderedIn(int month) {
         List<Bill> bills = new ArrayList<>();
         try (var ps = DbConnection.getInstance().getPreparedStatement(
-                "SELECT id_bill, name_status_bill, fullname, total_price, address_customer, time_order " +
+                "SELECT id_bill, name_status_bill, full_name, total_price, address_customer, time_order " +
                         "FROM bills b JOIN status_bills s ON b.id_status_bill = s.id_status_bill " +
                         "WHERE MONTH(time_order) = ? AND YEAR(time_order) = YEAR(CURRENT_DATE)")) {
             ps.setInt(1, month);

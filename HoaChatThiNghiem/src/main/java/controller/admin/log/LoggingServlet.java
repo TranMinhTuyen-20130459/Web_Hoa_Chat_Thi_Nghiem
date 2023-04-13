@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
-@WebServlet(name = "LoggingServlet", value = "/admin/logging")
+@WebServlet(name = "LoggingServlet", value = "/admin/logging-super")
 public class LoggingServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
