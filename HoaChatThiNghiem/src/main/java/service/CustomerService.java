@@ -15,10 +15,18 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class CustomerService {
-    public static String hashPasswordInput(String password) throws NoSuchAlgorithmException {
-        MessageDigest md = MessageDigest.getInstance("SHA-256");
-        byte[] hash = md.digest(password.getBytes());
-        return Base64.getEncoder().encodeToString(hash);
+    public static String hashPass(String password){
+        try{
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] hashedBytes = md.digest(password.getBytes(StandardCharsets.UTF_8));
+            StringBuilder sb = new StringBuilder();
+            for(byte b : hashedBytes){
+                sb.append(String.format("%02x", b));
+            }
+            return sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
     }
     public static Customer checkLogin(String email, String password) {
         List<Customer> customers = new ArrayList<>();
@@ -53,12 +61,12 @@ public class CustomerService {
                 return null;
             } else {
                 Customer unique = customers.get(0);
-                String hashedInputPass = hashPasswordInput(password);
+                String hashedInputPass = hashPass(password);
                 if (unique.getPassword().equals(hashedInputPass)) {
                     return unique;
                 }
             }
-        } catch (SQLException | NoSuchAlgorithmException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
             connectDB.close();
@@ -152,19 +160,6 @@ public class CustomerService {
             throw new RuntimeException();
         } finally {
             connectDb.close();
-        }
-    }
-    public static String hashPass(String password){
-        try{
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] hashedBytes = md.digest(password.getBytes(StandardCharsets.UTF_8));
-            StringBuilder sb = new StringBuilder();
-            for(byte b : hashedBytes){
-                sb.append(String.format("%02x", b));
-            }
-            return sb.toString();
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
         }
     }
     public static void signUp(String email, String hashedPass) {
@@ -310,5 +305,9 @@ public class CustomerService {
         } catch (SQLException e) {
             return new ArrayList<>();
         }
+    }
+
+    public static void main(String[] args) {
+        System.out.println(checkLogin("nguyenphutai1234@gmail.com", "nguyenphutai"));
     }
 }
