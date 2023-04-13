@@ -1,15 +1,23 @@
 package controller.admin.log;
 
+import model.admin.Admin;
+import utils.CommonString;
+
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 
-@WebServlet(name = "AjaxLoggingServlet", value = "/AjaxLoggingServlet")
+@WebServlet(name = "AjaxLoggingServlet", value = "/admin/check-role-log")
 public class AjaxLoggingServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        Admin ad = (Admin) request.getSession().getAttribute(CommonString.ADMIN_SESSION);
+        if (ad.getId_role_admin() != 3) {
+            response.sendRedirect(request.getContextPath() + "/admin/dang-nhap");
+        }else {
+            doPost(request, response);
+        }
     }
 
     @Override
@@ -18,7 +26,7 @@ public class AjaxLoggingServlet extends HttpServlet {
         try {
             Integer idRoleAdmin = Integer.parseInt(idRole);
             if (idRoleAdmin == 3) {
-                response.getWriter().write(request.getContextPath() + "/admin/logging");
+                response.getWriter().write(request.getContextPath() + "/admin/logging-super");
             } else {
                 response.getWriter().write("fail");
             }

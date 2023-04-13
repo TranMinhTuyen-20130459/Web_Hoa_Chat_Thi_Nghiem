@@ -69,6 +69,31 @@ public class AdminService_MT {
         } finally {
             connectDB.close();
         }
+    }public static boolean checkUsernameWithRole(String username, int role) {
+        List<Admin> admins = new ArrayList<>();
+        DbConnection connectDB = DbConnection.getInstance();
+        String sql = "select username,password,id_role_admin,id_status_acc,full_name from account_admins" +
+                " where username = ? and id_role_admin = ?";
+        PreparedStatement preState = connectDB.getPreparedStatement(sql);
+        try {
+            preState.setString(1, username);
+            preState.setInt(2, role);
+            ResultSet rs = preState.executeQuery();
+            while (rs.next()) {
+                String user_name = rs.getString("username");
+                String password = rs.getString("password");
+                int id_role_admin = rs.getInt("id_role_admin");
+                int id_status_acc = rs.getInt("id_status_acc");
+                String full_name = rs.getString("full_name");
+                Admin admin = new Admin(user_name, password, id_role_admin, id_status_acc, full_name);
+                admins.add(admin);
+            }
+            return admins.size() > 0 ? true : false;
+        } catch (SQLException e) {
+            return false;
+        } finally {
+            connectDB.close();
+        }
     }
 
     public static boolean updatePassword(String username, String new_pass) {

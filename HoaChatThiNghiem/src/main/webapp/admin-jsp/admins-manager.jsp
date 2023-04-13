@@ -252,7 +252,7 @@
             swalAlert('Cảnh báo !!!', 'Vui lòng nhập lại mật khẩu đúng yêu cầu!', 'error', 3000)
         } else {
             $.ajax({
-                url: '${context}/AddAccountAdminServlet',
+                url: '${context}/admin/add-account',
                 type: 'POST',
                 data: {
                     UserName: user_name,
@@ -283,6 +283,8 @@
                         })
                     } else if (resultData.toString() == 'fail') {
                         swalAlert('', 'Thêm thất bại', 'error', 2000)
+                    }else {
+                        window.location = resultData;
                     }
                 },
                 error: function () {
@@ -355,9 +357,9 @@
         } else if (pass_admin_new.length > 0 && pass_admin_new.length < 8) {
             swalAlert('Cảnh báo !!!', 'Vui lòng nhập lại mật khẩu mới đúng yêu cầu!', 'error', 3000)
         } else {
-            console.log(pass_admin_new,pass_admin,username,id_role_admin)
+
             $.ajax({
-                url: '${context}/UpdateAdminServlet',
+                url: '${context}/admin/update-account',
                 type: 'POST',
                 data: {
                     UserName: username,
