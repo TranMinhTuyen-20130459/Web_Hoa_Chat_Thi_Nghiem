@@ -64,7 +64,7 @@
                             <div class="col-lg-12 col-12">
                                 <div class="form-group mb-4">
                                     <label>Họ và tên</label>
-                                    <input id="nameCustomer" name="name" type="text"
+                                    <input id="nameCustomer" name="nameCustomer" type="text"
                                            value="${sessionScope.auth_customer.fullname}"/>
                                 </div>
                             </div>
@@ -166,7 +166,8 @@
 
 <!-- ===== JAVASCRIPT ===== -->
 <jsp:include page="../common/shop-js.jsp"/>
-<script src="../shop/js/sweetalert2.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 
 <%--Thư viện Axios là một thư viện HTTP Client dựa trên Promise--%>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
@@ -231,8 +232,59 @@
     }
 </script>
 
+<%-- Kiểm tra sự hợp lệ của form thông tin giao hàng --%>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+
 <%--Gọi Ajax cho phương thức đặt hàng --%>
 <script>
+
+    $(document).ready(function () {
+        // Kiểm tra validate form
+        $('#checkout_form').validate({
+            rules: {
+                nameCustomer: {
+                    required: true,a
+                },
+                phone: {
+                    required: true,
+                    minlength: 10,
+                    maxlength: 10,
+                    number: true,
+                },
+                email: {
+                    required: true,
+                    email: true,
+                },
+                address: {
+                    required: true,
+                },
+            },
+            messages: {
+                nameCustomer: {
+                    required: "Họ và tên không được để trống",
+                },
+                phone: {
+                    required: "Số điện thoại không được để trống",
+                    minlength: "Số điện thoại phải có 10 số",
+                    maxlength: "Số điện thoại phải có 10 số",
+                    number: "Số điện thoại không đúng định dạng",
+                },
+                email: {
+                    required: "Email không được để trống",
+                    email: "Email không đúng định dạng",
+                },
+                address: {
+                    required: "Địa chỉ không được để trống",
+                },
+            },
+            // Hiển thị thông báo lỗi
+            errorPlacement: function (error, element) {
+                error.insertAfter(element);
+                error.css("color", "red");
+            }
+        })
+    })
+
     $('#btn-checkout').on('click', function () {
 
         let nameCustomer = $('#nameCustomer').val()
@@ -242,82 +294,68 @@
         let district = $('#district').val()
         let ward = $('#ward').val()
         let address = $('#address').val()
-        let bill_price_before = ${requestScope['bill_price']};
+        let bill_price_before = "${requestScope['bill_price']}"
 
-        $.ajax({
-            url: '${context}/AjaxCheckoutServlet', // -- địa chỉ của server
-            type: 'POST', // -- phương thức truyền : GET, POST, PUT, DELETE
-            data: {
+        if (nameCustomer == "" || phoneCustomer == "" ||
+            emailCustomer == "" || city =="" ||
+            district == "" || ward == "" || address == "" || bill_price_before == "") {
 
-                NameCustomer: nameCustomer,
-                PhoneCustomer: phoneCustomer,
-                EmailCustomer: emailCustomer,
-                City: city,
-                District: district,
-                Ward: ward,
-                Address: address,
-                BillPriceBefore: bill_price_before
+            swal({
+                title: 'Thông báo',
+                text: 'Bạn hãy nhập đầy đủ thông tin !!!',
+                icon: 'warning',
+                timer: 3000,
+                buttons: false
+            })
 
-            }, // -- tham số truyền đến server
-            data_type: 'text', // -- kiểu dữ liệu nhận về từ server
-            success: function (resultData) {
+        } else {
 
-                if (resultData.toString() == "true") {
-                    Swal.fire({
-                        title: 'Thông báo',
-                        text: 'Bạn hãy đặt hàng thành công ^.^',
-                        icon: 'success',
-                        timer: 3000,
-                        buttons: false
-                    })
-                } else {
-                    Swal.fire({
-                        title: 'Thông báo',
-                        text: 'Đơn hàng của bạn không được đặt !!!',
-                        icon: 'error',
-                        timer: 3000,
-                        buttons: false
-                    })
+            $.ajax({
+                url: '${context}/AjaxCheckoutServlet', // -- địa chỉ của server
+                type: 'POST', // -- phương thức truyền : GET, POST, PUT, DELETE
+                data: {
+
+                    NameCustomer: nameCustomer,
+                    PhoneCustomer: phoneCustomer,
+                    EmailCustomer: emailCustomer,
+                    City: city,
+                    District: district,
+                    Ward: ward,
+                    Address: address,
+                    BillPriceBefore: bill_price_before
+
+                }, // -- tham số truyền đến server
+                data_type: 'text', // -- kiểu dữ liệu nhận về từ server
+                success: function (resultData) {
+
+                    if (resultData.toString() == "true") {
+                        swal({
+                            title: 'Thông báo',
+                            text: 'Bạn hãy đặt hàng thành công ^.^',
+                            icon: 'success',
+                            timer: 3000,
+                            buttons: false
+                        })
+                    } else {
+                        swal({
+                            title: 'Thông báo',
+                            text: 'Đơn hàng của bạn không được đặt !!!',
+                            icon: 'error',
+                            timer: 3000,
+                            buttons: false
+                        })
+                    }
+
+
+                },
+                error: function () {
+                    // error no call ajax
                 }
+            })
 
-
-            },
-            error: function () {
-                // error no call ajax
-            }
-        })
+        }
     })
 </script>
-
-<%--<script>--%>
-<%--    $('#company').on('change', function () {--%>
-<%--        window.location.href = '${context}/shop/update-checkout?city=' + $(this).val()--%>
-<%--    })--%>
-
-<%--    $('#btn-checkout').on('click', function () {--%>
-<%--        Swal.fire({--%>
-<%--            icon: 'success',--%>
-<%--            title: 'Thanh toán thành công',--%>
-<%--            html: '<span class="d-block mt-2">Đơn hàng của bạn đã thanh toán thành công.</span>' +--%>
-<%--                '<span class="d-block mt-3 mb-2">' +--%>
-<%--                'Bạn có thể xem chi tiết trong <span id="s-marker">lịch sử mua hàng</span>.</span>',--%>
-<%--            didOpen: () => {--%>
-<%--                const marker = Swal.getHtmlContainer().querySelector('#s-marker')--%>
-<%--                $(marker).css('color', '#2880e7').css('cursor', 'pointer').on('click', function () {--%>
-<%--                    $('#checkout_form').append($('<input>').attr('type', 'hidden').attr('name', 'nav'))--%>
-<%--                        .submit()--%>
-<%--                })--%>
-<%--            },--%>
-<%--            confirmButtonColor: '#166bcc',--%>
-<%--            confirmButtonText: 'TIẾP TỤC MUA HÀNG',--%>
-<%--            allowOutsideClick: () =>  $('#checkout_form').submit()--%>
-<%--        }).then(result => {--%>
-<%--            if (result.isConfirmed) {--%>
-<%--                $('#checkout_form').submit()--%>
-<%--            }--%>
-<%--        })--%>
-<%--    })--%>
-<%--</script>--%>
 
 </body>
 
