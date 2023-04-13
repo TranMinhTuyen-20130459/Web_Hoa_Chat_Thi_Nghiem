@@ -8,3 +8,5 @@ ALTER TABLE bills ALTER COLUMN from_province_name SET DEFAULT "Hồ Chí Minh";
 
 ALTER TABLE bills DROP FOREIGN KEY bills_ibfk_4;
 
+ALTER TABLE account_customers
+ADD COLUMN failed_count NUMERIC;
