@@ -243,7 +243,7 @@
         $('#checkout_form').validate({
             rules: {
                 nameCustomer: {
-                    required: true,a
+                    required: true,
                 },
                 phone: {
                     required: true,
