@@ -55,6 +55,28 @@ public class TestFacebookGoogleService {
 
     }
 
+    public static void Test_CreateAccProReturnId_Fb() {
+        Log logCreateAcc = new Log(Log.ALERT, "-1", "", "", "", "", "");
+        Customer customerFB = new Customer();
+        customerFB.setId_user_fb("0002");
+        customerFB.setFullname("tuyen_kun");
+        customerFB.setEmail_customer("tuyen@gmail.com");
+
+        System.out.println(FacebookGoogleService.createAccProReturnId(JDBiConnector.me(), customerFB, TypeAcc.ACC_FACEBOOK, logCreateAcc));
+    }
+
+    public static void Test_CreateAccProReturnId_Gg() {
+
+        Log logCreateAcc = new Log(Log.ALERT, "-1", "", "", "", "", "");
+        Customer customerGG = new Customer();
+        customerGG.setId_user_gg("0002");
+        customerGG.setFullname("tuyen_kun");
+        customerGG.setEmail_customer("tuyen@gmail.com");
+
+        System.out.println(FacebookGoogleService.createAccProReturnId(JDBiConnector.me(), customerGG, TypeAcc.ACC_GOOGLE, logCreateAcc));
+
+    }
+
 
     public static void main(String[] args) {
 
@@ -62,6 +84,8 @@ public class TestFacebookGoogleService {
 //        TestFacebookGoogleService.Test_CreateAccPro_FB();
 //        TestFacebookGoogleService.Test_CreateAccPro_GG();
 
-        Test_CheckExistAccReturnId();
+//        Test_CheckExistAccReturnId();
+        Test_CreateAccProReturnId_Fb();
+        Test_CreateAccProReturnId_Gg();
     }
 }
