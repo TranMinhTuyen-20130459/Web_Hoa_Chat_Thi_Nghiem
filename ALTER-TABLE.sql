@@ -10,3 +10,9 @@ ALTER TABLE bills DROP FOREIGN KEY bills_ibfk_4;
 
 ALTER TABLE account_customers
 ADD COLUMN failed_count NUMERIC;
+
+-- thêm 2 thuộc tính email và url_image_admin trong bảng admin
+ALTER TABLE account_admins
+ADD COLUMN email VARCHAR(255);
+ALTER TABLE account_admins
+ADD COLUMN url_image_admin VARCHAR(255);
