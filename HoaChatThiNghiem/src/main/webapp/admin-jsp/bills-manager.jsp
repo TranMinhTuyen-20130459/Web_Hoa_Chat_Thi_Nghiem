@@ -53,8 +53,7 @@
                         <tr>
                             <th class="text-center">ID đơn hàng</th>
                             <th class="text-center">Khách hàng</th>
-                            <th class="text-center">Đơn hàng</th>
-                            <th class="text-center">Tổng tiền</th>
+                            <th class="text-center">SĐT</th>
                             <th class="text-center">Tình trạng</th>
                             <th class="text-center">Địa chỉ giao hàng</th>
                             <th class="text-center">Ngày đặt hàng</th>

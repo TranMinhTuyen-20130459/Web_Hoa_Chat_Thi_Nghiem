@@ -16,9 +16,9 @@ public class CheckoutDAO {
                     .bind("to_name", bill.getNameCustomer())
                     .bind("to_phone", bill.getPhoneCustomer())
                     .bind("to_address", bill.getAddress())
-                    .bind("to_ward_name", bill.getWard())
-                    .bind("to_district_name", bill.getDistrict())
-                    .bind("to_province_name", bill.getCity())
+                    .bind("to_ward_name", bill.getWardName())
+                    .bind("to_district_name", bill.getDistrictName())
+                    .bind("to_province_name", bill.getProvinceName())
                     .bind("email_customer", bill.getEmailCustomer())
                     .bind("bill_price_before", bill.getBill_price_before());
 

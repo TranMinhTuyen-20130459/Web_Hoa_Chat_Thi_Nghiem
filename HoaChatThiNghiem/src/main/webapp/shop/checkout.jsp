@@ -19,6 +19,21 @@
 </head>
 
 <body>
+<style>
+    .has-scrollbar::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    .has-scrollbar::-webkit-scrollbar-thumb {
+        background-color: #ccc;
+        border-radius: 6px;
+    }
+
+    .has-scrollbar {
+        max-height: 100px;
+        overflow-y: auto;
+    }
+</style>
 <!-- ===== PRELOADER ===== -->
 <div class="preloader">
     <div class="preloader-inner">
@@ -85,28 +100,35 @@
                             <div class="col-lg-4 col-12">
                                 <div class="form-group">
                                     <label>Tỉnh / Thành<span>*</span></label>
-                                    <select size="10" class="form-select form-select-sm mb-3" id="city"
+                                    <div class="select-wrapper">
+                                    <select name="cities" size="10" class="form-select form-select-sm mb-3" id="city"
                                             aria-label=".form-select-sm" style="display:block">
                                         <option value="" selected>Chọn tỉnh thành</option>
                                     </select>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-lg-4 col-12">
                                 <div class="form-group">
                                     <label>Quận / Huyện<span>*</span></label>
-                                    <select class="form-select form-select-sm mb-3" id="district"
+                                    <div class="select-wrapper">
+                                    <select name="districts" class="form-select form-select-sm mb-3" id="district"
                                             aria-label=".form-select-sm" style="display: block">
                                         <option value="" selected>Chọn quận huyện</option>
                                     </select>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-lg-4 col-12">
                                 <div class="form-group">
                                     <label>Phường / Xã<span>*</span></label>
-                                    <select class="form-select form-select-sm" id="ward" aria-label=".form-select-sm"
+                                    <div class="select-wrapper">
+                                    <select name="wards" class="form-select form-select-sm" id="ward"
+                                            aria-label=".form-select-sm"
                                             style="display: block">
                                         <option value="" selected>Chọn phường xã</option>
                                     </select>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-lg-12 col-12">
@@ -174,6 +196,7 @@
 
 <%--Lấy dữ liệu về tỉnh/thành , quận/huyện , phường/xã từ file Json --%>
 <script>
+
     var citis = document.getElementById("city");
     var districts = document.getElementById("district");
     var wards = document.getElementById("ward");
@@ -191,6 +214,7 @@
     });
 
     function renderCity(data) {
+
         for (const x of data) {
             citis.options[citis.options.length] = new Option(x.Name, x.Id);
         }
@@ -229,32 +253,44 @@
             $('#ward').niceSelect('update');
         };
 
+        //Gọi plugin niceSelect
+        $('select').niceSelect();
+
+        //Thêm class 'has-scrollbar' vào thẻ ul của các select hiển thị scrollbar nếu có nhiều dữ liệu
+        $('#city ul').addClass('has-scrollbar');
+        // $('#city ul, #district ul, #ward ul').addClass('has-scrollbar');
+
     }
 </script>
 
-<%-- Kiểm tra sự hợp lệ của form thông tin giao hàng --%>
+<%-- Kiểm tra sự hợp lệ của form thông tin giao hàng dùng thư viện jquery.validate --%>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 
 <%--Gọi Ajax cho phương thức đặt hàng --%>
 <script>
 
     $(document).ready(function () {
+
         // Kiểm tra validate form
         $('#checkout_form').validate({
             rules: {
+                // tên khách hàng
                 nameCustomer: {
                     required: true,
                 },
+                // số điện thoại khách hàng
                 phone: {
                     required: true,
                     minlength: 10,
                     maxlength: 10,
                     number: true,
                 },
+                // địa chỉ email
                 email: {
                     required: true,
                     email: true,
                 },
+                // địa chỉ chi tiết đơn hàng sẽ được giao tới
                 address: {
                     required: true,
                 },
@@ -297,7 +333,7 @@
         let bill_price_before = "${requestScope['bill_price']}"
 
         if (nameCustomer == "" || phoneCustomer == "" ||
-            emailCustomer == "" || city =="" ||
+            emailCustomer == "" || city == "" ||
             district == "" || ward == "" || address == "" || bill_price_before == "") {
 
             swal({
