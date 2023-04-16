@@ -41,10 +41,6 @@
             <a class="app-menu-item <%=c3%>" href="#" onclick="funcAjax2()"><i class='bx bx-task'></i>
                 <span class="app-menu-label">Quản lý đơn hàng</span></a>
         </li>
-        <%--        <li>--%>
-        <%--            <a class="app-menu-item <%=c9%>" href="${context}/admin/voucher"><i class='bx bx-task'></i>--%>
-        <%--                <span class="app-menu-label">Quản lý voucher</span></a>--%>
-        <%--        </li>--%>
         <li>
             <a class="app-menu-item <%=c4%>" href="#" onclick="funcAjax3()"><i
                     class='bx bx-pie-chart-alt-2'></i>
@@ -73,109 +69,50 @@
     Phân quyền chức năng quản lý admin
     Admin nào có id_role = 3 thì được sử dụng chức năng này
     --%>
+    let idRoleAdmin
     // admin
     function funcAjax() {
-        var idRoleAdmin = <%=admin.getId_role_admin()%>
-            $.ajax({
-                url: '${context}/admin/check-role',
-                type: 'POST',                           //-- mặc định type của ajax là GET
-                data: {IdRoleAdmin: idRoleAdmin},
-                data_type: "text",
-                success: (function (resultData) {
-                    if (resultData.toString() == 'fail') {
-                        swal({
-                            text: 'Bạn không có quyền sử dụng chức năng này',
-                            icon: 'error',
-                            timer: 1000,
-                            buttons: false
-                        });
-                    } else {
-                        // alert(resultData)
-                        window.location = resultData;
-                    }
-                }),
-                error: (function () {
-                    // error no call ajax
-                })
-            })
+        idRoleAdmin = <%=admin.getId_role_admin()%>;
+        checkRoleAndRedirect('${context}/admin/check-role-ad', idRoleAdmin);
     }
     // logging
     function funcAjax1() {
-        var idRoleAdmin = <%=admin.getId_role_admin()%>
-            $.ajax({
-                url: '${context}/admin/check-role-log',
-                type: 'POST',                           //-- mặc định type của ajax là GET
-                data: {IdRoleAdmin: idRoleAdmin},
-                data_type: "text",
-                success: (function (resultData) {
-                    if (resultData.toString() == 'fail') {
-                        swal({
-                            text: 'Bạn không có quyền sử dụng chức năng này',
-                            icon: 'error',
-                            timer: 1000,
-                            buttons: false
-                        });
-                    } else {
-                        // alert(resultData)
-                        window.location = resultData;
-                    }
-                }),
-                error: (function () {
-                    // error no call ajax
-                })
-            })
+        idRoleAdmin = <%=admin.getId_role_admin()%>;
+        checkRoleAndRedirect('${context}/admin/check-role-log', idRoleAdmin);
     }
 
     // check role for root
     function funcAjax2() {
-        var idRoleAdmin = <%=admin.getId_role_admin()%>
-            $.ajax({
-                url: '${context}/admin/check-role-bill',
-                type: 'POST',                           //-- mặc định type của ajax là GET
-                data: {IdRoleAdmin: idRoleAdmin},
-                data_type: "text",
-                success: (function (resultData) {
-                    if (resultData.toString() == 'fail') {
-                        swal({
-                            text: 'Bạn không có quyền sử dụng chức năng này',
-                            icon: 'error',
-                            timer: 1000,
-                            buttons: false
-                        });
-                    } else {
-                        // alert(resultData)
-                        window.location = resultData;
-                    }
-                }),
-                error: (function () {
-                    // error no call ajax
-                })
-            })
+        idRoleAdmin = <%=admin.getId_role_admin()%>;
+        checkRoleAndRedirect('${context}/admin/check-role-bill', idRoleAdmin);
     }
 
     function funcAjax3() {
-        var idRoleAdmin = <%=admin.getId_role_admin()%>
-            $.ajax({
-                url: '${context}/admin/check-role-report',
-                type: 'POST',                           //-- mặc định type của ajax là GET
-                data: {IdRoleAdmin: idRoleAdmin},
-                data_type: "text",
-                success: (function (resultData) {
-                    if (resultData.toString() == 'fail') {
-                        swal({
-                            text: 'Bạn không có quyền sử dụng chức năng này',
-                            icon: 'error',
-                            timer: 1000,
-                            buttons: false
-                        });
-                    } else {
-                        // alert(resultData)
-                        window.location = resultData;
-                    }
-                }),
-                error: (function () {
-                    // error no call ajax
-                })
-            })
+        idRoleAdmin = <%=admin.getId_role_admin()%>;
+        checkRoleAndRedirect('${context}/admin/check-role-report', idRoleAdmin);
+    }
+
+    function checkRoleAndRedirect(url, idRoleAdmin) {
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: { IdRoleAdmin: idRoleAdmin },
+            data_type: 'text',
+            success: function (resultData) {
+                if (resultData.toString() == 'fail') {
+                    swal({
+                        text: 'Bạn không có quyền sử dụng chức năng này',
+                        icon: 'error',
+                        timer: 1000,
+                        buttons: false,
+                    });
+                } else {
+                    window.location = resultData;
+                }
+            },
+            error: function () {
+                // handle error
+            },
+        });
     }
 </script>
