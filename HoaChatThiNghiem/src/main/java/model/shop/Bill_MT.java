@@ -1,8 +1,9 @@
 package model.shop;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
-public class Bill_MT {
+public class Bill_MT implements Serializable {
 
     // đây là class được tạo bởi Minh Tuyên
 
@@ -145,6 +146,40 @@ public class Bill_MT {
         return ship_price;
     }
 
+    public int getId_bill() {
+        return id_bill;
+    }
+
+    public int getId_user() {
+        return id_user;
+    }
+
+    public int getId_status_bill() {
+        return id_status_bill;
+    }
+
+    public double getBill_price_after() {
+        return bill_price_after;
+    }
+
+    public Timestamp getTime_order() {
+        return time_order;
+    }
+
+    public String getNameStatus() {
+        switch (id_status_bill) {
+            case 1:
+                return "Chờ xác nhận";
+            case 2:
+                return "Đang giao hàng";
+            case 3:
+                return "Đã giao";
+            case 4:
+                return "Hủy đơn hàng";
+        }
+        return "";
+    }
+
     @Override
     public String toString() {
         return "Bill_MT{" +
@@ -168,6 +203,6 @@ public class Bill_MT {
                 ", bill_price_before=" + bill_price_before +
                 ", bill_price_after=" + bill_price_after +
                 ", time_order=" + time_order +
-                '}'+"\n";
+                '}' + "\n";
     }
 }
