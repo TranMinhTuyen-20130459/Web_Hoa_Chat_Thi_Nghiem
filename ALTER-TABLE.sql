@@ -1,3 +1,4 @@
+-- thêm giá trị mặc định cho các cột trong bảng bills 
 ALTER TABLE bills ALTER COLUMN shop_id SET DEFAULT "1";
 ALTER TABLE bills ALTER COLUMN from_name SET DEFAULT "k46-it-nlu";
 ALTER TABLE bills ALTER COLUMN from_phone SET DEFAULT "123456789";
@@ -6,6 +7,15 @@ ALTER TABLE bills ALTER COLUMN from_ward_name SET DEFAULT "Linh Trung";
 ALTER TABLE bills ALTER COLUMN from_district_name SET DEFAULT "Thủ Đức";
 ALTER TABLE bills ALTER COLUMN from_province_name SET DEFAULT "Hồ Chí Minh";
 
+-- thêm các cột mới vào bảng bills để làm việc với api logistic
+ALTER TABLE bills ADD COLUMN from_province_id varchar(20) DEFAULT('0');
+ALTER TABLE bills ADD COLUMN from_district_id varchar(20) DEFAULT('0');
+ALTER TABLE bills ADD COLUMN from_ward_id varchar(20) DEFAULT('0');
+ALTER TABLE bills ADD COLUMN to_province_id varchar(20) DEFAULT('0');
+ALTER TABLE bills ADD COLUMN to_district_id varchar(20) DEFAULT('0');
+ALTER TABLE bills ADD COLUMN to_ward_id varchar(20) DEFAULT('0');
+
+-- xóa đi khóa ngoại giữa bảng bills và bảng account_customers
 ALTER TABLE bills DROP FOREIGN KEY bills_ibfk_4;
 
 ALTER TABLE account_customers
