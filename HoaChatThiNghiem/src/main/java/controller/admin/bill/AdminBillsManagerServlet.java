@@ -1,8 +1,10 @@
 package controller.admin.bill;
 
 import database.dao.CustomerDao;
+import model.admin.Admin;
 import model.shop.Bill;
 import service.CustomerService;
+import utils.CommonString;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -10,17 +12,23 @@ import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "AdminBillsManager", value = "/admin/quan-ly-don-hang")
+@WebServlet(name = "AdminBillsManager", value = "/admin/quan-ly-don-hang-root")
 public class AdminBillsManagerServlet extends HttpServlet {
     private final CustomerDao customerDao = new CustomerDao();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Bill> bills = CustomerService.getAllBills();
-        request.setAttribute("bills", bills);
+        Admin ad = (Admin) request.getSession().getAttribute(CommonString.ADMIN_SESSION);
+        if(ad.getId_role_admin() >= 2){
+            List<Bill> bills = CustomerService.getAllBills();
+            request.setAttribute("bills", bills);
 
-        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/admin-jsp/bills-manager.jsp");
-        dispatcher.forward(request,response);
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/admin-jsp/bills-manager.jsp");
+            dispatcher.forward(request,response);
+        }
+        else {
+            response.sendRedirect(request.getContextPath() + "/admin/trang-chu");
+        }
     }
 
     @Override

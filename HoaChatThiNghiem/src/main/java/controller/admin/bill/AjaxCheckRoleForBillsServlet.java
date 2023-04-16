@@ -1,4 +1,4 @@
-package controller.admin.account;
+package controller.admin.bill;
 
 import model.admin.Admin;
 import utils.CommonString;
@@ -8,10 +8,11 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 
-@WebServlet(name = "AjaxAdminsManagerServlet", value = "/admin/check-role")
-public class AjaxAdminsManagerServlet extends HttpServlet {
+@WebServlet(name = "AjaxCheckRoleForRootServlet", value = "/admin/check-role-bill")
+public class AjaxCheckRoleForBillsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
 
     }
 
@@ -20,8 +21,8 @@ public class AjaxAdminsManagerServlet extends HttpServlet {
         Admin ad = (Admin) request.getSession().getAttribute(CommonString.ADMIN_SESSION);
         try {
             Integer idRoleAdmin = ad.getId_role_admin();
-            if (idRoleAdmin == 3) {
-                response.getWriter().write(request.getContextPath() + "/admin/quan-ly-admin-super");
+            if (idRoleAdmin >= 2) {
+                response.getWriter().write(request.getContextPath() + "/admin/quan-ly-don-hang-root");
             } else {
                 response.getWriter().write("fail");
             }
