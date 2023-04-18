@@ -28,10 +28,60 @@ public class CustomerService {
             throw new RuntimeException(e);
         }
     }
+    public static Customer takeAccountFromEmail(String email){
+        List<Customer> customers = new ArrayList<>();
+        DbConnection connectDB = DbConnection.getInstance();
+        String sql = "SELECT id_user_customer, username, pass, id_status_acc, id_city, full_name, phone_customer, " +
+                "address, sex, email_customer, failed_count " +
+                "from account_customers where username = ?";
+        PreparedStatement preState = connectDB.getPreparedStatement(sql);
+        try {
+            preState.setString(1, email);
+            ResultSet rs = preState.executeQuery();
+            while (rs.next()) {
+                int id_customer = rs.getInt("id_user_customer");
+                String email_customer = rs.getString("username");
+                String password_customer = rs.getString("pass");
+                int id_status_acc_customer = rs.getInt("id_status_acc");
+                int id_city_customer = rs.getInt("id_city");
+                String fullname_customer = rs.getString("full_name");
+                if (fullname_customer == null) {
+                    fullname_customer = email_customer;
+                }
+                String phone = rs.getString("phone_customer");
+                String address = rs.getString("address");
+                String sex = rs.getString("sex");
+                String email_cus = rs.getString("email_customer");
+                int failed_count = rs.getInt("failed_count");
+                Customer customer = new Customer(id_customer, email_customer, password_customer, id_status_acc_customer,
+                        id_city_customer, fullname_customer, phone, address);
+                customer.setSex(sex);
+                customer.setEmail_customer(email_cus);
+                customer.setFailed_count(failed_count);
+                customers.add(customer);
+            }
+            if (customers.size() != 1) {
+                return null;
+            } else {
+                Customer unique = customers.get(0);
+//                int count = getFailedCount(unique.getEmail());
+//                System.out.println(count);
+//                temporaryBan(unique.getEmail(), count);
+//                System.out.println(temporaryBan(unique.getEmail(), count));
+//                updateFailedCount(unique.getEmail());
+                return unique;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            connectDB.close();
+        }
+    }
     public static Customer checkLogin(String email, String password) {
         List<Customer> customers = new ArrayList<>();
         DbConnection connectDB = DbConnection.getInstance();
-        String sql = "SELECT id_user_customer, username, pass, id_status_acc, id_city, full_name, phone_customer, address, sex, email_customer " +
+        String sql = "SELECT id_user_customer, username, pass, id_status_acc, id_city, full_name, phone_customer, " +
+                "address, sex, email_customer, failed_count " +
                 "from account_customers where username = ?";
         PreparedStatement preState = connectDB.getPreparedStatement(sql);
         try {
@@ -64,6 +114,12 @@ public class CustomerService {
                 String hashedInputPass = hashPass(password);
                 if (unique.getPassword().equals(hashedInputPass)) {
                     return unique;
+                }else{
+                    int count = getFailedCount(unique.getEmail());
+                    System.out.println(count);
+                    temporaryBan(unique.getEmail(), count);
+                    System.out.println(temporaryBan(unique.getEmail(), count));
+                    updateFailedCount(unique.getEmail());
                 }
             }
         } catch (SQLException e) {
@@ -73,7 +129,60 @@ public class CustomerService {
         }
         return null;
     }
+    public static void updateFailedCount(String email){
+        DbConnection connectDb = DbConnection.getInstance();
+        String sql = "UPDATE account_customers " +
+                "SET failed_count = failed_count + 1" +
+                " WHERE username = ?";
+        PreparedStatement preState = connectDb.getPreparedStatement(sql);
+        try{
+            preState.setString(1, email);
+            preState.executeUpdate();
+        }catch (Exception e){
+        }
+        finally {
+            connectDb.close();
+        }
+    }
+    public static int getFailedCount(String email){
+        DbConnection connectDb = DbConnection.getInstance();
+        String sql = "SELECT failed_count " +
+                "FROM account_customers " +
+                "WHERE username = ?";
+        PreparedStatement preSta = connectDb.getPreparedStatement(sql);
+        try {
+            preSta.setString(1, email);
+            ResultSet rs = preSta.executeQuery();
+            while (rs.next()){
+                return rs.getInt(1);
+            }
+        }catch (Exception e){
 
+        }finally {
+            connectDb.close();
+        }
+        return 100;
+    }
+    public static boolean temporaryBan(String email, int count){
+        if(count >= 5){
+            DbConnection connectDb = DbConnection.getInstance();
+            String sql = "UPDATE account_customers " +
+                    "SET id_status_acc = 2" +
+                    " WHERE username = ?";
+            PreparedStatement preSta = connectDb.getPreparedStatement(sql);
+            try {
+                preSta.setString(1, email);
+                preSta.executeUpdate();
+                return true;
+            }catch (Exception e){
+            }finally {
+                connectDb.close();
+            }
+        }else{
+            return false;
+        }
+        return false;
+    }
     public static boolean changePass(String newPass, String email) {
         DbConnection connectDb = DbConnection.getInstance();
         String sql = "UPDATE account_customers " +
@@ -164,8 +273,8 @@ public class CustomerService {
     }
     public static void signUp(String email, String hashedPass) {
         DbConnection connectDb = DbConnection.getInstance();
-        String sql = "INSERT INTO account_customers(username, pass, id_status_acc, id_city) " +
-                "VALUES(?, ?, 1, 1)";
+        String sql = "INSERT INTO account_customers(username, pass, id_status_acc, id_city, failed_count) " +
+                "VALUES(?, ?, 1, 1, 0)";
         PreparedStatement preState = connectDb.getPreparedStatement(sql);
         try {
             preState.setString(1, email);
@@ -305,9 +414,5 @@ public class CustomerService {
         } catch (SQLException e) {
             return new ArrayList<>();
         }
-    }
-
-    public static void main(String[] args) {
-        System.out.println(checkLogin("nguyenphutai1234@gmail.com", "nguyenphutai"));
     }
 }

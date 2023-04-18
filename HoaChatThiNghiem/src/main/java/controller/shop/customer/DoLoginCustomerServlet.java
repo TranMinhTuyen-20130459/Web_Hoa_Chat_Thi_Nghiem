@@ -20,6 +20,12 @@ public class DoLoginCustomerServlet extends HttpServlet {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         Customer customer = CustomerService.checkLogin(email, password);
+        Customer customerLoginFailed = CustomerService.takeAccountFromEmail(email);
+        if(email.equals("") || password.equals("")){
+            request.setAttribute("error","Email hoặc mật khẩu đang bị trống");
+            request.getServletContext().getRequestDispatcher("/shop/login.jsp").forward(request,response);
+            return;
+        }
         if(customer != null){
             if(customer.getId_status_acc() == 1) {
                 HttpSession session = request.getSession(true);
@@ -34,8 +40,24 @@ public class DoLoginCustomerServlet extends HttpServlet {
                 request.getRequestDispatcher("login.jsp").forward(request, response);
             }
         }else{
-            request.setAttribute("error", "Tài khoản hoặc mật khẩu không đúng");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
+            if(customerLoginFailed != null){
+                if(customerLoginFailed.getId_status_acc() == 2){
+                    request.setAttribute("error", "Tài khoản tạm khóa");
+                    request.getRequestDispatcher("login.jsp").forward(request, response);
+                }else if(customerLoginFailed.getId_status_acc() == 3){
+                    request.setAttribute("error", "Tài khoản đã bị khóa vĩnh viễn");
+                    request.getRequestDispatcher("login.jsp").forward(request, response);
+                }else{
+                    int count = 6 - customerLoginFailed.getFailed_count();
+                    if(count >= 0){
+                        request.setAttribute("error", "Tài khoản này còn " + count + " đăng nhập");
+                        request.getRequestDispatcher("login.jsp").forward(request, response);
+                    }
+                }
+            }else{
+                request.setAttribute("error", "Tài khoản hoặc mật khẩu không đúng");
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+            }
         }
     }
 }

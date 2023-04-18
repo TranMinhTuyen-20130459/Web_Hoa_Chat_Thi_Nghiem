@@ -27,6 +27,7 @@ public class Customer implements Serializable {
     private String id_user_fb;
 
     private String id_user_gg;
+    private int failed_count;
 
     public Customer() {
     }
@@ -140,6 +141,14 @@ public class Customer implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public int getFailed_count() {
+        return failed_count;
+    }
+
+    public void setFailed_count(int failed_count) {
+        this.failed_count = failed_count;
     }
 
     public Date getTimeCreated() {
