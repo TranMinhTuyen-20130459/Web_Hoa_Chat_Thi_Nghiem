@@ -101,10 +101,11 @@
                                 <div class="form-group">
                                     <label>Tỉnh / Thành<span>*</span></label>
                                     <div class="select-wrapper">
-                                    <select name="cities" size="10" class="form-select form-select-sm mb-3" id="city"
-                                            aria-label=".form-select-sm" style="display:block">
-                                        <option value="" selected>Chọn tỉnh thành</option>
-                                    </select>
+                                        <select name="cities" size="10" class="form-select form-select-sm mb-3"
+                                                id="city"
+                                                aria-label=".form-select-sm" style="display:block">
+                                            <option value="" selected>Chọn tỉnh thành</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -112,10 +113,10 @@
                                 <div class="form-group">
                                     <label>Quận / Huyện<span>*</span></label>
                                     <div class="select-wrapper">
-                                    <select name="districts" class="form-select form-select-sm mb-3" id="district"
-                                            aria-label=".form-select-sm" style="display: block">
-                                        <option value="" selected>Chọn quận huyện</option>
-                                    </select>
+                                        <select name="districts" class="form-select form-select-sm mb-3" id="district"
+                                                aria-label=".form-select-sm" style="display: block">
+                                            <option value="" selected>Chọn quận huyện</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -123,11 +124,11 @@
                                 <div class="form-group">
                                     <label>Phường / Xã<span>*</span></label>
                                     <div class="select-wrapper">
-                                    <select name="wards" class="form-select form-select-sm" id="ward"
-                                            aria-label=".form-select-sm"
-                                            style="display: block">
-                                        <option value="" selected>Chọn phường xã</option>
-                                    </select>
+                                        <select name="wards" class="form-select form-select-sm" id="ward"
+                                                aria-label=".form-select-sm"
+                                                style="display: block">
+                                            <option value="" selected>Chọn phường xã</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -149,7 +150,7 @@
                         <div class="content mt-3">
                             <ul>
                                 <li>Hóa đơn<span>${pu:format(requestScope['bill_price'])}đ</span></li>
-                                <li>(+) Vận chuyển<span>${pu:format(requestScope['transport_fee'])}đ</span></li>
+                                <li>(+) Vận chuyển<span id="feeShip">0 đ</span></li>
                                 <li>Tổng<span
                                         class="total">${pu:format(requestScope['bill_price'] + requestScope['transport_fee'])}đ</span>
                                 </li>
@@ -200,6 +201,7 @@
     let cities = document.getElementById('city');
     let districts = document.getElementById('district');
     let wards = document.getElementById('ward');
+    let costShip = document.getElementById('feeShip');
 
     // các url của api logistic
     const urls = {
@@ -207,13 +209,23 @@
         api_province: 'http://140.238.54.136/api/province',
         api_district: 'http://140.238.54.136/api/district',
         api_ward: 'http://140.238.54.136/api/ward',
-        api_feeShip: 'http://140.238.54.136/api/fee-ship',
+        api_feeShip: 'http://140.238.54.136/api/calculateFee',
     }
 
     // thông tin tài khoản đã đăng ký dùng để gọi api logistic
     const accountAPI = {
         email: 'tuyen@1234',
         password: '123456789'
+    }
+
+    // thông tin vận chuyển đơn hàng
+    let infor_transport = {
+        from_district_id: 1463, // Thành phố Thủ Đức
+        from_ward_id: 21808, // Phường Linh Trung
+        height: 100,
+        length: 100,
+        width: 100,
+        weight: 100
     }
 
     let countGetListProvince = 0;
@@ -328,25 +340,31 @@
     // Gọi api POST ước lượng chi phí vận chuyển
     function getFeeShip(url, from_district_id, from_ward_id, to_district_id, to_ward_id, height, length, width, weight, access_token) {
 
+        console.log("đây là hàm getFeeShip()")
         axios.post(url, {
+            from_district_id: from_district_id,
+            from_ward_id: from_ward_id,
+            to_district_id: to_district_id,
+            to_ward_id: to_ward_id,
+            height: height,
+            length: length,
+            width: width,
+            weight: weight
+        }, {
             headers: {
                 Authorization: 'Bearer ' + access_token
-            },
-            params: {
-                from_district_id: from_district_id,
-                from_ward_id: from_ward_id,
-                to_district_id: to_district_id,
-                to_ward_id: to_ward_id,
-                height: height,
-                length: length,
-                width: width,
-                weight: weight
             }
+
         })
             .then((response) => {
+                const data = response.data
+                feeShip = data.data[0].service_fee
 
+                costShip.innerHTML = feeShip+' đ';
+                console.log(feeShip)
             })
             .catch((error) => {
+                console.log(error.message)
                 console.error(error);
             })
 
@@ -384,6 +402,7 @@
 
                 resetSelectDistrict();
                 resetSelectWard();
+                costShip.innerHTML = 0+' đ';
 
             }
 
@@ -414,6 +433,7 @@
                 getListWardOfDistrict(urls.api_ward, districtID, access_token) // gọi api lấy danh sách phường/xã của quận/huyện dựa vào id quận/huyện
             } else {
                 resetSelectWard();
+                costShip.innerHTML = 0+' đ';
             }
         }
     }
@@ -434,6 +454,17 @@
 
         // Cập nhật plugin nice-select
         $('#ward').niceSelect('update');
+
+        wards.onchange = function () {
+            let to_district_id = districts.value;
+            let to_ward_id = this.value;
+
+            getFeeShip(urls.api_feeShip, infor_transport.from_district_id, infor_transport.from_ward_id,
+                to_district_id, to_ward_id,
+                infor_transport.height, infor_transport.length,
+                infor_transport.width, infor_transport.weight, access_token)
+
+        }
 
     }
 
