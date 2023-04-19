@@ -195,78 +195,358 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
 
 <%--Lấy dữ liệu về tỉnh/thành , quận/huyện , phường/xã từ file Json --%>
+<%--<script>--%>
+
+<%--    let cities = document.getElementById("city");--%>
+<%--    let districts = document.getElementById("district");--%>
+<%--    let wards = document.getElementById("ward");--%>
+
+<%--    let Parameter = {--%>
+<%--        url: "./data/vietnam.json", //Đường dẫn đến file chứa dữ liệu hoặc api do backend cung cấp--%>
+<%--        method: "GET", //do backend cung cấp--%>
+<%--        responseType: "application/json", //kiểu Dữ liệu trả về do backend cung cấp--%>
+<%--    };--%>
+
+<%--    //gọi ajax = axios => nó trả về cho chúng ta là một promise--%>
+<%--    let promise = axios(Parameter);--%>
+
+<%--    //Xử lý khi request thành công--%>
+<%--    promise.then(function (result) {--%>
+<%--        renderCity(result.data); // => trả về dữ liệu các tỉnh / thành phố--%>
+<%--    });--%>
+
+<%--    //Xử lý khi request thất bại--%>
+<%--    promise.catch(error =>{--%>
+<%--        console.log(error);--%>
+<%--    });--%>
+
+<%--    function renderCity(data) {--%>
+
+<%--        for (const x of data) {--%>
+<%--            cities.options[cities.options.length] = new Option(x.Name, x.Id);--%>
+<%--        }--%>
+
+<%--        // Cập nhật plugin nice-select--%>
+<%--        $('#city').niceSelect('update');--%>
+
+<%--        // xứ lý khi thay đổi tỉnh thành thì sẽ hiển thị ra quận huyện thuộc tỉnh thành đó--%>
+<%--        cities.onchange = function () {--%>
+<%--            districts.length = 1;--%>
+<%--            wards.length = 1;--%>
+<%--            if (this.value != "") {--%>
+<%--                const result = data.filter(n => n.Id === this.value);--%>
+
+<%--                for (const k of result[0].Districts) {--%>
+<%--                    district.options[district.options.length] = new Option(k.Name, k.Id);--%>
+<%--                }--%>
+<%--            }--%>
+<%--            // Cập nhật plugin nice-select--%>
+<%--            $('#district').niceSelect('update');--%>
+<%--            $('#ward').niceSelect('update');--%>
+<%--        };--%>
+
+<%--        // xứ lý khi thay đổi quận huyện thì sẽ hiển thị ra phường xã thuộc quận huyện đó--%>
+<%--        districts.onchange = function () {--%>
+<%--            wards.length = 1;--%>
+<%--            const dataCity = data.filter((n) => n.Id === cities.value);--%>
+<%--            if (this.value != "") {--%>
+<%--                const dataWards = dataCity[0].Districts.filter(n => n.Id === this.value)[0].Wards;--%>
+
+<%--                for (const w of dataWards) {--%>
+<%--                    wards.options[wards.options.length] = new Option(w.Name, w.Id);--%>
+<%--                }--%>
+<%--            }--%>
+<%--            // Cập nhật plugin nice-select--%>
+<%--            $('#ward').niceSelect('update');--%>
+<%--        };--%>
+
+<%--        //Gọi plugin niceSelect--%>
+<%--        $('select').niceSelect();--%>
+
+<%--        //Thêm class 'has-scrollbar' vào thẻ ul của các select hiển thị scrollbar nếu có nhiều dữ liệu--%>
+<%--        $('#city ul').addClass('has-scrollbar');--%>
+<%--        // $('#city ul, #district ul, #ward ul').addClass('has-scrollbar');--%>
+
+<%--    }--%>
+<%--</script>--%>
+
+<!-- Gọi API để lấy danh sách tỉnh/thành, quận/huyện, phường/xã -->
 <script>
 
-    var citis = document.getElementById("city");
-    var districts = document.getElementById("district");
-    var wards = document.getElementById("ward");
-    var Parameter = {
-        url: "./data/vietnam.json", //Đường dẫn đến file chứa dữ liệu hoặc api do backend cung cấp
-        method: "GET", //do backend cung cấp
-        responseType: "application/json", //kiểu Dữ liệu trả về do backend cung cấp
-    };
+    let cities = document.getElementById('city');
+    let districts = document.getElementById('district');
+    let wards = document.getElementById('ward');
 
-    //gọi ajax = axios => nó trả về cho chúng ta là một promise
-    var promise = axios(Parameter);
-    //Xử lý khi request thành công
-    promise.then(function (result) {
-        renderCity(result.data);
-    });
+    // các url của api logistic
+    const urls = {
+        api_login: 'http://140.238.54.136/api/auth/login',
+        api_province: 'http://140.238.54.136/api/province',
+        api_district: 'http://140.238.54.136/api/district',
+        api_ward: 'http://140.238.54.136/api/ward',
+        api_feeShip: 'http://140.238.54.136/api/fee-ship',
+    }
 
-    function renderCity(data) {
+    // thông tin tài khoản đã đăng ký dùng để gọi api logistic
+    const accountAPI = {
+        email: 'tuyen@1234',
+        password: '123456789'
+    }
 
-        for (const x of data) {
-            citis.options[citis.options.length] = new Option(x.Name, x.Id);
-        }
+    let countGetListProvince = 0;
+    let access_token = getToken(urls.api_login, accountAPI.email, accountAPI.password); // gọi api để lấy access_token sau khi vừa load trang
+    let listProvince;// danh sách tỉnh/thành
+    let listDistrictOfProvince; // danh sách quận/huyện thuộc một tỉnh/thành bất kì nào đó
+    let listWardOfDistrict; // danh sách phường/xã thuộc một quận/huyện bất kì nào đó
+    let feeShip; // phí ship ước lượng
+
+    //  Gọi api POST để lấy access_token <=> đăng nhập vào hệ thống của bên logistic bằng tài khoản đã đăng ký trước đó
+    function getToken(url, email, password) {
+
+        console.log("Access_Token:")
+
+        axios.post(url, {
+            email: email,
+            password: password
+        })
+
+            .then((response) => {
+
+                access_token = response.data.access_token
+                console.log(access_token)
+
+                // đảm bảo chỉ gọi hàm getListProvince 1 lần duy nhất
+                if (countGetListProvince === 0) {
+                    getListProvince(urls.api_province, access_token) // gọi api lấy danh sách tỉnh/thành dựa vào access_token vừa lấy được
+                    countGetListProvince++;
+                }
+
+            }) // => được gọi khi Promise được giải quyết thành công và trả về dữ liệu JSON từ API endpoint.
+
+            .catch((error) => {
+
+                // access_token = null;
+                console.error(error);
+            }); // => được gọi khi Promise bị từ chối và trả về lỗi từ API endpoint.
+    }
+
+    // Gọi api GET để lấy ra danh sách các tỉnh/thành
+    function getListProvince(url, access_token) {
+
+        console.log('Danh sách các tỉnh/thành')
+        axios.get(url, {
+            headers: {
+                Authorization: 'Bearer ' + access_token
+            }
+        })
+            .then((response) => {
+
+                listProvince = response.data.original.data
+                console.log(listProvince)
+
+                renderProvince(listProvince) // hiển thị danh sách tỉnh/thành lên giao diện
+
+            })  // => được gọi khi Promise được giải quyết thành công và trả về dữ liệu JSON từ API endpoint.
+            .catch((error) => {
+                console.error(error);
+            })  // => được gọi khi Promise bị từ chối và trả về lỗi từ API endpoint.
+
+    }
+
+    // Gọi api GET lấy ra danh sách quận/huyện của một tỉnh/thành bằng api GET
+    function getListDistrictOfProvince(url, provinceID, access_token) {
+
+        console.log('Danh sách các quận/huyện của một tỉnh/thành')
+
+        axios.get(url, {
+            headers: {
+                Authorization: 'Bearer ' + access_token
+            },
+            params: {
+                provinceID: provinceID
+            }
+        })
+            .then((response) => {
+                listDistrictOfProvince = response.data.original.data
+                console.log(listDistrictOfProvince)
+
+                renderDistrict(listDistrictOfProvince) // hiển thị danh sách quận/huyện vừa được lấy về lên giao diện
+
+            })
+            .catch((error) => {
+                console.error(error);
+            })
+    }
+
+    // Gọi api GET lấy ra danh sách phường/xã của một quận/huyện bằng api GET
+    function getListWardOfDistrict(url, districtID, access_token) {
+
+        console.log('Danh sách các phường/xã của một quận/huyện')
+
+        axios.get(url, {
+            headers: {
+                Authorization: 'Bearer ' + access_token
+            },
+            params: {
+                districtID: districtID
+            }
+        })
+            .then((response) => {
+                listWardOfDistrict = response.data.original.data
+                console.log(listWardOfDistrict)
+
+                renderWard(listWardOfDistrict) // hiển thị danh sách phường/xã vừa được lấy về lên giao diện
+            })
+            .catch((error) => {
+                console.error(error);
+            })
+    }
+
+    // Gọi api POST ước lượng chi phí vận chuyển
+    function getFeeShip(url, from_district_id, from_ward_id, to_district_id, to_ward_id, height, length, width, weight, access_token) {
+
+        axios.post(url, {
+            headers: {
+                Authorization: 'Bearer ' + access_token
+            },
+            params: {
+                from_district_id: from_district_id,
+                from_ward_id: from_ward_id,
+                to_district_id: to_district_id,
+                to_ward_id: to_ward_id,
+                height: height,
+                length: length,
+                width: width,
+                weight: weight
+            }
+        })
+            .then((response) => {
+
+            })
+            .catch((error) => {
+                console.error(error);
+            })
+
+    }
+
+    // gọi lại hàm getToken để lấy access_token mới sau 300s
+    setInterval(() => {
+        getToken(urls.api_login, accountAPI.email, accountAPI.password);
+    }, 300000);
+
+    function renderProvince(listProvince) {
+
+        console.log("Đây là hàm renderProvince()")
+        // console.log(listProvince)
+
+        listProvince.forEach((province) => {
+            const option = document.createElement('option');
+            option.value = province.ProvinceID;
+            option.textContent = province.ProvinceName;
+            cities.appendChild(option);
+        });
 
         // Cập nhật plugin nice-select
         $('#city').niceSelect('update');
 
-        // xứ lý khi thay đổi tỉnh thành thì sẽ hiển thị ra quận huyện thuộc tỉnh thành đó
-        citis.onchange = function () {
-            districts.length = 1;
-            wards.length = 1;
-            if (this.value != "") {
-                const result = data.filter(n => n.Id === this.value);
+        // xứ lý khi thay đổi tỉnh/thành thì sẽ hiển thị ra quận/huyện thuộc tỉnh thành đó
+        cities.onchange = function () {
 
-                for (const k of result[0].Districts) {
-                    district.options[district.options.length] = new Option(k.Name, k.Id);
-                }
+            let provinceID = this.value;
+            if (provinceID != "") {
+                resetSelectDistrict();
+                resetSelectWard();
+                getListDistrictOfProvince(urls.api_district, provinceID, access_token) // gọi api lấy danh sách quận/huyện của tỉnh/thành dựa vào id tỉnh/thành
+            } else {
+
+                resetSelectDistrict();
+                resetSelectWard();
+
             }
-            // Cập nhật plugin nice-select
-            $('#district').niceSelect('update');
-            $('#ward').niceSelect('update');
-        };
 
-        // xứ lý khi thay đổi quận huyện thì sẽ hiển thị ra phường xã thuộc quận huyện đó
-        districts.onchange = function () {
-            wards.length = 1;
-            const dataCity = data.filter((n) => n.Id === citis.value);
-            if (this.value != "") {
-                const dataWards = dataCity[0].Districts.filter(n => n.Id === this.value)[0].Wards;
-
-                for (const w of dataWards) {
-                    wards.options[wards.options.length] = new Option(w.Name, w.Id);
-                }
-            }
-            // Cập nhật plugin nice-select
-            $('#ward').niceSelect('update');
-        };
-
-        //Gọi plugin niceSelect
-        $('select').niceSelect();
-
-        //Thêm class 'has-scrollbar' vào thẻ ul của các select hiển thị scrollbar nếu có nhiều dữ liệu
-        $('#city ul').addClass('has-scrollbar');
-        // $('#city ul, #district ul, #ward ul').addClass('has-scrollbar');
+        }
 
     }
+
+    function renderDistrict(listDistrictOfProvince) {
+
+        console.log("Đây là hàm renderDistrict()")
+
+        resetSelectDistrict();
+
+        listDistrictOfProvince.forEach((district) => {
+            const option = document.createElement('option');
+            option.value = district.DistrictID;
+            option.textContent = district.DistrictName;
+            districts.appendChild(option);
+        })
+
+        // Cập nhật plugin nice-select
+        $('#district').niceSelect('update');
+
+        // xứ lý khi thay đổi quận/huyện thì sẽ hiển thị ra phường/xã thuộc quận/huyện đó
+        districts.onchange = function () {
+            let districtID = this.value;
+            if (districtID != "") {
+                getListWardOfDistrict(urls.api_ward, districtID, access_token) // gọi api lấy danh sách phường/xã của quận/huyện dựa vào id quận/huyện
+            } else {
+                resetSelectWard();
+            }
+        }
+    }
+
+    function renderWard(listWardOfDistrict) {
+
+
+        console.log("Đây là hàm renderWard()")
+
+        resetSelectWard();
+
+        listWardOfDistrict.forEach((ward) => {
+            const option = document.createElement('option');
+            option.value = ward.WardCode;
+            option.textContent = ward.WardName;
+            wards.appendChild(option);
+        })
+
+        // Cập nhật plugin nice-select
+        $('#ward').niceSelect('update');
+
+    }
+
+    function resetSelectDistrict() {
+
+        // Reset danh sách các phần tử option của select quận/huyện
+        districts.innerHTML = '';
+        const defaultOptionD = document.createElement('option');
+        defaultOptionD.value = '';
+        defaultOptionD.textContent = 'Chọn quận huyện';
+        districts.appendChild(defaultOptionD);
+
+        // Cập nhật plugin nice-select
+        $('#district').niceSelect('update');
+
+    }
+
+    function resetSelectWard() {
+
+        // Reset danh sách các phần tử option của select phường/xã
+        wards.innerHTML = '';
+        const defaultOptionW = document.createElement('option');
+        defaultOptionW.value = '';
+        defaultOptionW.textContent = 'Chọn phường xã';
+        wards.appendChild(defaultOptionW);
+
+        // Cập nhật plugin nice-select
+        $('#ward').niceSelect('update');
+
+    }
+
 </script>
 
 <%-- Kiểm tra sự hợp lệ của form thông tin giao hàng dùng thư viện jquery.validate --%>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 
-<%--Gọi Ajax cho phương thức đặt hàng --%>
+<%--Kiểm tra hợp lệ của form và gọi Ajax khi đặt hàng --%>
 <script>
 
     $(document).ready(function () {
@@ -367,7 +647,7 @@
                     if (resultData.toString() == "true") {
                         swal({
                             title: 'Thông báo',
-                            text: 'Bạn hãy đặt hàng thành công ^.^',
+                            text: 'Bạn đã đặt hàng thành công ^.^',
                             icon: 'success',
                             timer: 3000,
                             buttons: false
