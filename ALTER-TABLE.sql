@@ -26,3 +26,5 @@ ALTER TABLE account_admins
 ADD COLUMN email VARCHAR(255);
 ALTER TABLE account_admins
 ADD COLUMN url_image_admin VARCHAR(255);
+
+ALTER TABLE account_customers MODIFY pass VARCHAR(250);
