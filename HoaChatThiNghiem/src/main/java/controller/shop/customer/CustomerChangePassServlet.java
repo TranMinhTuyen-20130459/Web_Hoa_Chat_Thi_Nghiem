@@ -17,8 +17,9 @@ public class CustomerChangePassServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String new_pass = request.getParameter("new-pass");
         String old_pass = request.getParameter("old-pass");
+        String hashed_old_pass = CustomerService.hashPass(old_pass);
+        String new_pass = request.getParameter("new-pass");
         String confirm_pass = request.getParameter("confirm-pass");
         if(new_pass.equals("") || old_pass.equals("") || confirm_pass.equals("")){
             request.setAttribute("text", "Vui lòng hãy nhập vào những trường còn thiếu");
@@ -27,9 +28,10 @@ public class CustomerChangePassServlet extends HttpServlet {
         }
         Customer customer = (Customer) request.getSession().getAttribute("auth_customer");
         System.out.println(customer);
-        if(old_pass.equals(customer.getPassword())){
+        if(hashed_old_pass.equals(customer.getPassword())){
             if(new_pass.equals(confirm_pass)){
-                if(CustomerService.changePass(new_pass, customer.getEmail())){
+                String hashed_new_pass = CustomerService.hashPass(new_pass);
+                if(CustomerService.changePass(hashed_new_pass, customer.getEmail())){
                     request.setAttribute("success","Đổi mật khẩu thành công");
                     request.getServletContext().getRequestDispatcher("/shop/change-pass.jsp").forward(request, response);
                 }
