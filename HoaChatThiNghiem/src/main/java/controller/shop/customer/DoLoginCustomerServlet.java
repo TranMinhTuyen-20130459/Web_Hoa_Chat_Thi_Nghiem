@@ -1,6 +1,7 @@
 package controller.shop.customer;
 
 import model.shop.Customer;
+import properties.FacebookProperties;
 import service.CustomerService;
 
 import javax.servlet.*;
@@ -12,28 +13,33 @@ import java.io.IOException;
 public class DoLoginCustomerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        request.setAttribute("clientIdFb", FacebookProperties.FACEBOOK_CLIENT_ID());
+        request.setAttribute("redirectUrlFb", FacebookProperties.FACEBOOK_REDIRECT_URL());
+
         RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/shop/login.jsp");
         dispatcher.forward(request, response);
     }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         Customer customer = CustomerService.checkLogin(email, password);
-        if(customer != null){
-            if(customer.getId_status_acc() == 1) {
+        if (customer != null) {
+            if (customer.getId_status_acc() == 1) {
                 HttpSession session = request.getSession(true);
                 request.setAttribute("auth_session_customer", session);
                 session.setAttribute("auth_customer", customer);
                 response.sendRedirect(request.getContextPath() + "/shop/home");
-            }else if(customer.getId_status_acc() == 2){
+            } else if (customer.getId_status_acc() == 2) {
                 request.setAttribute("error", "Tài khoản tạm khóa");
                 request.getRequestDispatcher("login.jsp").forward(request, response);
-            }else{
+            } else {
                 request.setAttribute("error", "Tài khoản đã bị khóa vĩnh viễn");
                 request.getRequestDispatcher("login.jsp").forward(request, response);
             }
-        }else{
+        } else {
             request.setAttribute("error", "Tài khoản hoặc mật khẩu không đúng");
             request.getRequestDispatcher("login.jsp").forward(request, response);
         }
