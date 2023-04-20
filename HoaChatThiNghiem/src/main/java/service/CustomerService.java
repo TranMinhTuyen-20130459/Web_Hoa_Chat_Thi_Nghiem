@@ -164,7 +164,7 @@ public class CustomerService {
         return 100;
     }
     public static boolean temporaryBan(String email, int count){
-        if(count >= 5){
+        if(count == 5){
             DbConnection connectDb = DbConnection.getInstance();
             String sql = "UPDATE account_customers " +
                     "SET id_status_acc = 2" +

@@ -43,5 +43,6 @@ public class DoLoginCustomerServlet extends HttpServlet {
             request.setAttribute("error", "Tài khoản hoặc mật khẩu không đúng");
             request.getRequestDispatcher("login.jsp").forward(request, response);
         }
+
     }
 }
