@@ -32,4 +32,5 @@
         <function-class>utils.DateUtil</function-class>
         <function-signature>java.lang.String formatTimestamp(java.sql.Timestamp)</function-signature>
     </function>
+
 </taglib>
