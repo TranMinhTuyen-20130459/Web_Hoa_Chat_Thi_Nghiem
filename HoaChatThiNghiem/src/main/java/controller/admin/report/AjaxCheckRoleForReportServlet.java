@@ -1,17 +1,20 @@
-package controller.admin.account;
+package controller.admin.report;
 
 import model.admin.Admin;
 import utils.CommonString;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.*;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name = "AjaxAdminsManagerServlet", value = "/admin/check-role-ad")
-public class AjaxAdminsManagerServlet extends HttpServlet {
+@WebServlet(name = "AjaxCheckRoleForReportServlet", value = "/admin/check-role-report")
+public class AjaxCheckRoleForReportServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
 
     }
 
@@ -20,8 +23,8 @@ public class AjaxAdminsManagerServlet extends HttpServlet {
         Admin ad = (Admin) request.getSession().getAttribute(CommonString.ADMIN_SESSION);
         try {
             Integer idRoleAdmin = ad.getId_role_admin();
-            if (idRoleAdmin == 3) {
-                response.getWriter().write(request.getContextPath() + "/admin/quan-ly-admin-super");
+            if (idRoleAdmin >= 2) {
+                response.getWriter().write(request.getContextPath() + "/admin/bao-cao-doanh-thu-root");
             } else {
                 response.getWriter().write("fail");
             }

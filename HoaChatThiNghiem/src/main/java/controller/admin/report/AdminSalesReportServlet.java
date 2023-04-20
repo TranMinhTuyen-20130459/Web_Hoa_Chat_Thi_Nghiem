@@ -1,8 +1,10 @@
 package controller.admin.report;
 
+import model.admin.Admin;
 import service.AdminService;
 import service.CustomerService;
 import service.ProductService;
+import utils.CommonString;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,11 +15,14 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.stream.Collectors;
 
-@WebServlet(name = "AdminSalesReport", value = "/admin/bao-cao-doanh-thu")
+@WebServlet(name = "AdminSalesReport", value = "/admin/bao-cao-doanh-thu-root")
 public class AdminSalesReportServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Admin ad = (Admin) req.getSession().getAttribute(CommonString.ADMIN_SESSION);
+        if(ad.getId_role_admin() >= 2){
+
         req.setAttribute("infos", getInformation());
 
         req.setAttribute("selling", ProductService.getSellingProducts(30)
@@ -41,6 +46,10 @@ public class AdminSalesReportServlet extends HttpServlet {
 
         var dispatcher = getServletContext().getRequestDispatcher("/admin-jsp/sales-report.jsp");
         dispatcher.forward(req, resp);
+        }
+        else {
+            resp.sendRedirect(req.getContextPath() + "/admin/trang-chu");
+        }
     }
 
     private int[] getInformation() {

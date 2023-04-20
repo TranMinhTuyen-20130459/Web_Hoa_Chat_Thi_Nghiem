@@ -36,14 +36,16 @@ public class DoForgotCustomerServlet extends HttpServlet {
             String id = uuid.toString();
             UUID uuid_password = UUID.randomUUID();
             String new_pass = uuid_password.toString();
-            CustomerSecurity customerSecurity = new CustomerSecurity(id, email, new_pass);
+            String new_hashedPass = CustomerService.hashPass(new_pass);
+            CustomerSecurity customerSecurity = new CustomerSecurity(id, email, new_hashedPass);
             HttpSession session = request.getSession(true);
             request.setAttribute("session_forgot", session);
             session.setAttribute("cus_forgot", customerSecurity);
 
+            String contextPath = request.getContextPath();
             String body = "Để xác thực tài khoản đã quên mật khẩu" +
-//                        "http://localhost:8080/HoaChatThiNghiem_war/shop/verify-register";
-                    "<a href='http://localhost:8080/HoaChatThiNghiem_war/shop/change-pass-forgot?key=" + id + "'> nhấn vào đây!</a>" + "\n" +
+//                        "http://localhost:8080"+ contextPath +"/shop/verify-register";
+                    "<a href='http://localhost:8080"+ contextPath +"/shop/change-pass-forgot?key=" + id + "'> nhấn vào đây!</a>" + "\n" +
                     "<p style='color: red;'>Mật khẩu mới của bạn: "+new_pass+"</p>";
 
             Email sendEmailForForgot = new Email("nguyenphutai840@gmail.com", "nlrtjmzdmlihnlrz",
