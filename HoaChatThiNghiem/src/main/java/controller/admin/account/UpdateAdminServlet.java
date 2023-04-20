@@ -25,7 +25,7 @@ public class UpdateAdminServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String password = request.getParameter("PassAd").strip();
+        String password = request.getParameter("PassAd").replace(" ", "");
         String username = request.getParameter("UserName");
         String idRole = request.getParameter("IdRole");
         String idStatus = request.getParameter("IdStatus");
@@ -36,7 +36,7 @@ public class UpdateAdminServlet extends HttpServlet {
         String statusLog = "Thất bại";
         try {
             try {
-                password_new = request.getParameter("PassNew").strip();
+                password_new = request.getParameter("PassNew").replace(" ", "");
                 fullname = request.getParameter("Fullname").trim();
             } catch (Exception e) {
             }
