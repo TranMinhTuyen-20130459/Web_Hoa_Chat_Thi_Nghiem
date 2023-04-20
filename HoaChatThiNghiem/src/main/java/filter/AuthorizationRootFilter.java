@@ -27,7 +27,7 @@ public class AuthorizationRootFilter implements Filter {
         HttpServletResponse resp = (HttpServletResponse) response;
         String url = req.getRequestURI();
         Admin ad = (Admin) req.getSession().getAttribute(CommonString.ADMIN_SESSION);
-        // kiem tra duong dan co phai danh cho super root khon
+        // kiem tra duong dan co phai danh cho root khong
         if (url.contains("/admin") && url.endsWith("root")) {
             if (ad != null) { // neu co session
                 if (!AdminService_MT.checkUsernameWithRole(ad.getUsername(), ad.getId_role_admin())) { // neu role trong sessin != role trong db
