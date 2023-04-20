@@ -27,8 +27,8 @@ public class AddAccountAdminServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String username = request.getParameter("UserName");
-        String password = request.getParameter("PassAd");
+        String username = request.getParameter("UserName").replace(" ", "");
+        String password = request.getParameter("PassAd").replace(" ", "");
         String idRole = request.getParameter("IdRole");
         String idStatus = request.getParameter("IdStatus");
         try {
@@ -55,7 +55,7 @@ public class AddAccountAdminServlet extends HttpServlet {
                     Admin admin = new Admin(username, password, role, status, " ");
                     if (!AdminService_MT.checkUsername(username)) { // kiem tra username
                         // check độ dài mat khau
-                        if (password.length() > 8) {
+                        if (password.length() > 8 || username != "" ) {
                             if (AdminService_MT.addAccountAdmin(admin) == 1) {
                                 response.getWriter().write("success");
                                 statusLog = "Thành công";
