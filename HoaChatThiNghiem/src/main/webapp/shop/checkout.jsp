@@ -149,10 +149,11 @@
                         <h2>TỔNG CỘNG</h2>
                         <div class="content mt-3">
                             <ul>
-                                <li>Hóa đơn<span>${pu:format(requestScope['bill_price'])}đ</span></li>
-                                <li>(+) Vận chuyển<span id="feeShip">0 đ</span></li>
+                                <li>Hóa đơn<span id="billPrice">0</span>
+                                </li>
+                                <li>(+) Vận chuyển<span id="feeShip">0</span></li>
                                 <li>Tổng<span
-                                        class="total">${pu:format(requestScope['bill_price'] + requestScope['transport_fee'])}đ</span>
+                                        class="total" id="totalBill">0</span>
                                 </li>
                             </ul>
                         </div>
@@ -190,7 +191,34 @@
 <!-- ===== JAVASCRIPT ===== -->
 <jsp:include page="../common/shop-js.jsp"/>
 
+<%--Thư viện dùng để hiển thị cửa sổ thông báo--%>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+
+<script>
+    const bill_price = ${requestScope['bill_price']};
+    let billPrice = document.getElementById('billPrice');
+    let costShip = document.getElementById('feeShip');
+    let totalBill = document.getElementById('totalBill');
+
+    $(document).ready(function (){
+
+        billPrice.innerHTML = formatCurrency(bill_price)
+        costShip.innerHTML = formatCurrency(0)
+        totalBill.innerHTML = formatCurrency(bill_price)
+
+    })
+
+    // format theo định dạng tiền tệ VN
+    function formatCurrency(currency) {
+        return currency.toLocaleString('vi-VN', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+            useGrouping: true,
+            currency: 'VND',
+            style: 'currency'
+        })
+    }
+</script>
 
 <%--Thư viện Axios là một thư viện HTTP Client dựa trên Promise--%>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
@@ -201,7 +229,6 @@
     let cities = document.getElementById('city');
     let districts = document.getElementById('district');
     let wards = document.getElementById('ward');
-    let costShip = document.getElementById('feeShip');
 
     // các url của api logistic
     const urls = {
@@ -360,7 +387,8 @@
                 const data = response.data
                 feeShip = data.data[0].service_fee
 
-                costShip.innerHTML = feeShip+' đ';
+                costShip.innerHTML = formatCurrency(feeShip);
+                totalBill.innerHTML = formatCurrency(bill_price + feeShip)
                 console.log(feeShip)
             })
             .catch((error) => {
@@ -402,8 +430,7 @@
 
                 resetSelectDistrict();
                 resetSelectWard();
-                costShip.innerHTML = 0+' đ';
-
+                resetFeeShip();
             }
 
         }
@@ -433,7 +460,7 @@
                 getListWardOfDistrict(urls.api_ward, districtID, access_token) // gọi api lấy danh sách phường/xã của quận/huyện dựa vào id quận/huyện
             } else {
                 resetSelectWard();
-                costShip.innerHTML = 0+' đ';
+                resetFeeShip();
             }
         }
     }
@@ -494,6 +521,12 @@
         // Cập nhật plugin nice-select
         $('#ward').niceSelect('update');
 
+    }
+
+    function resetFeeShip() {
+        feeShip = 0;
+        costShip.innerHTML = formatCurrency(feeShip);
+        totalBill.innerHTML = formatCurrency(bill_price);
     }
 
 </script>
@@ -593,7 +626,10 @@
                     District: district,
                     Ward: ward,
                     Address: address,
-                    BillPriceBefore: bill_price_before
+                    BillPriceBefore: bill_price_before,
+                    FeeShip: feeShip,
+                    BillPriceAfter: bill_price + feeShip
+
 
                 }, // -- tham số truyền đến server
                 data_type: 'text', // -- kiểu dữ liệu nhận về từ server
