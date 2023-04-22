@@ -1,7 +1,5 @@
 package properties;
 
-import database.DbProperties;
-
 import java.io.IOException;
 import java.util.Properties;
 
@@ -12,7 +10,7 @@ public class FacebookProperties {
 
     static {
         try {
-            PROP.load(DbProperties.class.getClassLoader().getResourceAsStream(PROP_PATH));
+            PROP.load(FacebookProperties.class.getClassLoader().getResourceAsStream(PROP_PATH));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -30,7 +28,7 @@ public class FacebookProperties {
         return PROP.getProperty("redirectUrl");
     }
 
-    public static String FACEBOOK_LINK_GET_TOKEN(){
+    public static String FACEBOOK_LINK_GET_TOKEN() {
         return PROP.getProperty("linkGetToken");
     }
 
