@@ -20,18 +20,9 @@
 
 <body>
 <style>
-    .has-scrollbar::-webkit-scrollbar {
-        height: 8px;
-    }
-
-    .has-scrollbar::-webkit-scrollbar-thumb {
-        background-color: #ccc;
-        border-radius: 6px;
-    }
-
-    .has-scrollbar {
-        max-height: 100px;
-        overflow-y: auto;
+    .nice-select .list{
+        max-height: 250px;
+        overflow-y: auto !important;
     }
 </style>
 <!-- ===== PRELOADER ===== -->
