@@ -14,7 +14,6 @@ public final class DbProperties {
             throw new RuntimeException(e);
         }
     }
-
     private DbProperties() {
         throw new AssertionError();
     }

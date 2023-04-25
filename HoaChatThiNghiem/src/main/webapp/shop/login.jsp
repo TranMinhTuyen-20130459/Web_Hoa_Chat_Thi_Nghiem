@@ -58,7 +58,8 @@
             </div>
             <div class="col-lg-5 col-md-5 col-12">
                 <div class="h-100 d-flex align-items-center">
-                    <form id="form-login" class="m-0 p-5 text-center" action="<%=request.getContextPath()%>/shop/login" method="post"
+                    <form id="form-login" class="m-0 p-5 text-center" action="<%=request.getContextPath()%>/shop/login"
+                          method="post"
                           name="form_login">
                         <h5 class="mb-4">Đăng Nhập</h5>
                         <%if (error != null) {%>
@@ -73,7 +74,8 @@
                         <input id="password" class="w-100 mb-4" type="password" placeholder="Mật khẩu" name="password"/>
                         <button type="submit" class="btn next w-100">Đăng nhập</button>
                         <span class="or d-inline-block text-uppercase my-4 position-relative">Hoặc</span>
-                        <a onclick="loginGg()" id="google-login-button" class="google d-flex justify-content-center w-100 mb-3"><img
+                        <a onclick="loginGg()" id="google-login-button"
+                           class="google d-flex justify-content-center w-100 mb-3"><img
                                 width="25px" class="mr-2" src="images/logo-google.png"
                                 alt=""/>Google</a>
                         <a onclick="loginFB()" id="fb-login-button"
@@ -114,18 +116,18 @@
 <%--xu ly chuyen huong den trang danh nhap facebook, google--%>
 <script>
     function loginGg() {
-        var redirectUri = 'https://localhost:8080/it-nlu/GoogleLoginServlet'
-        var clientId = '482392281996-220kv6ebj29hqk0ot270448ea6mrtj2i.apps.googleusercontent.com'
-        var linkAuthentication = 'https://accounts.google.com/o/oauth2/auth?scope=profile%20email&redirect_uri='
+        let clientId = '482392281996-220kv6ebj29hqk0ot270448ea6mrtj2i.apps.googleusercontent.com'
+        let redirectUri = 'https://localhost:8080/it-nlu/GoogleLoginServlet'
+        let linkAuthentication = 'https://accounts.google.com/o/oauth2/auth?scope=profile%20email&redirect_uri='
             + redirectUri + '&response_type=code&client_id=' + clientId + '&approval_prompt=force&access_type=offline'
         window.location = linkAuthentication
     }
 
     function loginFB() {
-        var appId = '1572977559871866'
-        var redirectUri = 'https://localhost:8080/it-nlu/FacebookLoginServlet'
-        var linkAuthentication = 'https://www.facebook.com/dialog/oauth?client_id='
-            + appId + '&redirect_uri=' + redirectUri + '&scope=public_profile,email'
+        let clientId = "<%=request.getAttribute("clientIdFb")%>"
+        let redirectUri = "<%=request.getAttribute("redirectUrlFb")%>"
+        let linkAuthentication = 'https://www.facebook.com/dialog/oauth?client_id='
+            + clientId + '&redirect_uri=' + redirectUri + '&scope=public_profile,email'
         window.location = linkAuthentication
     }
 </script>
