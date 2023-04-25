@@ -116,8 +116,8 @@
 <%--xu ly chuyen huong den trang danh nhap facebook, google--%>
 <script>
     function loginGg() {
-        let clientId = '482392281996-220kv6ebj29hqk0ot270448ea6mrtj2i.apps.googleusercontent.com'
-        let redirectUri = 'https://localhost:8080/it-nlu/GoogleLoginServlet'
+        let clientId = "<%=request.getAttribute("clientIdGg")%>"
+        let redirectUri = "<%=request.getAttribute("redirectUrlGg")%>"
         let linkAuthentication = 'https://accounts.google.com/o/oauth2/auth?scope=profile%20email&redirect_uri='
             + redirectUri + '&response_type=code&client_id=' + clientId + '&approval_prompt=force&access_type=offline'
         window.location = linkAuthentication

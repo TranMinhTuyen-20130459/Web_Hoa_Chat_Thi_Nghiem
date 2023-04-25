@@ -5,31 +5,31 @@ import java.util.Properties;
 
 public class FacebookProperties {
 
-    private static final String PROP_PATH = "facebook.properties";
-    private static final Properties PROP = new Properties();
+    private static final String FB_PROP_PATH = "facebook.properties";
+    private static final Properties FB_PROP = new Properties();
 
     static {
         try {
-            PROP.load(FacebookProperties.class.getClassLoader().getResourceAsStream(PROP_PATH));
+            FB_PROP.load(FacebookProperties.class.getClassLoader().getResourceAsStream(FB_PROP_PATH));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     public static String FACEBOOK_CLIENT_ID() {
-        return PROP.getProperty("clientID");
+        return FB_PROP.getProperty("clientID");
     }
 
     public static String FACEBOOK_CLIENT_SECRET() {
-        return PROP.getProperty("clientSecret");
+        return FB_PROP.getProperty("clientSecret");
     }
 
     public static String FACEBOOK_REDIRECT_URL() {
-        return PROP.getProperty("redirectUrl");
+        return FB_PROP.getProperty("redirectUrl");
     }
 
     public static String FACEBOOK_LINK_GET_TOKEN() {
-        return PROP.getProperty("linkGetToken");
+        return FB_PROP.getProperty("linkGetToken");
     }
 
 
