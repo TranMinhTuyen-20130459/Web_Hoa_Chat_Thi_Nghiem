@@ -2,6 +2,7 @@ package controller.shop.customer;
 
 import model.shop.Customer;
 import properties.FacebookProperties;
+import properties.GoogleProperties;
 import service.CustomerService;
 
 import javax.servlet.*;
@@ -16,6 +17,9 @@ public class DoLoginCustomerServlet extends HttpServlet {
 
         request.setAttribute("clientIdFb", FacebookProperties.FACEBOOK_CLIENT_ID());
         request.setAttribute("redirectUrlFb", FacebookProperties.FACEBOOK_REDIRECT_URL());
+
+        request.setAttribute("clientIdGg", GoogleProperties.GOOGLE_CLIENT_ID());
+        request.setAttribute("redirectUrlGg", GoogleProperties.GOOGLE_REDIRECT_URL());
 
         RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/shop/login.jsp");
         dispatcher.forward(request, response);
