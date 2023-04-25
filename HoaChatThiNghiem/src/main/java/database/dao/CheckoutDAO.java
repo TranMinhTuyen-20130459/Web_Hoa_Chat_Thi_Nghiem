@@ -10,8 +10,11 @@ public class CheckoutDAO {
 
     public static int addNewBill(Handle handle, Bill_MT bill, String idUser) {
         try {
-            Update update = handle.createUpdate("INSERT INTO bills(id_user,id_status_bill,to_name,to_phone,to_address,to_ward_name,to_district_name,to_province_name,email_customer,bill_price_before)" +
-                    " VALUES(:id_user,1,:to_name,:to_phone,:to_address,:to_ward_name,:to_district_name,:to_province_name,:email_customer,:bill_price_before)");
+            Update update = handle.createUpdate("INSERT INTO bills(id_user,id_status_bill,to_name,to_phone,to_address,to_ward_name,to_district_name,to_province_name," +
+                    "email_customer,bill_price_before,bill_price_after,ship_price," +
+                    "to_ward_id,to_district_id,to_province_id)" +
+                    " VALUES(:id_user,1,:to_name,:to_phone,:to_address,:to_ward_name,:to_district_name,:to_province_name," +
+                    ":email_customer,:bill_price_before,:bill_price_after,:ship_price,:to_ward_id,:to_district_id,:to_province_id)");
             update.bind("id_user", idUser)
                     .bind("to_name", bill.getNameCustomer())
                     .bind("to_phone", bill.getPhoneCustomer())
@@ -20,7 +23,12 @@ public class CheckoutDAO {
                     .bind("to_district_name", bill.getDistrictName())
                     .bind("to_province_name", bill.getProvinceName())
                     .bind("email_customer", bill.getEmailCustomer())
-                    .bind("bill_price_before", bill.getBill_price_before());
+                    .bind("bill_price_before", bill.getBill_price_before())
+                    .bind("bill_price_after", bill.getBill_price_after())
+                    .bind("ship_price", bill.getShip_price())
+                    .bind("to_ward_id", bill.getTo_ward_id())
+                    .bind("to_district_id", bill.getTo_district_id())
+                    .bind("to_province_id", bill.getTo_province_id());
 
             int rowInsert = update.execute(); //--> insert bill vào bảng bills trong db
 
