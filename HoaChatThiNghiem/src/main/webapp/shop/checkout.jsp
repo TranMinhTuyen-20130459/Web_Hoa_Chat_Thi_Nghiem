@@ -20,18 +20,9 @@
 
 <body>
 <style>
-    .has-scrollbar::-webkit-scrollbar {
-        height: 8px;
-    }
-
-    .has-scrollbar::-webkit-scrollbar-thumb {
-        background-color: #ccc;
-        border-radius: 6px;
-    }
-
-    .has-scrollbar {
-        max-height: 100px;
-        overflow-y: auto;
+    .nice-select .list{
+        max-height: 250px;
+        overflow-y: auto !important;
     }
 </style>
 <!-- ===== PRELOADER ===== -->
@@ -195,16 +186,16 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 
 <script>
-    const bill_price = ${requestScope['bill_price']};
+    const bill_price_before = ${requestScope['bill_price']};
     let billPrice = document.getElementById('billPrice');
     let costShip = document.getElementById('feeShip');
     let totalBill = document.getElementById('totalBill');
 
-    $(document).ready(function (){
+    $(document).ready(function () {
 
-        billPrice.innerHTML = formatCurrency(bill_price)
+        billPrice.innerHTML = formatCurrency(bill_price_before)
         costShip.innerHTML = formatCurrency(0)
-        totalBill.innerHTML = formatCurrency(bill_price)
+        totalBill.innerHTML = formatCurrency(bill_price_before)
 
     })
 
@@ -388,7 +379,7 @@
                 feeShip = data.data[0].service_fee
 
                 costShip.innerHTML = formatCurrency(feeShip);
-                totalBill.innerHTML = formatCurrency(bill_price + feeShip)
+                totalBill.innerHTML = formatCurrency(bill_price_before + feeShip)
                 console.log(feeShip)
             })
             .catch((error) => {
@@ -526,7 +517,7 @@
     function resetFeeShip() {
         feeShip = 0;
         costShip.innerHTML = formatCurrency(feeShip);
-        totalBill.innerHTML = formatCurrency(bill_price);
+        totalBill.innerHTML = formatCurrency(bill_price_before);
     }
 
 </script>
@@ -594,15 +585,21 @@
         let nameCustomer = $('#nameCustomer').val()
         let phoneCustomer = $('#phoneCustomer').val()
         let emailCustomer = $('#emailCustomer').val()
-        let city = $('#city').val()
-        let district = $('#district').val()
-        let ward = $('#ward').val()
+
+        let provinceId = $('#city').val()
+        let provinceName = $('#city').find(':selected').text()
+
+        let districtId = $('#district').val()
+        let districtName = $('#district').find(':selected').text()
+
+        let wardId = $('#ward').val()
+        let wardName = $('#ward').find(':selected').text()
+
         let address = $('#address').val()
-        let bill_price_before = "${requestScope['bill_price']}"
 
         if (nameCustomer == "" || phoneCustomer == "" ||
-            emailCustomer == "" || city == "" ||
-            district == "" || ward == "" || address == "" || bill_price_before == "") {
+            emailCustomer == "" || provinceId == "" ||
+            districtId == "" || wardId == "" || address == "") {
 
             swal({
                 title: 'Thông báo',
@@ -622,13 +619,16 @@
                     NameCustomer: nameCustomer,
                     PhoneCustomer: phoneCustomer,
                     EmailCustomer: emailCustomer,
-                    City: city,
-                    District: district,
-                    Ward: ward,
+                    ProvinceId: provinceId,
+                    ProvinceName: provinceName,
+                    DistrictId: districtId,
+                    DistrictName: districtName,
+                    WardId: wardId,
+                    WardName: wardName,
                     Address: address,
                     BillPriceBefore: bill_price_before,
                     FeeShip: feeShip,
-                    BillPriceAfter: bill_price + feeShip
+                    BillPriceAfter: bill_price_before + feeShip
 
 
                 }, // -- tham số truyền đến server
@@ -642,7 +642,12 @@
                             icon: 'success',
                             timer: 3000,
                             buttons: false
-                        })
+                        }).then(() => {
+                            window.location.href = "<%=request.getContextPath()%>/shop/home";
+                        }).onClose(() => {
+                            // Xử lý tại đây nếu người dùng tắt cửa sổ thông báo trước khi nó đóng tự động
+                            window.location.href = "<%=request.getContextPath()%>/shop/home";
+                        });
                     } else {
                         swal({
                             title: 'Thông báo',

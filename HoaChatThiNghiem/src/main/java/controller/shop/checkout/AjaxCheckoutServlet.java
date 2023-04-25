@@ -23,16 +23,23 @@ public class AjaxCheckoutServlet extends HttpServlet {
         String NameCustomer = request.getParameter("NameCustomer");
         String PhoneCustomer = request.getParameter("PhoneCustomer");
         String EmailCustomer = request.getParameter("EmailCustomer");
-        String City = request.getParameter("City");
-        String District = request.getParameter("District");
-        String Ward = request.getParameter("Ward");
+        String ProvinceId = request.getParameter("ProvinceId");
+        String ProvinceName = request.getParameter("ProvinceName");
+        String DistrictId = request.getParameter("DistrictId");
+        String DistrictName = request.getParameter("DistrictName");
+        String WardId = request.getParameter("WardId");
+        String WardName = request.getParameter("WardName");
         String Address = request.getParameter("Address");
         String BillPriceBefore = request.getParameter("BillPriceBefore");
+        String FeeShip = request.getParameter("FeeShip");
+        String BillPriceAfter = request.getParameter("BillPriceAfter");
 
         Customer cus = (Customer) request.getSession().getAttribute("auth_customer");
 
         Cart cart = (Cart) request.getSession().getAttribute("cart");
-        Bill_MT bill = new Bill_MT(NameCustomer, PhoneCustomer, EmailCustomer, City, District, Ward, Address, Double.parseDouble(BillPriceBefore));
+        Bill_MT bill = new Bill_MT(cus.getId(), 1, NameCustomer, PhoneCustomer, EmailCustomer, ProvinceName, DistrictName, WardName, Address,
+                ProvinceId, DistrictId, WardId,
+                Double.parseDouble(FeeShip), Double.parseDouble(BillPriceBefore), Double.parseDouble(BillPriceAfter));
 
         boolean addBillAndBillDetail = CheckoutService.addBillAndBillDetail(bill, cart, cus.getId() + "");
 
