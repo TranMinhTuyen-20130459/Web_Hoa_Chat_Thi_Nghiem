@@ -39,6 +39,11 @@ public class Bill_MT implements Serializable {
 
     private Timestamp time_order;
 
+    public Bill_MT(int id_bill, int id_status_bill) {
+        this.id_bill = id_bill;
+        this.id_status_bill = id_status_bill;
+    }
+
     public Bill_MT(int id_bill, int id_user, int id_status_bill, String nameCustomer, String phoneCustomer, String emailCustomer, String to_province_name, String to_district_name, String to_ward_name, String address, String from_province_id, String from_district_id, String from_ward_id, String to_province_id, String to_district_id, String to_ward_id, double ship_price, double bill_price_before, double bill_price_after, Timestamp time_order) {
         this.id_bill = id_bill;
         this.id_user = id_user;
