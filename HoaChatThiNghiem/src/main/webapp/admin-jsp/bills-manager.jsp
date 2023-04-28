@@ -187,20 +187,27 @@
 <script>
 
     let select_status = document.getElementById('select-status')
+    const modal = $('#modal-up') // cửa sổ cập nhật trạng thái đơn hàng
+    let value_status_bill; // giá trị trạng thái của đơn hàng
+    let table = $('#sampleTable').DataTable();
+    let columnIdx;// cột chứa giá trị trong DataTable
+    let selectedRow;// dòng được chọn
+    let cellValue;// giá trị ô tương ứng theo dòng và cột
+
 
     // Khi click vào icon edit
     $('.edit').on('click', function () {
-        const modal = $('#modal-up')
+
         modal.modal('show')// => show ra cửa sổ model
 
-        let value_status_bill; // giá trị trạng thái của đơn hàng
+        columnIdx = table.column(8).index(); // cột chứa giá trị id_status_bill đã được ẩn đi bởi DataTable
+        selectedRow = $(this).closest('tr'); // Lấy ra phần tử tr đang được chọn
+        cellValue = table.cell(selectedRow, columnIdx).data(); // Lấy giá trị ô tương ứng với vị trí hàng và cột đã chọn
 
-        let table = $('#sampleTable').DataTable();
-        let columnIdx = table.column(8).index(); // cột chứa giá trị id_status_bill đã được ẩn đi bởi DataTable
-        let selectedRow = $(this).closest('tr'); // Lấy ra phần tử tr đang được chọn
-        let cellValue = table.cell(selectedRow, columnIdx).data(); // Lấy giá trị ô tương ứng với vị trí hàng và cột đã chọn
-        console.log("value status bill: " + cellValue);
-        select_status.value = cellValue // thay đổi thẻ select theo giá trị tương ứng
+        value_status_bill = cellValue
+        select_status.value = value_status_bill // thay đổi thẻ select theo giá trị tương ứng
+
+        console.log("value status bill: " + value_status_bill);
 
         select_status.onchange = function () {
             value_status_bill = this.value
@@ -210,7 +217,33 @@
 
         // Khi click vào button Lưu lại
         $('.btn-save').on('click', function () {
-            alert("Đây là button Save")
+
+            if (cellValue == value_status_bill) {
+
+                alert('khong the cap nhat')
+
+            } else {
+                switch (value_status_bill) {
+                    // Đơn hàng đang ở trạng thái "Chờ xác nhận"
+                    case '1':
+                        alert(value_status_bill)
+                        break;
+                    //... trạng thái "Đang giao hàng"
+                    case '2':
+                        alert(value_status_bill)
+                        break;
+                    //... trạng thái "Đã giao"
+                    case '3':
+                        alert(value_status_bill)
+                        break;
+                    //... trạng thái "Hủy đơn hàng"
+                    case '4':
+                        alert(value_status_bill)
+                        break;
+                    default:
+                        "Welcome to bug";
+                }
+            }
         })
     })
 
