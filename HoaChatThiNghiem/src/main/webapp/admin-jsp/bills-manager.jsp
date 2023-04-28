@@ -59,7 +59,8 @@
                             <th class="text-center">Tiền ship</th>
                             <th class="text-center">Trị giá đơn hàng</th>
                             <th class="text-center">Thời gian đặt hàng</th>
-                            <th class="text-center">Chỉnh sửa</th>
+                            <th class="text-center">Cập nhật</th>
+                            <th></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -81,12 +82,14 @@
                                         class="badge ${bg}">${b.getNameStatus()}</span></td>
                                 <td>${b.address}, ${b.to_ward_name}, ${b.to_district_name}, ${b.to_province_name}</td>
                                 <td>${pu:format(b.ship_price)} đ</td>
-                                <td>${pu:format(b.bill_price_before)} đ </td>
+                                <td>${pu:format(b.bill_price_before)} đ</td>
                                 <td>${b.time_order}</td>
                                 <td class="text-center">
                                     <button class="btn btn-primary btn-sm edit" type="button" title="Sửa"><i
                                             class="fas fa-edit"></i></button>
                                 </td>
+                                    <%--cột số 8 trong DataTable,được ẩn đi--%>
+                                <td>${b.id_status_bill}</td>
                             </tr>
                         </c:forEach>
                         </tbody>
@@ -103,33 +106,13 @@
         <div class="modal-content mt-5">
             <div class="modal-body p-4">
                 <div class="row">
-                    <div class="form-group col-md-12">
-                            <span class="thong-tin-thanh-toan">
-                                <h5>Chỉnh sửa đơn hàng</h5>
-                            </span>
-                    </div>
-                </div>
-                <div class="row">
-                    <input type="hidden" id="input-bill-id">
-                    <div class="form-group col-md-6">
-                        <label class="control-label">Tên khách hàng</label>
-                        <input class="form-control" type="text" required name="bill-customer">
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label class="control-label">Địa chỉ giao hàng</label>
-                        <input class="form-control" type="text" required name="bill-address">
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label class="control-label">Tổng thanh toán</label>
-                        <input class="form-control" type="number" name="bill-price">
-                    </div>
-                    <div class="form-group col-md-6 ">
+                    <div class="form-group col-md-12 ">
                         <label for="select-status" class="control-label">Tình trạng đơn hàng</label>
                         <select class="form-control" id="select-status" name="bill-status">
-                            <option value="bg-info">Chờ xử lý</option>
-                            <option value="bg-warning">Đang vận chuyển</option>
-                            <option value="bg-success">Đã giao</option>
-                            <option value="bg-danger">Đã hủy</option>
+                            <option value="1">Chờ xác nhận</option>
+                            <option value="2">Đang giao hàng</option>
+                            <option value="3">Đã giao</option>
+                            <option value="4">Hủy đơn hàng</option>
                         </select>
                     </div>
                 </div>
@@ -146,37 +129,6 @@
 <jsp:include page="../common/admin-js.jsp"/>
 <!-- ================================================================================================== -->
 <script>
-    $('.edit').on('click', function () {
-        const modal = $('#modal-up')
-        modal.find('#input-bill-id').val($(this).closest('tr').find('td:first-child').attr('data-bbid'))
-        modal.find('input[name=bill-customer]').val($(this).closest('tr').find('td:nth-child(2)').text())
-        modal.find('input[name=bill-address]').val($(this).closest('tr').find('td:nth-child(6)').text())
-        modal.find('input[name=bill-price]').val($(this).closest('tr').find('td:nth-child(4)').attr('data-price'))
-        const bg = String($(this).closest('tr').find('td:nth-child(5)').attr('data-ss'))
-        modal.find('select[name=bill-status] option').each(function () {
-            if (String($(this).val()) === bg)
-                $(this).attr('selected', 'selected')
-        })
-        modal.modal('show')
-    })
-
-    $('.btn-save').on('click', function () {
-        const form = $('<form></form>').attr('method', 'post').attr('action', '${context}/admin/quan-ly-don-hang')
-        const fieldId = $('<input>').attr('type', 'hidden').attr('name', 'bill_id')
-            .attr('value', $('#input-bill-id').val())
-        const fieldCus = $('<input>').attr('type', 'hidden').attr('name', 'bill_cus')
-            .attr('value', $('input[name=bill-customer]').val())
-        const fieldPrice = $('<input>').attr('type', 'hidden').attr('name', 'bill_price')
-            .attr('value', $('input[name=bill-price]').val())
-        const fieldStatus = $('<input>').attr('type', 'hidden').attr('name', 'bill_status')
-            .attr('value', $('#select-status').find(':selected').val())
-        const fieldAddress = $('<input>').attr('type', 'hidden').attr('name', 'bill_address')
-            .attr('value', $('input[name=bill-address]').val())
-        form.append(fieldId).append(fieldCus).append(fieldPrice).append(fieldStatus).append(fieldAddress)
-
-        $(document.body).append(form)
-        form.submit()
-    })
 
     const myApp = new function () {
         this.printTable = function () {
@@ -190,7 +142,14 @@
 
     $('#sampleTable').dataTable({
         // order: false,
-        order: [[0, 'asc']]
+        order: [[0, 'asc']],
+        "columnDefs": [
+            {
+                "targets": [8], // áp dụng cho cột số 8
+                "visible": false, // ẩn cột
+                "searchable": false
+            }
+        ]
     });
 
     $('.btn-excel').on('click', function () {
@@ -222,6 +181,39 @@
                 pdf.save('Test.pdf');
             }, margins);
     })
+
+</script>
+
+<script>
+
+    let select_status = document.getElementById('select-status')
+
+    // Khi click vào icon edit
+    $('.edit').on('click', function () {
+        const modal = $('#modal-up')
+        modal.modal('show')// => show ra cửa sổ model
+
+        let value_status_bill; // giá trị trạng thái của đơn hàng
+
+        let table = $('#sampleTable').DataTable();
+        let columnIdx = table.column(8).index(); // cột chứa giá trị id_status_bill đã được ẩn đi bởi DataTable
+        let selectedRow = $(this).closest('tr'); // Lấy ra phần tử tr đang được chọn
+        let cellValue = table.cell(selectedRow, columnIdx).data(); // Lấy giá trị ô tương ứng với vị trí hàng và cột đã chọn
+        console.log("value status bill: " + cellValue);
+        select_status.value = cellValue // thay đổi thẻ select theo giá trị tương ứng
+
+        select_status.onchange = function () {
+            value_status_bill = this.value
+            console.log("value status bill: " + value_status_bill)
+
+        }// => khi thay đổi trạng thái của đơn hàng
+
+        // Khi click vào button Lưu lại
+        $('.btn-save').on('click', function () {
+            alert("Đây là button Save")
+        })
+    })
+
 </script>
 </body>
 
