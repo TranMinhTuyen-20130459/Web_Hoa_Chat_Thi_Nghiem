@@ -8,9 +8,9 @@ ALTER TABLE bills ALTER COLUMN from_district_name SET DEFAULT "Thủ Đức";
 ALTER TABLE bills ALTER COLUMN from_province_name SET DEFAULT "Hồ Chí Minh";
 
 -- thêm các cột mới vào bảng bills để làm việc với api logistic
-ALTER TABLE bills ADD COLUMN from_province_id varchar(20) DEFAULT('0');
-ALTER TABLE bills ADD COLUMN from_district_id varchar(20) DEFAULT('0');
-ALTER TABLE bills ADD COLUMN from_ward_id varchar(20) DEFAULT('0');
+ALTER TABLE bills ADD COLUMN from_province_id varchar(20) DEFAULT('202'); // tp.Hồ Chí Minh
+ALTER TABLE bills ADD COLUMN from_district_id varchar(20) DEFAULT('3695'); // tp.Thủ Đức
+ALTER TABLE bills ADD COLUMN from_ward_id varchar(20) DEFAULT('90737'); // phường Linh Trung
 ALTER TABLE bills ADD COLUMN to_province_id varchar(20) DEFAULT('0');
 ALTER TABLE bills ADD COLUMN to_district_id varchar(20) DEFAULT('0');
 ALTER TABLE bills ADD COLUMN to_ward_id varchar(20) DEFAULT('0');
