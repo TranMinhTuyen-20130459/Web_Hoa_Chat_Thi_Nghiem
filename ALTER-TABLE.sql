@@ -15,6 +15,18 @@ ALTER TABLE bills ADD COLUMN to_province_id varchar(20) DEFAULT('0');
 ALTER TABLE bills ADD COLUMN to_district_id varchar(20) DEFAULT('0');
 ALTER TABLE bills ADD COLUMN to_ward_id varchar(20) DEFAULT('0');
 
+ALTER TABLE bills ADD COLUMN height DECIMAL DEFAULT(100);
+ALTER TABLE bills ADD COLUMN length DECIMAL DEFAULT(100);
+ALTER TABLE bills ADD COLUMN width DECIMAL DEFAULT(100);
+ALTER TABLE bills ADD COLUMN weight DECIMAL DEFAULT(100);
+
+ALTER TABLE bills ADD COLUMN fee DECIMAL;
+ALTER TABLE bills ADD COLUMN lead_time VARCHAR(255);
+ALTER TABLE bills ADD COLUMN active BOOLEAN;
+ALTER TABLE bills ADD COLUMN updated_at VARCHAR(255);
+ALTER TABLE bills ADD COLUMN created_at VARCHAR(255);
+ALTER TABLE bills ADD COLUMN id_logistic VARCHAR(255);
+
 -- xóa đi khóa ngoại giữa bảng bills và bảng account_customers
 ALTER TABLE bills DROP FOREIGN KEY bills_ibfk_4;
 
