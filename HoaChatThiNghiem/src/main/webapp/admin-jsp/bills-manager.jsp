@@ -297,8 +297,8 @@
 
     let select_status_bill = document.getElementById('select-status')
     const modal = $('#modal-up') // cửa sổ cập nhật trạng thái đơn hàng
-    let value_status_bill; // giá trị trạng thái của đơn hàng
     let table = $('#sampleTable').DataTable();
+    let value_status_bill; // giá trị trạng thái của đơn hàng
     let columnIdx;// cột chứa giá trị trong DataTable
     let selectedRow;// dòng được chọn
     let cellValue;// giá trị ô tương ứng theo dòng và cột
@@ -333,24 +333,62 @@
                 switch (value_status_bill) {
                     // Đơn hàng đang ở trạng thái "Chờ xác nhận"
                     case '1':
-                        // alert(value_status_bill)
+                        swal({
+                            title: 'Thông báo',
+                            text: 'Không thể cập nhật trạng thái đơn hàng về "Chờ xác nhận"',
+                            icon: 'warning',
+                            timer: 4000,
+                            buttons: false
+                        })
                         break;
-                    //... trạng thái "Đang giao hàng"
+                    // ... trạng thái "Đang giao hàng"
                     case '2':
-                        // alert(value_status_bill)
-
-                        infor_transport.to_district_id = table.cell(selectedRow, table.column(10).index()).data()
-                        infor_transport.to_ward_id = table.cell(selectedRow, table.column(11).index()).data()
-
-                        registerTransport(urls.api_register_transport, infor_transport, access_token_admin)
+                        // chỉ khi đơn hàng đang ở trạng thái "Chờ xác nhận : 1" mới được cập nhật thành "Đang giao hàng"
+                        if (cellValue == '1') {
+                            infor_transport.to_district_id = table.cell(selectedRow, table.column(10).index()).data()
+                            infor_transport.to_ward_id = table.cell(selectedRow, table.column(11).index()).data()
+                            registerTransport(urls.api_register_transport, infor_transport, access_token_admin)
+                        } else {
+                            swal({
+                                title: 'Thông báo',
+                                text: 'Không thể cập nhật trạng thái đơn hàng về "Đang giao hàng"',
+                                icon: 'warning',
+                                timer: 4000,
+                                buttons: false
+                            })
+                        }
                         break;
-                    //... trạng thái "Đã giao"
+                    // ... trạng thái "Đã giao"
                     case '3':
-                        // alert(value_status_bill)
+
+                        // chỉ khi đơn hàng đang ở trạng thái "Chờ xác nhận : 1" or "Đang giao hàng : 2" mới có thể cập nhật thành "Đã giao : 3"
+                        if (cellValue == '1' || cellValue == '2') {
+
+                        } else {
+                            swal({
+                                title: 'Thông báo',
+                                text: 'Không thể cập nhật trạng thái đơn hàng về "Đã giao"',
+                                icon: 'warning',
+                                timer: 4000,
+                                buttons: false
+                            })
+                        }
                         break;
                     //... trạng thái "Hủy đơn hàng"
                     case '4':
-                        // alert(value_status_bill)
+
+                        // chỉ khi đơn hàng đang ở trạng thái "Chờ xác nhận : 1" or "Đang giao hàng : 2" or "Đã giao : 3" mới có thể cập nhật thành "Hủy đơn hàng : 4"
+                        if (cellValue == '1' || cellValue == '2' || cellValue == '3') {
+
+                        } else {
+                            swal({
+                                title: 'Thông báo',
+                                text: 'Không thể cập nhật trạng thái đơn hàng về "Hủy đơn hàng"',
+                                icon: 'warning',
+                                timer: 4000,
+                                buttons: false
+                            })
+                        }
                         break;
                     default:
                         "Welcome to bug";
@@ -358,6 +396,11 @@
             }
         })
     })
+
+    // Update thông tin đơn hàng bằng Ajax
+    function updateInforBill(infor_transport) {
+        return false;
+    }
 
 </script>
 
