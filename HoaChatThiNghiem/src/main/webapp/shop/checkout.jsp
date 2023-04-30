@@ -238,8 +238,8 @@
 
     // thông tin vận chuyển đơn hàng
     let infor_transport = {
-        from_district_id: 1463, // Thành phố Thủ Đức
-        from_ward_id: 21808, // Phường Linh Trung
+        from_district_id: 3695, // Thành phố Thủ Đức
+        from_ward_id: 90737, // Phường Linh Trung
         height: 100,
         length: 100,
         width: 100,

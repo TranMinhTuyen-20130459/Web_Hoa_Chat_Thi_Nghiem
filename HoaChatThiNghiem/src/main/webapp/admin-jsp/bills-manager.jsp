@@ -51,7 +51,7 @@
                     <table class="table table-hover table-bordered bill-table" id="sampleTable">
                         <thead>
                         <tr>
-                            <%--<th class="text-center">ID đơn hàng</th>--%>
+                            <th class="text-center">ID đơn hàng</th>
                             <th class="text-center">Khách hàng</th>
                             <th class="text-center">SĐT</th>
                             <th class="text-center">Tình trạng</th>
@@ -76,6 +76,7 @@
                                 <c:when test="${b.getNameStatus() == ''}"><c:set var="bg" value="bg-info"/></c:when>
                             </c:choose>
                             <tr>
+                                <td><a href="">#${b.id_bill}</a></td>
                                 <td>${b.nameCustomer}</td>
                                 <td>${b.phoneCustomer}</td>
                                 <td data-ss="${bg}" class="text-center"><span
@@ -88,8 +89,12 @@
                                     <button class="btn btn-primary btn-sm edit" type="button" title="Sửa"><i
                                             class="fas fa-edit"></i></button>
                                 </td>
-                                    <%--cột số 8 trong DataTable,được ẩn đi--%>
                                 <td>${b.id_status_bill}</td>
+                                    <%--cột số 9 trong DataTable,được ẩn đi--%>
+                                <td>${b.to_district_id}</td>
+                                    <%--cột số 10 trong DataTable,được ẩn đi--%>
+                                <td>${b.to_ward_id}</td>
+                                    <%--cột số 11 trong DataTable,được ẩn đi--%>
                             </tr>
                         </c:forEach>
                         </tbody>
@@ -145,7 +150,7 @@
         order: [[0, 'asc']],
         "columnDefs": [
             {
-                "targets": [8], // áp dụng cho cột số 8
+                "targets": [9, 10, 11], // áp dụng cho cột số 9,10,11
                 "visible": false, // ẩn cột
                 "searchable": false
             }
@@ -184,9 +189,113 @@
 
 </script>
 
+<%--Thư viện dùng để hiển thị cửa sổ thông báo--%>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+
+<%--Thư viện Axios là một thư viện HTTP Client dựa trên Promise--%>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+
+<script>
+    // các url của api logistic
+    const urls = {
+        api_login: 'http://140.238.54.136/api/auth/login',
+        api_register_transport: 'http://140.238.54.136/api/registerTransport'
+    }
+
+    // thông tin tài khoản đã đăng ký dùng để gọi api logistic
+    const accountAPI = {
+        email: 'tuyen@1234',
+        password: '123456789'
+    }
+
+    let access_token_admin = getToken(urls.api_login, accountAPI.email, accountAPI.password);
+
+    // thông tin vận chuyển đơn hàng
+    let infor_transport = {
+        from_district_id: '3695', // Thành phố Thủ Đức
+        from_ward_id: '90737', // Phường Linh Trung
+        height: 100,
+        length: 100,
+        width: 100,
+        weight: 100,
+        to_district_id: '0',
+        to_ward_id: '0'
+    }
+
+    //  Gọi api POST để lấy access_token <=> đăng nhập vào hệ thống của bên logistic bằng tài khoản đã đăng ký trước đó
+    function getToken(url, email, password) {
+
+        console.log("Access_Token:")
+
+        axios.post(url, {
+            email: email,
+            password: password
+        })
+
+            .then((response) => {
+
+                access_token_admin = response.data.access_token
+                console.log(access_token_admin)
+
+
+            }) // => được gọi khi Promise được giải quyết thành công và trả về dữ liệu JSON từ API endpoint.
+
+            .catch((error) => {
+
+                // access_token = null;
+                console.error(error);
+            }); // => được gọi khi Promise bị từ chối và trả về lỗi từ API endpoint.
+    }
+
+    // gọi lại hàm getToken để lấy access_token mới sau 300s
+    setInterval(() => {
+        getToken(urls.api_login, accountAPI.email, accountAPI.password);
+    }, 300000);
+
+    // Gọi API POST để đăng kí vận chuyển đơn hàng
+    function registerTransport(url, infor_transport, access_token) {
+
+        console.log("Đây là hàm registerTransport()")
+        console.log("DistrictId :" + infor_transport.to_district_id)
+        console.log("WardId :" + infor_transport.to_ward_id)
+
+        axios.post(url, {
+            from_district_id: infor_transport.from_district_id,
+            from_ward_id: infor_transport.from_ward_id,
+            to_district_id: infor_transport.to_district_id,
+            to_ward_id: infor_transport.to_ward_id,
+            height: infor_transport.height,
+            length: infor_transport.length,
+            width: infor_transport.width,
+            weight: infor_transport.weight
+        }, {
+            headers: {
+                Authorization: 'Bearer ' + access_token
+            }
+        })
+            .then((response) => {
+                if (response.data.message == 'Registered Transport successfully') {
+                    swal({
+                        title: 'Thông báo',
+                        text: 'Đơn hàng đã được đăng kí vận chuyển ^.^',
+                        icon: 'success',
+                        timer: 2000,
+                        buttons: false
+                    })
+                }
+                console.log(response.data)
+            }) // => được gọi khi Promise được giải quyết thành công và trả về dữ liệu JSON
+
+            .catch((error) => {
+                console.error(error)
+            }) // => được gọi khi Promise bị từ chối và trả về lỗi từ API endpoint
+    }
+
+</script>
+
 <script>
 
-    let select_status = document.getElementById('select-status')
+    let select_status_bill = document.getElementById('select-status')
     const modal = $('#modal-up') // cửa sổ cập nhật trạng thái đơn hàng
     let value_status_bill; // giá trị trạng thái của đơn hàng
     let table = $('#sampleTable').DataTable();
@@ -194,51 +303,54 @@
     let selectedRow;// dòng được chọn
     let cellValue;// giá trị ô tương ứng theo dòng và cột
 
-
     // Khi click vào icon edit
     $('.edit').on('click', function () {
 
         modal.modal('show')// => show ra cửa sổ model
 
-        columnIdx = table.column(8).index(); // cột chứa giá trị id_status_bill đã được ẩn đi bởi DataTable
+        columnIdx = table.column(9).index(); // cột chứa giá trị id_status_bill đã được ẩn đi bởi DataTable
         selectedRow = $(this).closest('tr'); // Lấy ra phần tử tr đang được chọn
         cellValue = table.cell(selectedRow, columnIdx).data(); // Lấy giá trị ô tương ứng với vị trí hàng và cột đã chọn
 
         value_status_bill = cellValue
-        select_status.value = value_status_bill // thay đổi thẻ select theo giá trị tương ứng
+        select_status_bill.value = value_status_bill // thay đổi thẻ select theo giá trị tương ứng
 
         console.log("value status bill: " + value_status_bill);
 
-        select_status.onchange = function () {
+        select_status_bill.onchange = function () {
             value_status_bill = this.value
             console.log("value status bill: " + value_status_bill)
 
         }// => khi thay đổi trạng thái của đơn hàng
 
         // Khi click vào button Lưu lại
-        $('.btn-save').on('click', function () {
+        $('.btn-save').unbind('click').on('click', function () {
 
             if (cellValue == value_status_bill) {
 
-                alert('khong the cap nhat')
-
             } else {
+
                 switch (value_status_bill) {
                     // Đơn hàng đang ở trạng thái "Chờ xác nhận"
                     case '1':
-                        alert(value_status_bill)
+                        // alert(value_status_bill)
                         break;
                     //... trạng thái "Đang giao hàng"
                     case '2':
-                        alert(value_status_bill)
+                        // alert(value_status_bill)
+
+                        infor_transport.to_district_id = table.cell(selectedRow, table.column(10).index()).data()
+                        infor_transport.to_ward_id = table.cell(selectedRow, table.column(11).index()).data()
+
+                        registerTransport(urls.api_register_transport, infor_transport, access_token_admin)
                         break;
                     //... trạng thái "Đã giao"
                     case '3':
-                        alert(value_status_bill)
+                        // alert(value_status_bill)
                         break;
                     //... trạng thái "Hủy đơn hàng"
                     case '4':
-                        alert(value_status_bill)
+                        // alert(value_status_bill)
                         break;
                     default:
                         "Welcome to bug";
@@ -248,6 +360,7 @@
     })
 
 </script>
+
 </body>
 
 </html>
