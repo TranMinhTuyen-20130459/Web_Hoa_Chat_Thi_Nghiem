@@ -74,7 +74,8 @@ public class AdminDAO {
 
     public List<RoleAdmin> getAllRoleAdmin(DbConnection connectDB) {
         List<RoleAdmin> result = new ArrayList<>();
-        String sql = "SELECT id_role_admin,name_role FROM role_admins";
+        String sql = "SELECT id_role_admin,name_role FROM role_admins " +
+                "WHERE id_role_admin <> 3 ";
         Statement statement = connectDB.getStatement();
         try {
             ResultSet rs = statement.executeQuery(sql);
