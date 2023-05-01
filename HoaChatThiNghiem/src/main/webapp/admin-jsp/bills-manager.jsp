@@ -122,7 +122,7 @@
                     </div>
                 </div>
                 <div class="d-flex justify-content-end mt-3">
-                    <button class="btn btn-save mr-3" type="submit">Lưu lại</button>
+                    <button class="btn btn-save mr-3" type="submit">Cập nhật</button>
                     <button class="btn btn-cancel" data-dismiss="modal">Hủy bỏ</button>
                 </div>
             </div>
