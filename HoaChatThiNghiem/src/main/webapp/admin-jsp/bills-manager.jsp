@@ -212,6 +212,8 @@
 
     // thông tin vận chuyển đơn hàng
     let infor_transport = {
+        id_bill: '-1',
+        id_status_bill: '-1',
         from_district_id: '3695', // Thành phố Thủ Đức
         from_ward_id: '90737', // Phường Linh Trung
         height: 100,
@@ -219,7 +221,13 @@
         width: 100,
         weight: 100,
         to_district_id: '0',
-        to_ward_id: '0'
+        to_ward_id: '0',
+        fee: '-1',
+        active: '-1',
+        lead_time: '-1',
+        updated_at: '-1',
+        created_at: '-1',
+        id_logistic: '-1'
     }
 
     //  Gọi api POST để lấy access_token <=> đăng nhập vào hệ thống của bên logistic bằng tài khoản đã đăng ký trước đó
@@ -274,14 +282,33 @@
             }
         })
             .then((response) => {
-                if (response.data.message == 'Registered Transport successfully') {
+
+                let checkUpdateInforBill = AsyncUpdateInforBill(infor_transport)
+                    .then((result) => {
+                        console.log("Day la ham AsyncUpdateInforBill() trong ham registerTransport() :" + result)
+                        if (result == 'true') checkUpdateInforBill = true
+                        else checkUpdateInforBill = false
+                        console.log("Ket qua cua bien checkUpdateInforBill :" + checkUpdateInforBill)
+                    })
+                    .catch((error) => {
+                        checkUpdateInforBill = false
+                        console.log("Ket qua cua bien checkUpdateInforBill :" + checkUpdateInforBill)
+                    })
+
+                if ( response.data.message == 'Registered Transport successfully'  ) {
                     swal({
                         title: 'Thông báo',
                         text: 'Đơn hàng đã được đăng kí vận chuyển ^.^',
                         icon: 'success',
                         timer: 2000,
                         buttons: false
-                    })
+                    }).then(() => {
+                        window.location.href = "<%=request.getContextPath()%>/admin/quan-ly-don-hang-root";
+                    }).onClose(() => {
+                        // Xử lý tại đây nếu người dùng tắt cửa sổ thông báo trước khi nó đóng tự động
+                        window.location.href = "<%=request.getContextPath()%>/admin/quan-ly-don-hang-root";
+                    });
+
                 }
                 console.log(response.data)
             }) // => được gọi khi Promise được giải quyết thành công và trả về dữ liệu JSON
@@ -295,12 +322,12 @@
 
 <script>
 
-    let select_status_bill = document.getElementById('select-status')
+    let select_status_bill = document.getElementById('select-status') // thẻ Select để Chọn trạng thái đơn hàng
     const modal = $('#modal-up') // cửa sổ cập nhật trạng thái đơn hàng
-    let table = $('#sampleTable').DataTable();
-    let value_status_bill; // giá trị trạng thái của đơn hàng
-    let columnIdx;// cột chứa giá trị trong DataTable
+    let table = $('#sampleTable').DataTable(); // => DataTable
+    let value_status_bill; // giá trị trạng thái của đơn hàng trong cửa sổ cập nhật trạng thái
     let selectedRow;// dòng được chọn
+    let columnIdx;// cột chứa giá trị trong DataTable
     let cellValue;// giá trị ô tương ứng theo dòng và cột
 
     // Khi click vào icon edit
@@ -308,12 +335,12 @@
 
         modal.modal('show')// => show ra cửa sổ model
 
-        columnIdx = table.column(9).index(); // cột chứa giá trị id_status_bill đã được ẩn đi bởi DataTable
         selectedRow = $(this).closest('tr'); // Lấy ra phần tử tr đang được chọn
+        columnIdx = table.column(9).index(); // cột chứa giá trị id_status_bill đã được ẩn đi bởi DataTable
         cellValue = table.cell(selectedRow, columnIdx).data(); // Lấy giá trị ô tương ứng với vị trí hàng và cột đã chọn
 
         value_status_bill = cellValue
-        select_status_bill.value = value_status_bill // thay đổi thẻ select theo giá trị tương ứng
+        select_status_bill.value = value_status_bill // thay đổi thẻ select trong cửa sổ Cập nhật trạng thái theo giá trị tương ứng
 
         console.log("value status bill: " + value_status_bill);
 
@@ -328,7 +355,15 @@
 
             if (cellValue == value_status_bill) {
 
+                // không cập nhật do giá trị trạng thái đơn hàng không thay đổi
+
             } else {
+
+                infor_transport.id_bill = getNumberFromString(table.cell(selectedRow, table.column(0).index()).data())
+                infor_transport.id_status_bill = value_status_bill
+
+                console.log("IdBill : " + infor_transport.id_bill)
+                console.log("IdStatusBill : " + infor_transport.id_status_bill)
 
                 switch (value_status_bill) {
                     // Đơn hàng đang ở trạng thái "Chờ xác nhận"
@@ -364,6 +399,27 @@
                         // chỉ khi đơn hàng đang ở trạng thái "Chờ xác nhận : 1" or "Đang giao hàng : 2" mới có thể cập nhật thành "Đã giao : 3"
                         if (cellValue == '1' || cellValue == '2') {
 
+                            AsyncUpdateInforBill(infor_transport).then((result) => {
+                                console.log("Day la ham AsyncUpdateInforBill() :" + result)
+                                if (result == 'true') {
+                                    swal({
+                                        title: 'Thông báo',
+                                        text: 'Cập nhật thành công ^.^',
+                                        icon: 'success',
+                                        timer: 2000,
+                                        buttons: false
+                                    }).then(() => {
+                                        window.location.href = "<%=request.getContextPath()%>/admin/quan-ly-don-hang-root";
+                                    }).onClose(() => {
+                                        // Xử lý tại đây nếu người dùng tắt cửa sổ thông báo trước khi nó đóng tự động
+                                        window.location.href = "<%=request.getContextPath()%>/admin/quan-ly-don-hang-root";
+                                    });
+                                }
+                            }).catch((error) => {
+                                console.log(error);
+                            });
+
+
                         } else {
                             swal({
                                 title: 'Thông báo',
@@ -377,8 +433,28 @@
                     //... trạng thái "Hủy đơn hàng"
                     case '4':
 
-                        // chỉ khi đơn hàng đang ở trạng thái "Chờ xác nhận : 1" or "Đang giao hàng : 2" or "Đã giao : 3" mới có thể cập nhật thành "Hủy đơn hàng : 4"
-                        if (cellValue == '1' || cellValue == '2' || cellValue == '3') {
+                        // chỉ khi đơn hàng đang ở trạng thái "Chờ xác nhận : 1" or "Đang giao hàng : 2" mới có thể cập nhật thành "Hủy đơn hàng : 4"
+                        if (cellValue == '1' || cellValue == '2') {
+
+                            AsyncUpdateInforBill(infor_transport).then((result) => {
+                                console.log("Day la ham AsyncUpdateInforBill() :" + result)
+                                if (result == 'true') {
+                                    swal({
+                                        title: 'Thông báo',
+                                        text: 'Cập nhật thành công ^.^',
+                                        icon: 'success',
+                                        timer: 2000,
+                                        buttons: false
+                                    }).then(() => {
+                                        window.location.href = "<%=request.getContextPath()%>/admin/quan-ly-don-hang-root";
+                                    }).onClose(() => {
+                                        // Xử lý tại đây nếu người dùng tắt cửa sổ thông báo trước khi nó đóng tự động
+                                        window.location.href = "<%=request.getContextPath()%>/admin/quan-ly-don-hang-root";
+                                    });
+                                }
+                            }).catch((error) => {
+                                console.log(error);
+                            });
 
                         } else {
                             swal({
@@ -398,8 +474,47 @@
     })
 
     // Update thông tin đơn hàng bằng Ajax
-    function updateInforBill(infor_transport) {
-        return false;
+    async function updateInforBill(infor_transport) {
+
+        return $.ajax({
+            url: '${context}/AjaxBillUpdateServlet', // -- địa chỉ của server
+            type: 'POST', // -- phương thức truyền : GET, POST, PUT, DELETE
+            data: {
+                IdBill: infor_transport.id_bill,
+                IdStatusBill: infor_transport.id_status_bill
+            }, // -- tham số truyền đến server
+            data_type: 'text',// -- kiểu dữ liệu nhận về từ server
+            success: function (response) {
+
+                console.log("Update Infor Bill :" + response)
+                if (response.toString() == 'true') return true
+
+            },
+            error: function () {
+                return false;
+            }
+        })
+
+    }
+
+    // dùng kĩ thuật async/await để xử lí bất đồng bộ => nhận kết quả trả về từ Ajax function updateInforBill()
+    async function AsyncUpdateInforBill(infor_transport) {
+        try {
+            let result = await updateInforBill(infor_transport);
+            console.log("Day la ham AsyncUpdateInforBill()")
+            console.log("Result function updateInforBill() :" + result)
+            return result;
+        } catch (error) {
+            console.log(error);
+            return false;
+        }
+    }
+
+    function getNumberFromString(str) {
+        const regex = /\d+/;
+        const matches = str.match(regex);
+        const number = matches ? matches[0] : null;
+        return number;
     }
 
 </script>
