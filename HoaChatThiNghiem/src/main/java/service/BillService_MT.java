@@ -1,5 +1,6 @@
 package service;
 
+import bean.Log;
 import database.JDBiConnector;
 import database.dao.BillDAO_MT;
 import model.shop.Bill_MT;
@@ -54,4 +55,22 @@ public class BillService_MT {
         Vì vậy, nếu bạn muốn đăng ký mapper cho tất cả các handle được tạo ra bởi Jdbi, bạn nên sử dụng Jdbi.registerRowMapper().
         Tuy nhiên, nếu bạn chỉ muốn đăng ký mapper cho một handle cụ thể, bạn nên sử dụng Handle.registerRowMapper().
      */
+
+    public static boolean updateInforBill(Bill_MT bill) {
+        Jdbi jdbi = null;
+        try {
+
+            jdbi = JDBiConnector.me();
+            return BillDAO_MT.updateInforBill(jdbi, bill);
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            Log log = new Log(1, "-1", "Bảng bills", "Cập nhật trạng thái của đơn hàng", "", "", "");
+            log.insert(jdbi);
+        }
+        return false;
+    }
+
+
 }
