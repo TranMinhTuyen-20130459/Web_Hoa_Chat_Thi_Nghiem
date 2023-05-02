@@ -113,12 +113,8 @@
                 <div class="row">
                     <input type="hidden" id="UsernameUpdate" value="">
                     <div class="form-group col-md-6">
-                        <label class="control-label">Mật khẩu hiện tại</label>
-                        <input id="InputPassOld" class="form-control" type="text" placeholder="nhập mật khẩu hiện tại">
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label class="control-label">Mật khẩu mới</label>
-                        <input id="InputPassNew" class="form-control" type="text" placeholder="nhập mật khẩu mới">
+                        <label class="control-label">Mật khẩu</label>
+                        <input id="InputPassNew" class="form-control" type="text" placeholder="nhập mật khẩu">
                     </div>
                     <div class="form-group col-md-6">
                         <label class="control-label">Tên admin</label>
@@ -166,15 +162,15 @@
                 </div>
                 <div class="row">
                     <div class="form-group col-md-6">
-                        <label class="control-label">Tên đăng nhập</label>
+                        <label class="control-label">Tên đăng nhập<span class ="text-danger">*</span></label>
                         <input id="InputUsername" class="form-control" type="text" placeholder="Nhập tên đăng nhập">
                     </div>
                     <div class="form-group col-md-6">
-                        <label class="control-label">Mật khẩu</label>
+                        <label class="control-label">Mật khẩu<span class ="text-danger">*</span></label>
                         <input id="InputPassword" class="form-control" type="text" placeholder="Nhập mật khẩu">
                     </div>
                     <div class="form-group col-md-6">
-                        <label for="SelectRole" class="control-label">Quyền</label>
+                        <label for="SelectRole" class="control-label">Quyền<span class ="text-danger">*</span></label>
                         <select class="form-control" id="UserRole">
                             <option value="0">-- Chọn quyền tài khoản --</option>
                             <c:forEach var="r" items="${requestScope.allRoleAdmin}">
@@ -183,7 +179,7 @@
                         </select>
                     </div>
                     <div class="form-group col-md-6">
-                        <label for="SelectStatus" class="control-label">Trạng thái tài khoản</label>
+                        <label for="SelectStatus" class="control-label">Trạng thái tài khoản<span class ="text-danger">*</span></label>
                         <select class="form-control" id="UserStatus">
                             <option value="0">-- Chọn trạng thái tài khoản --</option>
                             <c:forEach var="stt" items="${requestScope.allStatusAcc}">
@@ -227,9 +223,32 @@
         $('#InputPassword').nextAll('.text-danger').remove()
     })
     $('.btn-add').on('click', function () {
-        $('#InputPassword').blur(function () {
+
+        $("#InputUsername").on("input", () => {
+            let username = $("#InputUsername").val();
+            if (username.includes(" ")) {
+                $("#InputUsername").nextAll(".text-danger").remove();
+                $("#InputUsername").after(
+                    '<div class=" text-danger">Tên đăng nhập không được chứa khoảng trắng</div>'
+                );
+            } else if (username.trim().length < 3 && username.trim().length > 50) {
+                $("#InputUsername").nextAll(".text-danger").remove();
+                $("#InputUsername").after(
+                    '<div class=" text-danger">Tên đăng nhập phải có 3 kí tự đến 50 kí tự</div>'
+                );
+            } else {
+                $("#InputUsername").nextAll(".text-danger").remove();
+            }
+        });
+        $('#InputPassword').on('input',function () {
             let pass_admin = $('#InputPassword').val().trim()
-            if (pass_admin.length < 9) {
+            if (pass_admin.includes(" ")) {
+                $("#InputPassword").nextAll(".text-danger").remove();
+                $("#InputPassword").after(
+                    '<div class=" text-danger">Mật khẩu không được chứa khoảng trắng</div>'
+                );
+            }
+            else if (pass_admin.length < 9) {
                 // nếu đã có cảnh báo rồi thì không cảnh báo nữa
                 let existingErrorMessages = $('#InputPassword').nextAll('.text-danger');
                 if (existingErrorMessages.length == 0) {
@@ -249,7 +268,7 @@
         } else if (user_name == '' || pass_admin == '' || id_role_admin == 0 || id_status_acc == 0) {
             swalAlert('Cảnh báo !!!', 'Bạn hãy nhập đầy đủ thông tin cho tài khoản này', 'error', 3000)
         } else if (pass_admin.length < 9) {
-            swalAlert('Cảnh báo !!!', 'Vui lòng nhập lại mật khẩu đúng yêu cầu!', 'error', 3000)
+            swalAlert('Cảnh báo !!!', 'Mật khẩu phải lớn hơn 8 ký tự!', 'error', 3000)
         } else {
             $.ajax({
                 url: '${context}/admin/add-account',
@@ -275,15 +294,14 @@
                         setTimeout(function () {
                             location.replace(location.href);
                         }, 2000);
-                    } else if (resultData.toString() == 'exits') {
+                    } else if (resultData.toString() == 'exists') {
                         swalAlert('', 'Thêm thất bại! Tên tài khoản này đã tồn tại.', 'error', 2000)
-
-                        $('#btnAdd').on('click', function () {
-                            $('#InputUsername').val('')
-                        })
+                        $('#InputUsername').val('')
                     } else if (resultData.toString() == 'fail') {
                         swalAlert('', 'Thêm thất bại', 'error', 2000)
-                    }else {
+                    } else if (resultData.toString() == 'invalid') {
+                        swalAlert('', 'Lỗi nhập dữ liệu', 'error', 2000)
+                    } else {
                         window.location = resultData;
                     }
                 },
@@ -294,28 +312,22 @@
         }
     })
     // hiện dialog update
+    var fullname_edit;
+    var status_edit;
+    var role_edit;
     $('button.edit').on('click', function () {
         // Lấy dữ liệu từ các thẻ HTML trong hàng đang chọn
         let username = $(this).closest('tr').find('.userName').text();
-        let fullname = $(this).closest('tr').find('.fullnameAd').text();
-        let status = $(this).closest('tr').find('.statusAd').text();
-        let role = $(this).closest('tr').find('.roleAd').text();
+        var fullname_edit = $(this).closest('tr').find('.fullnameAd').text();
+        var status_edit = $(this).closest('tr').find('.statusAd').text();
+        var role_edit = $(this).closest('tr').find('.roleAd').text();
 
         // Hiển thị dữ liệu lên các ô input hoặc dialog
         $('#UsernameUpdate').val(username);
-        $('#InputStatus').val('0');
-        $('#InputRole').val('0');
-        $('#InputFullName').val(fullname);
-        $('#InputPassOld').blur(function () {
-            let passOldAd = $('#InputPassOld').val()
-            if (passOldAd.length < 8) {
-                let existingErrorMessages = $('#InputPassOld').nextAll('.text-danger');
-                if (existingErrorMessages.length == 0) {
-                    $('#InputPassOld').after('<div class="text-danger">Mật khẩu tối thiểu 8 kí tự!</div>')
-                }
-            } else $('#InputPassOld').nextAll('.text-danger').remove()
+        $('#SelectStatus').val('0');
+        $('#SelectRole').val('0');
+        $('#InputFullName').val(fullname_edit);
 
-        })
         $('#InputPassNew').blur(function () {
             let passNewAd = $('#InputPassNew').val().trim()
             if (passNewAd.length > 0 && passNewAd.length < 8) {
@@ -347,14 +359,14 @@
     });
     $('#btUpdateAdmin').on('click', function () {
         let username = $('#UsernameUpdate').val().trim()
-        let pass_admin = $('#InputPassOld').val().trim()
-        let pass_admin_new = $('#InputPassNew').val().trim()
+        let pass_admin = $('#InputPassNew').val().trim()
         let id_role_admin = $('#SelectRole').val()
         let id_status_acc = $('#SelectStatus').val()
         let fullname = $('#InputFullName').val()
-        if (pass_admin == null || id_role_admin == 0 || id_status_acc == 0) {
-            swalAlert('Cảnh báo !!!', 'Bạn hãy nhập đầy đủ thông tin cho tài khoản này!', 'error', 3000)
-        } else if (pass_admin_new.length > 0 && pass_admin_new.length < 8) {
+
+        if (id_role_admin == 0 || id_status_acc == 0) {
+            swalAlert('Cảnh báo !!!', 'Vui lòng chọn quyền cùng với trạng thái!', 'error', 3000)
+        } else if (pass_admin.length > 0 && pass_admin.length < 8) {
             swalAlert('Cảnh báo !!!', 'Vui lòng nhập lại mật khẩu mới đúng yêu cầu!', 'error', 3000)
         } else {
 
@@ -364,7 +376,6 @@
                 data: {
                     UserName: username,
                     PassAd: pass_admin,
-                    PassNew: pass_admin_new,
                     IdRole: id_role_admin,
                     IdStatus: id_status_acc,
                     Fullname: fullname
@@ -378,12 +389,14 @@
                             location.replace(location.href);
                         }, 2000);
 
-                    } else if (resultData.toString() == 'passfail') {
-                        swalAlert('', 'Mật khẩu của tài khoản này không chính xác!', 'error', 2000)
                     } else if (resultData.toString() == 'error') {
-                        swalAlert('', 'Lỗi', 'error', 2000)
+                        swalAlert('', 'Lỗi', 'error', 1500)
+                    } else if (resultData.toString() == 'wrong') {
+                        swalAlert('', 'Nhập sai dữ liệu', 'error', 1500)
+                    } else if (resultData.toString() == 'seal') {
+                        swalAlert('', 'Tài khoản này đã bị khóa vĩnh viễn!', 'error', 1500)
                     } else {
-                        swalAlert('', 'Bạn không có quyền cập nhật!', 'error', 2000)
+                        swalAlert('', 'Bạn không có quyền cập nhật!', 'error', 1800)
                     }
                 },
                 error: function () {
@@ -395,13 +408,11 @@
     $('#modal-up #btCancel').on('click', function () {
         $('#InputUsername').val('')
         $('#InputPassNew').val('')
-        $('#InputPassOld').val('')
-        $('#InputRole').val('0')
-        $('#InputStatus').val('0')
+        $('#InputRole').val()
+        $('#InputStatus').val()
         $('#SelectStatus').nextAll('.text-danger').remove()
         $('#SelectRole').nextAll('.text-danger').remove()
         $('#InputPassNew').nextAll('.text-danger').remove()
-        $('#InputPassOld').nextAll('.text-danger').remove()
     });
 
     function swalAlert(title, text, icon, timer) {
@@ -412,6 +423,10 @@
             timer: timer,
             buttons: false
         });
+    }
+
+    function checkCompete() {
+
     }
 </script>
 </body>
