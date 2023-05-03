@@ -14,7 +14,7 @@ public class Bill_MT_RowMapper implements RowMapper<Bill_MT> {
                 rs.getString("to_name"), rs.getString("to_phone"), rs.getString("email_customer"),
                 rs.getString("to_province_name"), rs.getString("to_district_name"), rs.getString("to_ward_name"),
                 rs.getString("to_address"),
-                rs.getString("from_province_id"), rs.getString("from_district_id"), rs.getString("to_ward_id"),
+                rs.getString("from_province_id"), rs.getString("from_district_id"), rs.getString("from_ward_id"),
                 rs.getString("to_province_id"), rs.getString("to_district_id"), rs.getString("to_ward_id"),
                 rs.getDouble("ship_price"), rs.getDouble("bill_price_before"), rs.getDouble("bill_price_after"), rs.getTimestamp("time_order"));
     }

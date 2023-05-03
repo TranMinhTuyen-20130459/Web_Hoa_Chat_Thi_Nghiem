@@ -39,6 +39,11 @@ public class Bill_MT implements Serializable {
 
     private Timestamp time_order;
 
+    public Bill_MT(int id_bill, int id_status_bill) {
+        this.id_bill = id_bill;
+        this.id_status_bill = id_status_bill;
+    }
+
     public Bill_MT(int id_bill, int id_user, int id_status_bill, String nameCustomer, String phoneCustomer, String emailCustomer, String to_province_name, String to_district_name, String to_ward_name, String address, String from_province_id, String from_district_id, String from_ward_id, String to_province_id, String to_district_id, String to_ward_id, double ship_price, double bill_price_before, double bill_price_after, Timestamp time_order) {
         this.id_bill = id_bill;
         this.id_user = id_user;
@@ -73,6 +78,23 @@ public class Bill_MT implements Serializable {
         this.bill_price_before = bill_price_before;
     }
 
+    public Bill_MT(int id_user, int id_status_bill, String nameCustomer, String phoneCustomer, String emailCustomer, String to_province_name, String to_district_name, String to_ward_name, String address, String to_province_id, String to_district_id, String to_ward_id, double ship_price, double bill_price_before, double bill_price_after) {
+        this.id_user = id_user;
+        this.id_status_bill = id_status_bill;
+        this.nameCustomer = nameCustomer;
+        this.phoneCustomer = phoneCustomer;
+        this.emailCustomer = emailCustomer;
+        this.to_province_name = to_province_name;
+        this.to_district_name = to_district_name;
+        this.to_ward_name = to_ward_name;
+        this.address = address;
+        this.to_province_id = to_province_id;
+        this.to_district_id = to_district_id;
+        this.to_ward_id = to_ward_id;
+        this.ship_price = ship_price;
+        this.bill_price_before = bill_price_before;
+        this.bill_price_after = bill_price_after;
+    }
 
     public String getNameCustomer() {
         return nameCustomer;
