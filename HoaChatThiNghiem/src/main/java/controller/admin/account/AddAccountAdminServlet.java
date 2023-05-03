@@ -33,6 +33,7 @@ public class AddAccountAdminServlet extends HttpServlet {
         String password = request.getParameter("PassAd");
         String idRole = request.getParameter("IdRole");
         String idStatus = request.getParameter("IdStatus");
+        String repass = request.getParameter("RePass");
         try {
 
             Admin ad = (Admin) request.getSession().getAttribute(CommonString.ADMIN_SESSION);
@@ -55,7 +56,7 @@ public class AddAccountAdminServlet extends HttpServlet {
                     nameUser = ad.getFullname();
                     if (AdminService_MT.checkUsername(username) == null) { // kiem tra username
                         // check độ dài mat khau
-                        if (checkData(username, password, idRole, idStatus)) {
+                        if (checkData(username, password,repass, idRole, idStatus)) {
                             Integer role = Integer.parseInt(idRole);
                             Integer status = Integer.parseInt(idStatus);
                             Admin admin = new Admin(username, password, role, status, " ");
@@ -99,8 +100,9 @@ public class AddAccountAdminServlet extends HttpServlet {
         }
     }
 
-    private boolean checkData(String username, String pass, String role, String status) {
+    private boolean checkData(String username, String pass,String repass, String role, String status) {
         if (username.contains(" ") || username.length() < 3 || username.length() > 50) return false;
+        if(!pass.equals(repass)) return false;
         if (pass.contains(" ") || pass.length() < 8) return false;
         if (!isNumber(role)) return false;
         if (!isNumber(status)) return false;

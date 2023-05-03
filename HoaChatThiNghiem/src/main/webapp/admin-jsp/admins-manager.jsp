@@ -114,7 +114,7 @@
                     <input type="hidden" id="UsernameUpdate" value="">
                     <div class="form-group col-md-6">
                         <label class="control-label">Mật khẩu</label>
-                        <input id="InputPassNew" class="form-control" type="text" placeholder="nhập mật khẩu">
+                        <input id="InputPassNew" class="form-control" type="password" placeholder="nhập mật khẩu">
                     </div>
                     <div class="form-group col-md-6">
                         <label class="control-label">Tên admin</label>
@@ -167,7 +167,11 @@
                     </div>
                     <div class="form-group col-md-6">
                         <label class="control-label">Mật khẩu<span class ="text-danger">*</span></label>
-                        <input id="InputPassword" class="form-control" type="text" placeholder="Nhập mật khẩu">
+                        <input id="InputPassword" class="form-control" type="password" placeholder="Nhập mật khẩu">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="control-label">Xác nhận mật khẩu<span class ="text-danger">*</span></label>
+                        <input id="ReInputPassword" class="form-control" type="password" placeholder="Nhập lại mật khẩu">
                     </div>
                     <div class="form-group col-md-6">
                         <label for="SelectRole" class="control-label">Quyền<span class ="text-danger">*</span></label>
@@ -218,6 +222,7 @@
     $('#btnCancel').on('click', function () {
         $('#InputUsername').val('')
         $('#InputPassword').val('')
+        $('#ReInputPassword').val('')
         $('#UserStatus').val('0')
         $('#UserRole').val('0')
         $('#InputPassword').nextAll('.text-danger').remove()
@@ -231,7 +236,7 @@
                 $("#InputUsername").after(
                     '<div class=" text-danger">Tên đăng nhập không được chứa khoảng trắng</div>'
                 );
-            } else if (username.trim().length < 3 && username.trim().length > 50) {
+            } else if (username.trim().length < 3 || username.trim().length > 50) {
                 $("#InputUsername").nextAll(".text-danger").remove();
                 $("#InputUsername").after(
                     '<div class=" text-danger">Tên đăng nhập phải có 3 kí tự đến 50 kí tự</div>'
@@ -248,7 +253,7 @@
                     '<div class=" text-danger">Mật khẩu không được chứa khoảng trắng</div>'
                 );
             }
-            else if (pass_admin.length < 9) {
+            else if (pass_admin.length < 8) {
                 // nếu đã có cảnh báo rồi thì không cảnh báo nữa
                 let existingErrorMessages = $('#InputPassword').nextAll('.text-danger');
                 if (existingErrorMessages.length == 0) {
@@ -256,11 +261,24 @@
                 }
             } else $('#InputPassword').nextAll('.text-danger').remove()
         })
+        // check nhập lại mật khẩu
+        $("#ReInputPassword").on("input", () => {
+            let repass = $("#ReInputPassword").val().trim();
+            if ($('#InputPassword').val().trim() !== repass && repass.length > 0) {
+                let existingErrorMessages = $("#ReInputPassword").nextAll(".text-danger");
+                if (existingErrorMessages.length == 0) {
+                    $("#ReInputPassword").after(
+                        '<div class="form-text text-danger">Mật khẩu xác nhận không khớp</div>'
+                    );
+                }
+            } else $("#ReInputPassword").nextAll(".text-danger").remove();
+        });
     })
     // thêm tài khoản admin
     $('#btnAdd').on('click', function () {
         let user_name = $('#InputUsername').val().trim()
         let pass_admin = $('#InputPassword').val().trim()
+        let repass = $("#ReInputPassword").val().trim()
         let id_role_admin = $('#UserRole').val()
         let id_status_acc = $('#UserStatus').val()
         if (user_name == '' && pass_admin == '' && id_role_admin == 0 && id_status_acc == 0) {
@@ -276,6 +294,7 @@
                 data: {
                     UserName: user_name,
                     PassAd: pass_admin,
+                    RePass: repass,
                     IdRole: id_role_admin,
                     IdStatus: id_status_acc
                 },
