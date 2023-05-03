@@ -8,6 +8,7 @@ import model.admin.Admin;
 import model.common.Voucher;
 import model.shop.Bill;
 import model.shop.Product;
+import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 
 import java.sql.PreparedStatement;
@@ -218,11 +219,13 @@ public class AdminService {
         }
 
     }
+
     public static List<Log> getAllLog() {
         return JDBiConnector.me().withHandle(handle ->
                 handle.createQuery("SELECT `id_log` ,`id_level`, `user_id`, src, content, ip_address, web_browser, create_at, `status` FROM logs")
                         .mapToBean(Log.class).list());
     }
+
     public static List<Log> getLogsByLevel(int id_level) {
         return JDBiConnector.me().withHandle(handle ->
                 handle.createQuery("SELECT `id_log` ,`id_level`, `user_id`, src, content, ip_address, web_browser, create_at, `status` FROM logs WHERE id_level = :id_level")
@@ -231,10 +234,5 @@ public class AdminService {
                         .stream().collect(Collectors.toList())
         );
     }
-    public static List<Voucher> getAllVoucher(){
-        return JDBiConnector.me().withHandle(handle ->
-                handle.createQuery("SELECT `id_voucher`, `code`, `discount`,`start_date`,`end_date`,`create_at` FROM vouchers"))
-                .mapToBean(Voucher.class)
-                .stream().collect(Collectors.toList());
-    }
+
 }

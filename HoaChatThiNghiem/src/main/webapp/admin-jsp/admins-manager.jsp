@@ -210,15 +210,48 @@
         $('#sampleTable').DataTable();
     });
 
+
+    <%--Xóa sản phẩm sử dụng Ajax --%>
     $('#sampleTable .trash').on('click', function () {
         swal({
-            title: 'Cảnh báo !!!',
-            text: 'Chức năng này đang được phát triển.',
-            icon: 'warning',
-            timer: 3000,
-            buttons: false
-        })
-    })
+            title: 'Cảnh báo',
+            text: 'Bạn có chắc chắn là muốn xóa tài khoản này?',
+            buttons: ['Hủy bỏ', 'Đồng ý']
+        }).then((agree) => {
+                if (agree) {
+                    var rowDelete = $(this).closest('tr')                       // row can be deleted
+                    var username = $(this).closest('tr').find('.userName').text()    // get data id of row after click in table
+                    $.ajax({    // call Ajax for action delete product
+                        url: '${context}/admin/delete-account',     //-- địa chỉ server
+                        type: 'POST',                                   //-- phương thức truyền : GET,POST,PUT,DELETE,...
+                        data: {Username: username},                          //-- tham số truyền đến server
+                        data_type: 'text',                              //-- kiểu dữ liệu nhận về từ server text,xml,json,...
+                        success: (function (resultData) {
+                            if (resultData.toString() == "success") {
+                                rowDelete.remove();
+                                swal({
+                                    text: 'Đã xóa thành công.',
+                                    icon: 'success',
+                                    timer: 1000,
+                                    buttons: false
+                                });
+                            } else {
+                                swal({
+                                    text: 'Xóa không thành công.',
+                                    icon: 'error',
+                                    timer: 1000,
+                                    buttons: false
+                                });
+                            }
+                        }),         //-- xử lí phản hồi từ server
+                        error: (function () {
+                            // error no call ajax
+                        })
+                    })
+                }
+            }
+        )
+    });
     $('#btnCancel').on('click', function () {
         $('#InputUsername').val('')
         $('#InputPassword').val('')
