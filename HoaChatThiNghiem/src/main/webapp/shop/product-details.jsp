@@ -51,13 +51,12 @@
             <div class="col-lg-5 col-md-12 col-sm-12 col-xs-12">
                 <div class="product-slider">
                     <div class="product-image">
-                        <img class="active" src="${context}/${p.imgPath}" alt="">
+                        <img class="active" src="${context}/${list_image.get(0).url_image}" alt="">
                     </div>
                     <ul class="image-list">
-                        <li><img src="${context}/${p.imgPath}" alt=""></li>
-                        <li><img src="${context}/${p.imgPath}" alt=""></li>
-                        <li><img src="${context}/${p.imgPath}" alt=""></li>
-                        <li><img src="${context}/${p.imgPath}" alt=""></li>
+                        <c:forEach var="i" begin="1" end="${ list_image.size() > 0? list_image.size()-1 : 4}">
+                        <li><img src="${context}/${list_image.get(i).url_image}" alt=""></li>
+                        </c:forEach>
                     </ul>
                 </div>
             </div>

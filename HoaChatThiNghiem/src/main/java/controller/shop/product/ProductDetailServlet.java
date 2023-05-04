@@ -1,8 +1,10 @@
 package controller.shop.product;
 
 import database.dao.ProductDAO;
+import model.common.Image;
 import model.shop.Product;
 import model.shop.Review;
+import service.AdminService_MT;
 import service.ProductService;
 
 import javax.servlet.ServletException;
@@ -29,19 +31,21 @@ public class ProductDetailServlet extends HttpServlet {
 
         String id = req.getParameter("product_id");
         if (id != null) {
-            Product product = ProductService.getProductById(productId = Integer.parseInt(id));
+            productId = Integer.parseInt(id);
+            Product product = ProductService.getProductById(productId);
             if (product != null) {
                 // update views
                 product.setViews(product.getViews() + 1);
                 ProductDAO dao = new ProductDAO();
                 dao.updateProduct(product);
-
+                List<Image> imageList = AdminService_MT.getProductImagesById(productId);
                 List<Product> relatedProducts = ProductService.getProducts().stream()
                         .filter(p -> product.getIdProduct() != p.getIdProduct() &&
                                 p.getType().equals(product.getType()) &&
                                 p.getSupply().equals(product.getSupply()))
                         .limit(6).collect(Collectors.toList());
                 req.setAttribute("related_products", relatedProducts);
+                req.setAttribute("list_image", imageList);
                 req.setAttribute("product", product);
                 req.getRequestDispatcher("product-details.jsp").forward(req, resp);
             }
