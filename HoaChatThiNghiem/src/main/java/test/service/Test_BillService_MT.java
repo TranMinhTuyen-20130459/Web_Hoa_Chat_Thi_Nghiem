@@ -3,7 +3,7 @@ package test.service;
 import model.shop.Bill_MT;
 import service.BillService_MT;
 
-public class TestBillService_MT {
+public class Test_BillService_MT {
 
     public static void Test_GetAllBills() {
         System.out.println(BillService_MT.getAllBills());
