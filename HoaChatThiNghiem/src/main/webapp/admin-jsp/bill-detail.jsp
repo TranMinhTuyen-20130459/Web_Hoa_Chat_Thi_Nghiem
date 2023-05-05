@@ -59,13 +59,13 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <c:forEach var="b" items="${requestScope.bills}">
+                        <c:forEach var="p" items="${requestScope.BillDetail}">
                             <tr>
-                                <td><img src="" alt=""></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td><img src="${context}/${p.url_img_product}" alt=""></td>
+                                <td>${p.name_product}</td>
+                                <td>${p.quantity}</td>
+                                <td>${p.listed_price}</td>
+                                <td>${p.current_price}</td>
                             </tr>
                         </c:forEach>
                         </tbody>
@@ -89,7 +89,6 @@
 
 
 </script>
-
 
 
 </body>
