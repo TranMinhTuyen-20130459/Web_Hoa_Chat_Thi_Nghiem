@@ -45,7 +45,7 @@ public class AdminService_MT {
         return null;
     }
 
-    public static boolean checkUsername(String username) {
+    public static Admin checkUsername(String username) {
         List<Admin> admins = new ArrayList<>();
         DbConnection connectDB = DbConnection.getInstance();
         String sql = "select username,password,id_role_admin,id_status_acc,full_name from account_admins where username = ?";
@@ -62,10 +62,10 @@ public class AdminService_MT {
                 Admin admin = new Admin(user_name, password, id_role_admin, id_status_acc, full_name);
                 admins.add(admin);
             }
-            return admins.size() > 0 ? true : false;
+            return admins.size() == 0 ? null : admins.get(0);
 
         } catch (SQLException e) {
-            return false;
+            return null;
         } finally {
             connectDB.close();
         }

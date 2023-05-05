@@ -1,6 +1,7 @@
 package controller.admin.account;
 
 import model.admin.Admin;
+import model.common.RoleAdmin;
 import service.AdminService_MT;
 import utils.CommonString;
 
@@ -18,6 +19,7 @@ public class AdminsManagerServlet extends HttpServlet {
         if (admin.getId_role_admin() == 3) {
             List<Admin> listAdmin = AdminService_MT.getAllAdmin();
             List<Object> allRoleAdminAndStatusAcc = AdminService_MT.getAllRoleAdminAndStatusAcc();
+            List<RoleAdmin> roles = (List<RoleAdmin>) allRoleAdminAndStatusAcc.get(0);
             request.setAttribute("adminList", listAdmin);
             request.setAttribute("allRoleAdmin", allRoleAdminAndStatusAcc.get(0));
             request.setAttribute("allStatusAcc", allRoleAdminAndStatusAcc.get(1));
