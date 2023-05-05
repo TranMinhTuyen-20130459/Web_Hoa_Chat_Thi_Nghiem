@@ -39,17 +39,17 @@ public class DeleteAccountAdminServlet extends HttpServlet {
                 } else if (ad.getId_role_admin() == 3) {
                     if (AdminService_MT.deleteAdminByUsername(username)) {
                         response.getWriter().write("success");
-                        log = new Log(Log.WARNING, 0 + "", ad.getUsername(), "Xóa " + username+ " thành công", statusLog);
+                        log = new Log(Log.WARNING, 0 + "", ad.getUsername(), "Xóa tài khoản " + username+ " thành công", statusLog);
                         WritingLogUtils.writeLog(request, log);
                     } else {
                         response.getWriter().write("fail");
                         statusLog = "thất bại";
-                        log = new Log(Log.ALERT, 0 + "",ad.getUsername() , "Xóa " + username+ " thất bại", statusLog);
+                        log = new Log(Log.ALERT, 0 + "",ad.getUsername() , "Xóa tài khoản " + username+ " thất bại", statusLog);
                         WritingLogUtils.writeLog(request, log);
                     }
                 } else {
                     statusLog = "thất bại";
-                    log = new Log(Log.ALERT, 0 + "",ad.getUsername() , "Xóa " + username+ " thất bại . vì không có quyền", statusLog);
+                    log = new Log(Log.ALERT, 0 + "",ad.getUsername() , "Xóa tài khoản " + username+ " thất bại . vì không có quyền", statusLog);
                     WritingLogUtils.writeLog(request, log);
                     response.getWriter().write(request.getContextPath() + "/admin/dang-nhap");
                     response.sendRedirect(request.getContextPath() + "/admin/dang-nhap");
@@ -64,7 +64,7 @@ public class DeleteAccountAdminServlet extends HttpServlet {
         } catch (Exception e) {
             statusLog = "thất bại";
             response.getWriter().write("fail");
-            log = new Log(Log.ALERT, 0 + "","Unknown" , "Xóa " + username+ " thất bại", statusLog);
+            log = new Log(Log.ALERT, 0 + "","Unknown" , "Xóa tài khoản " + username+ " thất bại", statusLog);
             WritingLogUtils.writeLog(request, log);
         }
 
