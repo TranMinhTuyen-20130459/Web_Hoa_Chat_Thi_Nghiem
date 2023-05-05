@@ -162,19 +162,20 @@
                 </div>
                 <div class="row">
                     <div class="form-group col-md-6">
-                        <label class="control-label">Tên đăng nhập<span class ="text-danger">*</span></label>
+                        <label class="control-label">Tên đăng nhập<span class="text-danger">*</span></label>
                         <input id="InputUsername" class="form-control" type="text" placeholder="Nhập tên đăng nhập">
                     </div>
                     <div class="form-group col-md-6">
-                        <label class="control-label">Mật khẩu<span class ="text-danger">*</span></label>
+                        <label class="control-label">Mật khẩu<span class="text-danger">*</span></label>
                         <input id="InputPassword" class="form-control" type="password" placeholder="Nhập mật khẩu">
                     </div>
                     <div class="form-group col-md-6">
-                        <label class="control-label">Xác nhận mật khẩu<span class ="text-danger">*</span></label>
-                        <input id="ReInputPassword" class="form-control" type="password" placeholder="Nhập lại mật khẩu">
+                        <label class="control-label">Xác nhận mật khẩu<span class="text-danger">*</span></label>
+                        <input id="ReInputPassword" class="form-control" type="password"
+                               placeholder="Nhập lại mật khẩu">
                     </div>
                     <div class="form-group col-md-6">
-                        <label for="SelectRole" class="control-label">Quyền<span class ="text-danger">*</span></label>
+                        <label for="SelectRole" class="control-label">Quyền<span class="text-danger">*</span></label>
                         <select class="form-control" id="UserRole">
                             <option value="0">-- Chọn quyền tài khoản --</option>
                             <c:forEach var="r" items="${requestScope.allRoleAdmin}">
@@ -183,7 +184,8 @@
                         </select>
                     </div>
                     <div class="form-group col-md-6">
-                        <label for="SelectStatus" class="control-label">Trạng thái tài khoản<span class ="text-danger">*</span></label>
+                        <label for="SelectStatus" class="control-label">Trạng thái tài khoản<span
+                                class="text-danger">*</span></label>
                         <select class="form-control" id="UserStatus">
                             <option value="0">-- Chọn trạng thái tài khoản --</option>
                             <c:forEach var="stt" items="${requestScope.allStatusAcc}">
@@ -209,9 +211,6 @@
     $(document).ready(function () {
         $('#sampleTable').DataTable();
     });
-
-
-    <%--Xóa sản phẩm sử dụng Ajax --%>
     $('#sampleTable .trash').on('click', function () {
         swal({
             title: 'Cảnh báo',
@@ -278,15 +277,14 @@
                 $("#InputUsername").nextAll(".text-danger").remove();
             }
         });
-        $('#InputPassword').on('input',function () {
+        $('#InputPassword').on('input', function () {
             let pass_admin = $('#InputPassword').val().trim()
             if (pass_admin.includes(" ")) {
                 $("#InputPassword").nextAll(".text-danger").remove();
                 $("#InputPassword").after(
                     '<div class=" text-danger">Mật khẩu không được chứa khoảng trắng</div>'
                 );
-            }
-            else if (pass_admin.length < 8) {
+            } else if (pass_admin.length < 8) {
                 // nếu đã có cảnh báo rồi thì không cảnh báo nữa
                 let existingErrorMessages = $('#InputPassword').nextAll('.text-danger');
                 if (existingErrorMessages.length == 0) {

@@ -37,8 +37,10 @@
 <div class="breadcrumbs py-4">
     <div class="container text-left">
         <ul class="bread-list d-inline-block">
-            <li class="d-inline-block text-capitalize"><a href="${context}/shop/home">Trang chủ<i class="ti-arrow-right mx-2"></i></a></li>
-            <li class="d-inline-block text-capitalize"><a href="${context}/shop/product-details">Chi tiết sản phẩm</a></li>
+            <li class="d-inline-block text-capitalize"><a href="${context}/shop/home">Trang chủ<i
+                    class="ti-arrow-right mx-2"></i></a></li>
+            <li class="d-inline-block text-capitalize"><a href="${context}/shop/product-details">Chi tiết sản phẩm</a>
+            </li>
         </ul>
     </div>
 </div>
@@ -51,18 +53,21 @@
             <div class="col-lg-5 col-md-12 col-sm-12 col-xs-12">
                 <div class="product-slider">
                     <div class="product-image">
-                        <img class="active" src="${context}/${list_image.get(0).url_image}" alt="">
+                        <img class="active" src="${context}/${list_image.size() > 0 ? list_image.get(0).url_image:""}"
+                             alt="">
                     </div>
                     <ul class="image-list">
-                        <c:forEach var="i" begin="1" end="${ list_image.size() > 0? list_image.size()-1 : 4}">
-                        <li><img src="${context}/${list_image.get(i).url_image}" alt=""></li>
+                        <c:forEach var="i" begin="1" end="${ list_image.size() > 0 ? list_image.size() - 1 : 4}">
+                            <li><img src="${context}/${list_image.size() > 0 ? list_image.get(i).url_image:""}" alt="">
+                            </li>
                         </c:forEach>
                     </ul>
                 </div>
             </div>
             <div class="col-lg-7 col-md-12 col-sm-12 col-xs-12">
                 <div class="product-d-content pl-5">
-                    <span class="supplier d-inline-block mb-1"><i class="bi bi-patch-check-fill"></i> Nhà cung cấp: ${p.supply}</span>
+                    <span class="supplier d-inline-block mb-1"><i
+                            class="bi bi-patch-check-fill"></i> Nhà cung cấp: ${p.supply}</span>
                     <h2 class="pd-name">${p.name}</h2>
                     <div class="product-rating d-flex">
                         <div class="rating">
@@ -80,8 +85,10 @@
                             <span class="percent">-${pu:discount(p.oldPrice, p.newPrice)}%</span></c:if>
                         </h3>
                         <c:choose>
-                            <c:when test="${p.status == 'Cấm bán'}"><span class="label label-forbidden">Cấm bán</span></c:when>
-                            <c:when test="${p.quantity == 0}"><span class="label label-out-stock">Hết hàng</span></c:when>
+                            <c:when test="${p.status == 'Cấm bán'}"><span
+                                    class="label label-forbidden">Cấm bán</span></c:when>
+                            <c:when test="${p.quantity == 0}"><span
+                                    class="label label-out-stock">Hết hàng</span></c:when>
                             <c:otherwise><span class="label label-in-stock">Còn hàng</span></c:otherwise>
                         </c:choose>
                     </div>
@@ -91,11 +98,13 @@
                     <div class="quantity d-inline-block mr-3">
                         <div class="input-group mt-3">
                             <div class="button minus">
-                                <button type="button" class="btn btn-primary btn-number"><i class="ti-minus"></i></button>
+                                <button type="button" class="btn btn-primary btn-number"><i class="ti-minus"></i>
+                                </button>
                             </div>
                             <input type="text" class="input-number" value="1"/>
                             <div class="button plus">
-                                <button type="button" class="btn btn-primary btn-number"><i class="ti-plus"></i></button>
+                                <button type="button" class="btn btn-primary btn-number"><i class="ti-plus"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -113,7 +122,8 @@
                             <c:forTokens var="ss" items="facebook,twitter,youtube,instagram" delims="," varStatus="i">
                                 <li class="icon ${ss}">
                                     <span class="tooltip">${ss}</span>
-                                    <span><i class="fa fa-${ss}<c:if test="${i.first}">-f</c:if><c:if test="${i.count eq 3}">-play</c:if>"></i></span>
+                                    <span><i
+                                            class="fa fa-${ss}<c:if test="${i.first}">-f</c:if><c:if test="${i.count eq 3}">-play</c:if>"></i></span>
                                 </li>
                             </c:forTokens>
                         </ul>
@@ -230,10 +240,12 @@
 <div id="rating-modal" class="hidden">
     <div class="modal-content">
         <span class="close"><i class="bi bi-x-lg"></i></span>
-        <form action="${context}/shop/product-details?product_id=${p.idProduct}" method="POST" id="rating-form" class="position-relative h-100">
+        <form action="${context}/shop/product-details?product_id=${p.idProduct}" method="POST" id="rating-form"
+              class="position-relative h-100">
             <h5>Đánh giá ${p.name}</h5>
             <div class="content-comment">
-                <textarea name="content" id="rating-content" rows="6" placeholder="Mời bạn chia sẻ thêm một số cảm nhận..."></textarea>
+                <textarea name="content" id="rating-content" rows="6"
+                          placeholder="Mời bạn chia sẻ thêm một số cảm nhận..."></textarea>
                 <div class="error hidden">Nội dung bình luận là bắt buộc!</div>
             </div>
             <div class="row no-gutters my-4 d-flex align-items-center">
@@ -243,7 +255,8 @@
                 <div class="col-lg-8">
                     <div class="star-wrapper">
                         <input type="hidden" name="stars" value="5" id="input-stars">
-                        <c:forTokens var="span" items="Tuyệt vời,Tốt,Trung bình,Không tệ,Rất tệ" delims="," varStatus="i">
+                        <c:forTokens var="span" items="Tuyệt vời,Tốt,Trung bình,Không tệ,Rất tệ" delims=","
+                                     varStatus="i">
                             <div class="star <c:if test="${i.first}">active</c:if>" data-star="${6 - i.count}">
                                 <i class="fa fa-star"></i>
                                 <span>${span}</span>
@@ -301,7 +314,9 @@
                             </c:choose>
                         </a>
                         <div class="cart-container">
-                            <button data-context="${context}" class="btn-cart" data-product-id="${pr.idProduct}"><i class="fa fa-cart-plus"></i> Thêm vào giỏ hàng</button>
+                            <button data-context="${context}" class="btn-cart" data-product-id="${pr.idProduct}"><i
+                                    class="fa fa-cart-plus"></i> Thêm vào giỏ hàng
+                            </button>
                         </div>
                     </div>
                     <div class="product-content">
@@ -389,8 +404,8 @@
         e.addClass('active')
     }
 
-    if ( window.history.replaceState ) {
-        window.history.replaceState( null, null, window.location.href );
+    if (window.history.replaceState) {
+        window.history.replaceState(null, null, window.location.href);
     }
 
     $('#btn-send-rating').on('click', function () {
