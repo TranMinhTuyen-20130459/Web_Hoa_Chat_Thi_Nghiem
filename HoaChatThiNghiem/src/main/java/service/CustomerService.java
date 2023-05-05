@@ -1,10 +1,13 @@
 package service;
 
 import database.DbConnection;
+import database.JDBiConnector;
 import model.shop.Bill;
 import model.shop.CartItem;
 import model.shop.Customer;
 import model.shop.Order;
+import org.jdbi.v3.core.mapper.RowMapper;
+import org.jdbi.v3.core.statement.StatementContext;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -414,5 +417,69 @@ public class CustomerService {
         } catch (SQLException e) {
             return new ArrayList<>();
         }
+    }
+    public static List<Customer> getAllCustomers() {
+        DbConnection connectDb = DbConnection.getInstance();
+        List<Customer> customers = new ArrayList<>();
+        String sql = "SELECT id_user_customer, username, pass, id_status_acc, id_city, full_name, phone_customer, address " +
+                "from account_customers ";
+        PreparedStatement preState = connectDb.getPreparedStatement(sql);
+        try {
+            ResultSet rs = preState.executeQuery();
+            while (rs.next()) {
+                int id_customer = rs.getInt("id_user_customer");
+                String email_customer = rs.getString("username");
+                String password_customer = rs.getString("pass");
+                int id_status_acc_customer = rs.getInt("id_status_acc");
+                int id_city_customer = rs.getInt("id_city");
+                String fullname_customer = rs.getString("full_name");
+                String phone = rs.getString("phone_customer");
+                String address = rs.getString("address");
+                Customer customer = new Customer(id_customer, email_customer, password_customer,
+                        id_status_acc_customer, id_city_customer, fullname_customer, phone, address);
+                customers.add(customer);
+            }
+            return customers;
+        } catch (Exception e) {
+            return customers;
+        } finally {
+            connectDb.close();
+        }
+    }
+    public static Customer getCustomerByUsername(String username) {
+        DbConnection connectDb = DbConnection.getInstance();
+        List<Customer> customers = new ArrayList<>();
+        String sql = "SELECT id_user_customer, username, pass, id_status_acc, id_city, full_name, phone_customer, address " +
+                "from account_customers where username = ?";
+        try {
+        PreparedStatement preState = connectDb.getPreparedStatement(sql);
+        preState.setString(1, username);
+            ResultSet rs = preState.executeQuery();
+            while (rs.next()) {
+                int id_customer = rs.getInt("id_user_customer");
+                String email_customer = rs.getString("username");
+                String password_customer = rs.getString("pass");
+                int id_status_acc_customer = rs.getInt("id_status_acc");
+                int id_city_customer = rs.getInt("id_city");
+                String fullname_customer = rs.getString("full_name");
+                String phone = rs.getString("phone_customer");
+                String address = rs.getString("address");
+                Customer customer = new Customer(id_customer, email_customer, password_customer,
+                        id_status_acc_customer, id_city_customer, fullname_customer, phone, address);
+                customers.add(customer);
+            }
+            return customers.size()> 0 ? customers.get(0): null;
+        } catch (Exception e) {
+            return null;
+        } finally {
+            connectDb.close();
+        }
+    }
+    public static boolean deleteCustomerByUsername(String username) {
+        return JDBiConnector.me().withHandle(handle ->
+                handle.createUpdate("DELETE FROM account_customers WHERE username = :username")
+                        .bind("username", username)
+                        .execute() > 0
+        );
     }
 }
