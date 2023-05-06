@@ -1,8 +1,10 @@
 package service;
 
 import database.DbConnection;
+import database.JDBiConnector;
 import database.dao.AdminDAO;
 import model.admin.Admin;
+import model.common.Image;
 import model.common.RoleAdmin;
 import model.common.StatusAcc;
 
@@ -69,7 +71,9 @@ public class AdminService_MT {
         } finally {
             connectDB.close();
         }
-    }public static boolean checkUsernameWithRole(String username, int role) {
+    }
+
+    public static boolean checkUsernameWithRole(String username, int role) {
         List<Admin> admins = new ArrayList<>();
         DbConnection connectDB = DbConnection.getInstance();
         String sql = "select username,password,id_role_admin,id_status_acc,full_name from account_admins" +
@@ -126,6 +130,7 @@ public class AdminService_MT {
             connectDB.close();
         }
     }
+
     public static List<Admin> getAllAdmin() {
         DbConnection connectDB = DbConnection.getInstance();
         AdminDAO dao = new AdminDAO();
@@ -136,14 +141,15 @@ public class AdminService_MT {
         }
     }
 
-    public static int addAccountAdmin(Admin admin){
+    public static int addAccountAdmin(Admin admin) {
         DbConnection connectDB = DbConnection.getInstance();
         AdminDAO dao = new AdminDAO();
         try {
-            return dao.addAccoutAdmin(connectDB,admin);
+            return dao.addAccoutAdmin(connectDB, admin);
         } finally {
             connectDB.close();
-        }}
+        }
+    }
 
     public static List<Object> getAllRoleAdminAndStatusAcc() {
         List<Object> result = new ArrayList<>();
@@ -160,6 +166,22 @@ public class AdminService_MT {
         return result;
     }
 
+    public static boolean deleteAdminByUsername(String username) {
+        return JDBiConnector.me().withHandle(handle ->
+                handle.createUpdate("DELETE FROM account_admins WHERE username = :username")
+                        .bind("username", username)
+                        .execute() > 0
+        );
+    }
+
+    public static List<Image> getProductImagesById(int productId) {
+        return JDBiConnector.me().withHandle(handle ->
+                handle.createQuery("SELECT i.id_image, i.id_status_image,i.url_image, i.date_inserted,i.date_updated FROM product_images AS pri JOIN images AS i ON pri.id_image = i.id_image WHERE pri.id_product = :productId AND i.id_status_image = '1'")
+                        .bind("productId", productId)
+                        .mapToBean(Image.class)
+                        .list()
+        );
+    }
 
 
 }
