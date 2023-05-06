@@ -64,6 +64,7 @@
                             <th>Trạng thái</th>
                             <th>Họ tên</th>
                             <th>Số điện thoại</th>
+                            <th>Địa chỉ</th>
                             <th>Chức năng</th>
                         </tr>
                         </thead>
@@ -85,6 +86,7 @@
                                 </td>
                                 <td class="fullnameCus">${a.fullname}</td>
                                 <td class="phoneCus">${a.phone}</td>
+                                <td class="phoneCus">${a.address}</td>
                                 <td>
                                     <button class="btn btn-primary btn-sm trash" type="button" title="Xóa"
                                             onclick=""><i class="fas fa-trash-alt"></i></button>
@@ -101,7 +103,7 @@
         </div>
     </div>
 </main>
-
+<%--chỉnh sửa tài khoản--%>
 <div class="modal fade" id="modal-up" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static"
      data-keyboard="false">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -122,15 +124,15 @@
                     </div>
                     <div class="form-group col-md-6">
                         <label class="control-label">Họ Tên</label>
-                        <input id="InputFullName" class="form-control" type="text">
+                        <input id="InputFullName" class="form-control" type="text" placeholder="nhập họ và tên">
                     </div>
                     <div class="form-group col-md-6">
                         <label class="control-label">Số điện thoại</label>
-                        <input id="InputPhone" class="form-control" type="text">
+                        <input id="InputPhone" class="form-control" type="number" placeholder="nhập số điện thoại">
                     </div>
                     <div class="form-group col-md-6">
                         <label class="control-label">Địa chỉ</label>
-                        <input id="InputAddress" class="form-control" type="text">
+                        <input id="InputAddress" class="form-control" type="text" placeholder="nhập địa chỉ">
                     </div>
 
                     <div class="form-group col-md-6">
@@ -144,7 +146,7 @@
                     </div>
                 </div>
                 <div class="d-flex justify-content-end mt-3">
-                    <button id="btUpdateAdmin" class="btn btn-save mr-3">Cập nhật</button>
+                    <button id="btUpdateCus" class="btn btn-save mr-3">Cập nhật</button>
                     <button id="btCancel" class="btn btn-cancel" data-dismiss="modal">Hủy bỏ</button>
                 </div>
             </div>
@@ -152,6 +154,7 @@
     </div>
 </div>
 </div>
+<%--thêm tài khoản--%>
 <div class="modal fade" id="form-add-admin" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static"
      data-keyboard="false">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -178,17 +181,13 @@
                         <input id="ReInputPassword" class="form-control" type="password"
                                placeholder="Nhập lại mật khẩu">
                     </div>
-
                     <div class="form-group col-md-6">
-                        <label for="SelectStatus" class="control-label">Trạng thái tài khoản<span
-                                class="text-danger">*</span></label>
-                        <select class="form-control" id="UserStatus">
-                            <option value="0">-- Chọn trạng thái tài khoản --</option>
-                            <c:forEach var="stt" items="${requestScope.allStatusAcc}">
-                                <option value="${stt.id_status}">${stt.name_status}</option>
-                            </c:forEach>
-                        </select>
+                        <label class="control-label">Họ tên</label>
+                        <input id="Fullname" class="form-control" type="password"
+                               placeholder="Nhập họ và tên">
                     </div>
+
+
                 </div>
                 <div class="d-flex justify-content-end mt-3">
                     <button id="btnAdd" class="btn btn-save mr-3">Thêm</button>
@@ -214,8 +213,8 @@
             buttons: ['Hủy bỏ', 'Đồng ý']
         }).then((agree) => {
                 if (agree) {
-                    var rowDelete = $(this).closest('tr')                       // row can be deleted
-                    var username = $(this).closest('tr').find('.userNameCus').text()    // get data id of row after click in table
+                    let rowDelete = $(this).closest('tr')                       // row can be deleted
+                    let username = $(this).closest('tr').find('.userNameCus').text()    // get data id of row after click in table
                     $.ajax({    // call Ajax for action delete product
                         url: '${context}/admin/delete-account-cus',     //-- địa chỉ server
                         type: 'POST',                                   //-- phương thức truyền : GET,POST,PUT,DELETE,...
@@ -258,20 +257,14 @@
     $('.btn-add').on('click', function () {
 
         $("#InputUsername").on("input", () => {
-            let username = $("#InputUsername").val();
-            if (username.includes(" ")) {
-                $("#InputUsername").nextAll(".text-danger").remove();
+            let email = $("#InputUsername").val().trim();
+            if (email.length > 0 && !isValidEmail(email)) {
+                // Hiển thị thông báo lỗi định dạng email không hợp lệ
+                $("#InputUsername").nextAll(".text-danger").remove(); // Loại bỏ các thông báo lỗi trước đó
                 $("#InputUsername").after(
-                    '<div class=" text-danger">Tên đăng nhập không được chứa khoảng trắng</div>'
+                    '<div class="form-text text-danger">Email phải có định dạng xx@xx.xx</div>'
                 );
-            } else if (username.trim().length < 3 || username.trim().length > 50) {
-                $("#InputUsername").nextAll(".text-danger").remove();
-                $("#InputUsername").after(
-                    '<div class=" text-danger">Tên đăng nhập phải có 3 kí tự đến 50 kí tự</div>'
-                );
-            } else {
-                $("#InputUsername").nextAll(".text-danger").remove();
-            }
+            } else $("#InputUsername").nextAll(".text-danger").remove();
         });
         $('#InputPassword').on('input', function () {
             let pass_admin = $('#InputPassword').val().trim()
@@ -300,30 +293,38 @@
                 }
             } else $("#ReInputPassword").nextAll(".text-danger").remove();
         });
+        $('#Fullname').on("input", () => {
+            let fullname = $('#Fullname').val().trim()
+            if (fullname.length > 255) {
+                $("#Fullname").nextAll(".text-danger").remove(); // Loại bỏ các thông báo lỗi trước đó
+                $("#Fullname").after(
+                    '<div class="form-text text-danger">Họ tên tối đa chỉ được 255 kí tự</div>'
+                );
+            } else $("#Fullname").nextAll(".text-danger").remove();
+        })
+
     })
     // thêm tài khoản admin
     $('#btnAdd').on('click', function () {
-        let user_name = $('#InputUsername').val().trim()
+        let email = $('#InputUsername').val().trim()
         let pass_admin = $('#InputPassword').val().trim()
         let repass = $("#ReInputPassword").val().trim()
-        let id_role_admin = $('#UserRole').val()
-        let id_status_acc = $('#UserStatus').val()
-        if (user_name == '' && pass_admin == '' && id_role_admin == 0 && id_status_acc == 0) {
+        let full_name = $("#Fullname").val().trim()
+        if (email == '' && pass_admin == '' && repass == '') {
             swalAlert('', 'Chưa có gì để thêm', 'error', 2000)
-        } else if (user_name == '' || pass_admin == '' || id_role_admin == 0 || id_status_acc == 0) {
+        } else if (email == '' || pass_admin == '' || repass == '') {
             swalAlert('Cảnh báo !!!', 'Bạn hãy nhập đầy đủ thông tin cho tài khoản này', 'error', 3000)
         } else if (pass_admin.length < 9) {
             swalAlert('Cảnh báo !!!', 'Mật khẩu phải lớn hơn 8 ký tự!', 'error', 3000)
         } else {
             $.ajax({
-                url: '${context}/admin/add-account',
+                url: '${context}/admin/add-account-cus',
                 type: 'POST',
                 data: {
-                    UserName: user_name,
+                    Email: email,
                     PassAd: pass_admin,
                     RePass: repass,
-                    IdRole: id_role_admin,
-                    IdStatus: id_status_acc
+                    Fullname: full_name
                 },
                 data_type: 'text',
                 success: function (resultData) {
@@ -331,9 +332,8 @@
                         $('#btnAdd').on('click', function () {
                             $('#InputUsername').val('')
                             $('#InputPassword').val('')
-
-                            $('#UserStatus').val('0')
-                            $('#UserRole').val('0')
+                            $('#ReInputPassword').val('')
+                            $('#Fullname').val('')
                         })
                         swalAlert('', 'Thêm thành công', 'success', 2000)
                         $('btnCancel').click()
@@ -363,74 +363,78 @@
     var role_edit;
     $('button.edit').on('click', function () {
         // Lấy dữ liệu từ các thẻ HTML trong hàng đang chọn
-        let username = $(this).closest('tr').find('.userName').text();
-        var fullname_edit = $(this).closest('tr').find('.fullnameAd').text();
-        var status_edit = $(this).closest('tr').find('.statusAd').text();
-        var role_edit = $(this).closest('tr').find('.roleAd').text();
+        let username = $(this).closest('tr').find('.userNameCus').text();
+        var fullname_edit = $(this).closest('tr').find('.fullnameCus').text();
+        var status_edit = $(this).closest('tr').find('.statusCus').text();
+        var phone_edit = $(this).closest('tr').find('.phoneCus').text();
 
         // Hiển thị dữ liệu lên các ô input hoặc dialog
         $('#UsernameUpdate').val(username);
         $('#SelectStatus').val('0');
-        $('#SelectRole').val('0');
         $('#InputFullName').val(fullname_edit);
-
-        $('#InputPassNew').blur(function () {
-            let passNewAd = $('#InputPassNew').val().trim()
-            if (passNewAd.length > 0 && passNewAd.length < 8) {
+        $('#InputPhone').val(phone_edit);
+        $("#InputPassNew").on('input', () => {
+            let pass_admin = $('#InputPassNew').val().trim()
+            if (pass_admin.includes(" ")) {
+                $("#InputPassNew").nextAll(".text-danger").remove();
+                $("#InputPassNew").after(
+                    '<div class=" text-danger">Mật khẩu không được chứa khoảng trắng</div>'
+                );
+            } else if (pass_admin.length > 0 && pass_admin.length < 8) {
+                // nếu đã có cảnh báo rồi thì không cảnh báo nữa
                 let existingErrorMessages = $('#InputPassNew').nextAll('.text-danger');
                 if (existingErrorMessages.length == 0) {
-                    $('#InputPassNew').after('<div class="text-danger">Mật khẩu tối thiểu 8 kí tự!</div>');
+                    $('#InputPassNew').after('<div class="text-danger">Mật khẩu tối thiểu 8 kí tự!</div>')
                 }
             } else $('#InputPassNew').nextAll('.text-danger').remove()
         })
-        $('#SelectRole').blur(function () {
-            let roleAd = $('#SelectRole').val()
-            if (roleAd == 0) {
-                let existingErrorMessages = $('#SelectRole').nextAll('.text-danger');
-                if (existingErrorMessages.length == 0) {
-                    $('#SelectRole').after('<div class="text-danger">Vui lòng chọn quyền!</div>')
-                }
-            } else $('#SelectRole').nextAll('.text-danger').remove()
+        $('#InputAddress').on("input", () => {
+            let address = $('#InputAddress').val().trim()
+            if (address.length > 255) {
+                $("#InputAddress").nextAll(".text-danger").remove(); // Loại bỏ các thông báo lỗi trước đó
+                $("#InputAddress").after(
+                    '<div class="form-text text-danger">Địa chỉ tối đa chỉ được 255 kí tự</div>'
+                );
+            } else $("#InputAddress").nextAll(".text-danger").remove();
         })
-        $('#SelectStatus').blur(function () {
-            let sttAd = $('#SelectStatus').val()
-            if (sttAd == 0) {
-                let existingErrorMessages = $('#SelectStatus').nextAll('.text-danger');
-                if (existingErrorMessages.length == 0) {
-                    $('#SelectStatus').after('<div class="text-danger">Vui lòng chọn trạng thái tài khoản!</div>')
-                }
-            } else $('#SelectStatus').nextAll('.text-danger').remove()
+        $('#InputPhone').on("input", () => {
+            let phone = $('#InputPhone').val().trim()
+            if (phone.length > 15) {
+                $("#InputPhone").nextAll(".text-danger").remove(); // Loại bỏ các thông báo lỗi trước đó
+                $("#InputPhone").after(
+                    '<div class="form-text text-danger">Số điện thoại tối đa chỉ được 15 số</div>'
+                );
+            } else $("#InputPhone").nextAll(".text-danger").remove();
         })
+
 
     });
-    $('#btUpdateAdmin').on('click', function () {
+    $('#btUpdateCus').on('click', function () {
         let username = $('#UsernameUpdate').val().trim()
-        let pass_admin = $('#InputPassNew').val().trim()
-        let id_role_admin = $('#SelectRole').val()
+        let pass_cus = $('#InputPassNew').val().trim()
         let id_status_acc = $('#SelectStatus').val()
         let fullname = $('#InputFullName').val()
-
-        if (id_role_admin == 0 || id_status_acc == 0) {
-            swalAlert('Cảnh báo !!!', 'Vui lòng chọn quyền cùng với trạng thái!', 'error', 3000)
-        } else if (pass_admin.length > 0 && pass_admin.length < 8) {
+        let phone = $('#InputPhone').val()
+        let address = $('#InputAddress').val()
+        if (pass_cus.length > 0 && pass_cus.length < 8) {
             swalAlert('Cảnh báo !!!', 'Vui lòng nhập lại mật khẩu mới đúng yêu cầu!', 'error', 3000)
         } else {
-
             $.ajax({
                 url: '${context}/admin/update-account-cus',
                 type: 'POST',
                 data: {
                     UserName: username,
-                    PassAd: pass_admin,
-                    IdRole: id_role_admin,
+                    PassAd: pass_cus,
                     IdStatus: id_status_acc,
-                    Fullname: fullname
+                    Fullname: fullname,
+                    Phone: phone,
+                    Address: address
                 },
                 data_type: 'text',
                 success: function (resultData) {
                     if (resultData.toString() == 'success') {
                         swalAlert('', 'Cập nhật thành công.', 'success', 2000)
-                        $('btnCancel').click()
+                        $('#btCancel').click()
                         setTimeout(function () {
                             location.replace(location.href);
                         }, 2000);
@@ -451,13 +455,15 @@
             })
         }
     })
-    $('#modal-up #btCancel').on('click', function () {
-        $('#InputUsername').val('')
+    $('#btCancel').on('click', function () {
+
+        $('#UsernameUpdate').val('')
         $('#InputPassNew').val('')
-        $('#InputRole').val()
-        $('#InputStatus').val()
+        $('#SelectStatus').val()
+        $('#InputFullName').val('')
+        $('#InputPhone').val('')
+        $('#InputAddress').val('')
         $('#SelectStatus').nextAll('.text-danger').remove()
-        $('#SelectRole').nextAll('.text-danger').remove()
         $('#InputPassNew').nextAll('.text-danger').remove()
     });
 
@@ -471,8 +477,10 @@
         });
     }
 
-    function checkCompete() {
-
+    // kiểm tra định dạng email
+    function isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
     }
 </script>
 </body>

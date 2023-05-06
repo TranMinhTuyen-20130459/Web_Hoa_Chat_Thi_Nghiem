@@ -206,6 +206,31 @@ public class CustomerService {
         }
         return false;
     }
+    public static boolean updateCustomer(Customer cus) {
+        DbConnection connectDb = DbConnection.getInstance();
+        String sql = "UPDATE account_customers " +
+                "SET pass = ?, id_status_acc= ?,full_name = ?," +
+                " phone_customer =?, address = ?, time_change_pass = current_timestamp()" +
+                " WHERE username = ?";
+        PreparedStatement preState = connectDb.getPreparedStatement(sql);
+        try {
+            preState.setString(1, cus.getPassword());
+            preState.setInt(2, cus.getId_status_acc());
+            preState.setString(3, cus.getFullname());
+            preState.setString(4, cus.getPhone());
+            preState.setString(5, cus.getAddress());
+            preState.setString(6, cus.getEmail());
+            int update = preState.executeUpdate();
+            if (update > 0) {
+                return true;
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            connectDb.close();
+        }
+        return false;
+    }
 
     public static int getIdOfCity(String city_name){
         DbConnection connnectDb = DbConnection.getInstance();
@@ -286,6 +311,22 @@ public class CustomerService {
             System.out.println("success");
         } catch (Exception e) {
             throw new RuntimeException();
+        } finally {
+            connectDb.close();
+        }
+    }
+    public static int registerCustomer(String email, String hashedPass,String fullname) {
+        DbConnection connectDb = DbConnection.getInstance();
+        String sql = "INSERT INTO account_customers(username, pass, id_status_acc, full_name ) " +
+                "VALUES(?, ?, 1, ?)";
+        PreparedStatement preState = connectDb.getPreparedStatement(sql);
+        try {
+            preState.setString(1, email);
+            preState.setString(2, hashedPass);
+            preState.setString(3, fullname);
+            return preState.executeUpdate();
+        } catch (Exception e) {
+            return 0;
         } finally {
             connectDb.close();
         }
@@ -457,13 +498,13 @@ public class CustomerService {
             ResultSet rs = preState.executeQuery();
             while (rs.next()) {
                 int id_customer = rs.getInt("id_user_customer");
-                String email_customer = rs.getString("username");
-                String password_customer = rs.getString("pass");
+                String email_customer = rs.getString("username") == null ?"":rs.getString("username") ;
+                String password_customer = rs.getString("pass") == null ?"":rs.getString("pass");
                 int id_status_acc_customer = rs.getInt("id_status_acc");
                 int id_city_customer = rs.getInt("id_city");
-                String fullname_customer = rs.getString("full_name");
-                String phone = rs.getString("phone_customer");
-                String address = rs.getString("address");
+                String fullname_customer = rs.getString("full_name") == null ?"":rs.getString("full_name");
+                String phone = rs.getString("phone_customer") == null ?"":rs.getString("phone_customer");
+                String address = rs.getString("address") == null ?"":rs.getString("address");
                 Customer customer = new Customer(id_customer, email_customer, password_customer,
                         id_status_acc_customer, id_city_customer, fullname_customer, phone, address);
                 customers.add(customer);
