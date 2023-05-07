@@ -5,7 +5,7 @@ import service.AdminService_MT;
 
 import java.util.List;
 
-public class TestAdminService {
+public class Test_AdminService {
     public static void Test_GetAllAdmin() {
         System.out.println(AdminService_MT.getAllAdmin());
     }
