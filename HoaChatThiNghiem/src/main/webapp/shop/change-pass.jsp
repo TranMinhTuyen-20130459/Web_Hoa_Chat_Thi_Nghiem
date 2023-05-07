@@ -56,7 +56,7 @@
             </div>
             <div class="col-lg-5 col-md-5 col-12">
                 <div class="h-100 d-flex align-items-center">
-                    <form class="m-0 p-5 text-center" action="${context}/shop/change-password" method="post">
+                    <form id="form-change-pass" class="m-0 p-5 text-center" action="${context}/shop/change-password" method="post">
                         <h5 class="mb-4">Đổi Mật Khẩu</h5>
                         <%if(success != null){%>
                         <div class="w-100 mb-3 alert alert-success notification" role="alert">
@@ -67,9 +67,12 @@
                             <%=text%>
                         </div>
                         <%}%>
-                        <input class="w-100 mb-3 insert" type="password" placeholder="Mật khẩu cũ" name="old-pass"/>
-                        <input class="w-100 mb-3 insert" type="password" placeholder="Mật khẩu mới" name="new-pass"/>
-                        <input class="w-100 mb-4 insert" type="password" placeholder="Xác nhận lại mật khẩu mới" name="confirm-pass"/>
+                        <span id="error-old-pass" class="text-danger"></span>
+                        <input id="old-pass" class="w-100 mb-3 insert" type="password" placeholder="Mật khẩu cũ" name="old-pass"/>
+                        <span id="error-new-pass" class="text-danger"></span>
+                        <input id="new-pass" class="w-100 mb-3 insert" type="password" placeholder="Mật khẩu mới" name="new-pass"/>
+                        <span id="error-re-pass" class="text-danger"></span>
+                        <input id="re-pass" class="w-100 mb-4 insert" type="password" placeholder="Xác nhận lại mật khẩu mới" name="confirm-pass"/>
                         <button class="btn next w-100 mb-3" id="confirm-change">Xác nhận</button>
                     </form>
                 </div>
@@ -87,6 +90,28 @@
 
 <!-- ===== JAVASCRIPT ===== -->
 <jsp:include page="../common/shop-js.jsp"/>
+<script src="./js/processInputText.js"></script>
+<script>
+    var old_pass = document.getElementById("old-pass");
+    var error_old_pass = document.getElementById("error-old-pass");
+    notEmpty(old_pass, error_old_pass);
+    notEmptyAndMinimum(old_pass, error_old_pass, "Mật khẩu cũ")
+
+    var new_pass = document.getElementById("new-pass");
+    var error_new_pass = document.getElementById("error-new-pass");
+    notEmpty(new_pass, error_new_pass);
+    notEmptyAndMinimum(new_pass, error_new_pass, "Mật khẩu mới")
+
+    var re_pass = document.getElementById("re-pass");
+    var error_re_pass = document.getElementById("error-re-pass");
+    notEmpty(re_pass, error_re_pass);
+    notEmptyAndMinimum(re_pass, error_re_pass, "Xác thực mật khẩu")
+
+    var form_change_pass = document.getElementById("form-change-pass");
+    preventSubmitForRegister(form_change_pass, old_pass, new_pass, re_pass);
+
+
+</script>
 </body>
 
 </html>

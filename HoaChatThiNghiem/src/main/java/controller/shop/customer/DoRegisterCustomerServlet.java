@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 @WebServlet(name = "DoRegisterCustomerServlet", value = "/shop/register")
+
 public class DoRegisterCustomerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -39,9 +40,10 @@ public class DoRegisterCustomerServlet extends HttpServlet {
                 HttpSession session = request.getSession(true);
                 request.setAttribute("session_cus", session);
                 session.setAttribute("cus", customer_register);
+                String contextPath = request.getContextPath();
                 String body = "Để tạo tài khoản và sử dụng các dịch vụ của chúng tôi hãy " +
-//                        "http://localhost:8080/HoaChatThiNghiem_war/shop/verify-register";
-                        "<a href='http://localhost:8080/HoaChatThiNghiem_war/shop/verify-register?key=" + id + "'>nhấn vào đây!</a>";
+//                        "http://localhost:8080"+ contextPath +"/shop/verify-register";
+                        "<a href='http://localhost:8080"+ contextPath +"/shop/verify-register?key=" + id + "'>nhấn vào đây!</a>";
                 Email sendEmailForVerify = new Email("nguyenphutai840@gmail.com", "nlrtjmzdmlihnlrz",
                         "Chào mừng bạn trở thành một phần của LAB CHEMICALS", body);
                 SendMail.sendMail(email, sendEmailForVerify);

@@ -50,8 +50,7 @@
                         <div class="col-sm-3">
                             <select class="custom-select mr-sm-2" id="sorted">
                                 <option selected value="0">Sắp xếp</option>
-                                <option value="1">Mức độ</option>
-                                <option value="2">Thời gian</option>
+                                <option value="1">Mức độ(Level)</option>
                             </select>
                         </div>
                     </div>
@@ -134,11 +133,6 @@
                 $('#sampleTable').dataTable({
                     destroy: true,
                     order: false
-                });
-            } else if ($(this).val() == 2) {
-                $('#sampleTable').dataTable({
-                    destroy: true,
-                    order: [[7, 'desc']]
                 });
             }
         }

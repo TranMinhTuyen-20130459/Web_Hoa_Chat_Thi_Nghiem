@@ -52,7 +52,8 @@ public class AdminDAO {
         String sql = "SELECT username,full_name,R.id_role_admin,R.name_role,S.id_status_acc,S.name_status_acc" +
                 " FROM account_admins A" +
                 " JOIN role_admins R ON A.id_role_admin = R.id_role_admin" +
-                " JOIN status_accs S ON A.id_status_acc = S.id_status_acc";
+                " JOIN status_accs S ON A.id_status_acc = S.id_status_acc" +
+                " WHERE R.id_role_admin <> 3";
         Statement statement = connectDB.getStatement();
         try {
             ResultSet rs = statement.executeQuery(sql);
@@ -74,7 +75,8 @@ public class AdminDAO {
 
     public List<RoleAdmin> getAllRoleAdmin(DbConnection connectDB) {
         List<RoleAdmin> result = new ArrayList<>();
-        String sql = "SELECT id_role_admin,name_role FROM role_admins";
+        String sql = "SELECT id_role_admin,name_role FROM role_admins " +
+                "WHERE id_role_admin <> 3 ";
         Statement statement = connectDB.getStatement();
         try {
             ResultSet rs = statement.executeQuery(sql);

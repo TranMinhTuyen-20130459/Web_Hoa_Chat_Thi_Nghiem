@@ -8,6 +8,7 @@ import com.restfb.Parameter;
 import com.restfb.Version;
 import com.restfb.types.User;
 import org.apache.http.client.fluent.Request;
+import properties.FacebookProperties;
 
 import java.io.IOException;
 
@@ -16,10 +17,10 @@ public class FacebookUtils {
     // Hàm getToken sử dụng để lấy token từ mã đã nhận được sau khi xác thực
     public static String getToken(final String code) throws IOException {
         // Tạo link để gửi yêu cầu lấy token
-        String link = String.format(ConstantsString.FACEBOOK_LINK_GET_TOKEN,
-                ConstantsString.FACEBOOK_APP_ID,
-                ConstantsString.FACEBOOK_APP_SECRET,
-                ConstantsString.FACEBOOK_REDIRECT_URL,
+        String link = String.format(FacebookProperties.FACEBOOK_LINK_GET_TOKEN(),
+                FacebookProperties.FACEBOOK_CLIENT_ID(),
+                FacebookProperties.FACEBOOK_CLIENT_SECRET(),
+                FacebookProperties.FACEBOOK_REDIRECT_URL(),
                 code);
 
         // Gửi yêu cầu lấy token và lấy kết quả trả về dưới dạng chuỗi JSON
@@ -39,7 +40,7 @@ public class FacebookUtils {
 
         // Tạo đối tượng FacebookClient sử dụng token và app-secret để truy vấn dữ liệu
         FacebookClient fbClient = new DefaultFacebookClient(accessToken,
-                ConstantsString.FACEBOOK_APP_SECRET,
+                FacebookProperties.FACEBOOK_CLIENT_SECRET(),
                 Version.LATEST);
 
         return fbClient.fetchObject("me", User.class, Parameter.with("fields", "id, name, email, gender"));

@@ -1,11 +1,14 @@
 package controller.admin.account;
 
+import model.admin.Admin;
+import utils.CommonString;
+
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 
-@WebServlet(name = "AjaxAdminsManagerServlet", value = "/admin/check-role")
+@WebServlet(name = "AjaxAdminsManagerServlet", value = "/admin/check-role-ad")
 public class AjaxAdminsManagerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -14,9 +17,9 @@ public class AjaxAdminsManagerServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String idRole = request.getParameter("IdRoleAdmin");
+        Admin ad = (Admin) request.getSession().getAttribute(CommonString.ADMIN_SESSION);
         try {
-            Integer idRoleAdmin = Integer.parseInt(idRole);
+            Integer idRoleAdmin = ad.getId_role_admin();
             if (idRoleAdmin == 3) {
                 response.getWriter().write(request.getContextPath() + "/admin/quan-ly-admin-super");
             } else {

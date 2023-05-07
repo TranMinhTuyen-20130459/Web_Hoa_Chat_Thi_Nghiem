@@ -10,88 +10,133 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @WebServlet(name = "UpdateAdminServlet", value = "/admin/update-account")
 public class UpdateAdminServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // không phải quyền super-root thì về trang home
         Admin ad = (Admin) request.getSession().getAttribute(CommonString.ADMIN_SESSION);
         if (ad.getId_role_admin() != 3) {
             response.sendRedirect(request.getContextPath() + "/admin/dang-nhap");
-        }else {
+        } else {
             doPost(request, response);
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String password = request.getParameter("PassAd").strip();
         String username = request.getParameter("UserName");
-        String idRole = request.getParameter("IdRole");
-        String idStatus = request.getParameter("IdStatus");
+        String idRole = "";
+        String idStatus = "";
         String password_new = "";
         String fullname = "";
-        String pass = "";
         Log log = null;
         String statusLog = "Thất bại";
         try {
-            try {
-                password_new = request.getParameter("PassNew").strip();
-                fullname = request.getParameter("Fullname").trim();
-            } catch (Exception e) {
+            password_new = request.getParameter("PassAd").replace(" ", "");
+            idRole = request.getParameter("IdRole");
+            idStatus = request.getParameter("IdStatus");
+            fullname = request.getParameter("Fullname").trim();
+            Integer role = 0;
+            Integer status = 0;
+            // nếu là chuỗi số mới parse
+            if (isNumber(idRole) && isNumber(idStatus)) {
+                role = Integer.parseInt(idRole);
+                status = Integer.parseInt(idStatus);
             }
-            Integer role = Integer.parseInt(idRole);
-            Integer status = Integer.parseInt(idStatus);
             Admin ad = (Admin) request.getSession().getAttribute(CommonString.ADMIN_SESSION);
             if (ad != null) {
+                // kiểm tra xem quyền hiện tại có giống quyền lúc đăng nhập vào không
                 if (!AdminService_MT.checkUsernameWithRole(ad.getUsername(), ad.getId_role_admin())) {
                     request.getSession().invalidate();
                     response.getWriter().write(request.getContextPath() + "/admin/dang-nhap");
+                    // kiểm tra xem phải quyền super-root và
                 } else if (ad.getId_role_admin() == 3) {
-                    if (AdminService_MT.checkLogin(username, password) != null) { // đúng mat khau
-                        if (password_new != "" && password_new.length() > 8) pass = password_new;
-                        else pass = password;
-                        Admin admin = new Admin(username, pass, role, status, fullname);
-                        if (AdminService_MT.updateAccount(admin)) {
-                            response.getWriter().write("success");
-                            statusLog = "Thành công";
-                            if (status == 3) {
-                                log = new Log(Log.DANGER, 0 + "", ad.getUsername(), "Sửa tài khoản admin '" + username + "' sang trạng thái KHÓA VĨNH VIỄN", statusLog);
-                                WritingLogUtils.writeLog(request, log);
-                            }
-                            if (status == 2) {
-                                log = new Log(Log.DANGER, 0 + "", ad.getUsername(), "Sửa tài khoản admin '" + username + "' sang trạng thái TẠM KHÓA", statusLog);
-                                WritingLogUtils.writeLog(request, log);
-                            }
-                            if (role == 3) {
-                                log = new Log(Log.DANGER, 0 + "", ad.getUsername(), "Sửa tài khoản admin '" + username + "' sang quyền SUPER-ROOT", statusLog);
-                                WritingLogUtils.writeLog(request, log);
+                    int roleOld = AdminService_MT.checkUsername(username).getId_status_acc();
+                    if (roleOld != 3 ) { // tài khoản này nếu bị khóa vĩnh viễn th không cho cập nhật
+                        // kiểm tra xem mật khẩu có bị đổi không
+                        if (!isPassword(username, password_new)) { // khong doi
+                            // nếu không bị đổi thì gán mật khẩu chính
+                            password_new = AdminService_MT.checkUsername(username).getPassAD();
+                        }
+                        //dữ liêu nhập đã hợp lệ chưa
+                        if (checkInvalid(username, password_new, role, status)) {
+                            Admin admin = new Admin(username, password_new, role, status, fullname);
+                            if (AdminService_MT.updateAccount(admin)) { // update
+                                response.getWriter().write("success");
+                                statusLog = "Thành công";
+                                if (status == 3) { // nếu trạng thái khóa vĩnh viễn
+                                    log = new Log(Log.DANGER, 0 + "", ad.getUsername(), "Sửa tài khoản admin '" + username + "' sang trạng thái KHÓA VĨNH VIỄN", statusLog);
+                                    WritingLogUtils.writeLog(request, log);
+                                }
+                                if (status == 2) {// nếu trạng thái tạm khóa
+                                    log = new Log(Log.DANGER, 0 + "", ad.getUsername(), "Sửa tài khoản admin '" + username + "' sang trạng thái TẠM KHÓA", statusLog);
+                                    WritingLogUtils.writeLog(request, log);
+                                }
+                                if (role == 3) { // nếu quyền là super-root
+                                    log = new Log(Log.DANGER, 0 + "", ad.getUsername(), "Sửa tài khoản admin '" + username + "' sang quyền SUPER-ROOT", statusLog);
+                                    WritingLogUtils.writeLog(request, log);
+                                } else {
+                                    log = new Log(Log.WARNING, 0 + "", ad.getUsername(), "Sửa tài khoản admin " + username, statusLog);
+                                    WritingLogUtils.writeLog(request, log);
+                                }
                             } else {
-                                log = new Log(Log.WARNING, 0 + "", ad.getUsername(), "Sửa tài khoản admin " + username, statusLog);
+                                response.getWriter().write("fail");
+                                statusLog = "Thất bại";
+                                log = new Log(Log.INFO, 0 + "", ad.getUsername(), "Sửa tài khoản admin " + username, statusLog);
                                 WritingLogUtils.writeLog(request, log);
                             }
                         } else {
-                            response.getWriter().write("fail");
+                            response.getWriter().write("wrong");
                             statusLog = "Thất bại";
-                            log = new Log(Log.INFO, 0 + "", ad.getUsername(), "Sửa tài khoản admin " + username, statusLog);
+                            log = new Log(Log.WARNING, 0 + "", ad.getUsername(), "Nhập sai dữ liệu", statusLog);
                             WritingLogUtils.writeLog(request, log);
                         }
-                    } else {
-                        response.getWriter().write("passfail");
+                    }else {
+                        response.getWriter().write("seal");
                         statusLog = "Thất bại";
-                        log = new Log(Log.INFO, 0 + "", ad.getUsername(), "Sửa tài khoản admin " + username, statusLog);
+                        log = new Log(Log.WARNING, 0 + "", ad.getUsername(), "Sửa tài khoản đã bị khóa", statusLog);
                         WritingLogUtils.writeLog(request, log);
                     }
                 } else {
                     response.getWriter().write(request.getContextPath() + "/admin/dang-nhap");
                     response.sendRedirect(request.getContextPath() + "/admin/dang-nhap");
                 }
+            } else {
+                response.getWriter().write(request.getContextPath() + "/admin/dang-nhap");
+                response.sendRedirect(request.getContextPath() + "/admin/dang-nhap");
+                statusLog = "Thất bại";
+                log = new Log(Log.DANGER, 0 + "", "", "Người này không phải admin " + username, statusLog);
+                WritingLogUtils.writeLog(request, log);
             }
         } catch (Exception e) {
             response.getWriter().write("error");
-            statusLog = "Thất bại";
-            log = new Log(Log.INFO, 0 + "", "", "Sửa tài khoản admin " + username, statusLog);
-            WritingLogUtils.writeLog(request, log);
+
         }
     }
+
+    private boolean checkInvalid(String username, String pass, int role, int status) {
+        if (AdminService_MT.checkLogin(username, pass) != null || pass.length() > 8) return true;
+        else if (role < 3 && role > 0) return true;
+        else if (status < 4 && status > 1) return true;
+        return false;
+    }
+
+    private boolean isNumber(String textnum) {
+        String regex = "^\\d+$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(textnum);
+        return matcher.matches();
+    }
+
+    private boolean isPassword(String username, String pass) {
+        if (AdminService_MT.checkLogin(username, pass) != null || pass.length() == 0)
+            return false;
+        else return true;
+
+    }
 }
+

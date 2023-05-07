@@ -38,7 +38,7 @@ public class TypeAcc implements Serializable {
                 '}';
     }
 
-    public static int ACC_NORMAL = 1;
-    public static int ACC_FACEBOOK = 2;
-    public static int ACC_GOOGLE = 3;
+    public static final int ACC_NORMAL = 1;
+    public static final int ACC_FACEBOOK = 2;
+    public static final int ACC_GOOGLE = 3;
 }

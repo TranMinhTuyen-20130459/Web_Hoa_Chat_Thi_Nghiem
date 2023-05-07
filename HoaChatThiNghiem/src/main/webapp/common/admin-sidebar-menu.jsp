@@ -7,10 +7,11 @@
     Admin admin = (Admin) session.getAttribute(CommonString.ADMIN_SESSION);%>
 <%
     String url = request.getRequestURL().toString(), c1 = "", c2 = "", c3 = "", c4 = "", c5 = "", c6 = "", c7 = "",
-            c8 ="";
+            c8 = "";
     if (url.contains("index")) c1 = "haha";
     else if (url.contains("product")) c2 = "haha";
     else if (url.contains("bills")) c3 = "haha";
+    else if (url.contains("bill-detail")) c3 = "haha";
     else if (url.contains("sales")) c4 = "haha";
     else if (url.contains("admins-manager")) c5 = "haha";
     else if (url.contains("settings")) c6 = "haha";
@@ -38,15 +39,11 @@
                 <span class="app-menu-label">Quản lý sản phẩm</span></a>
         </li>
         <li>
-            <a class="app-menu-item <%=c3%>" href="${context}/admin/quan-ly-don-hang"><i class='bx bx-task'></i>
+            <a class="app-menu-item <%=c3%>" href="#" onclick="funcAjax2()"><i class='bx bx-task'></i>
                 <span class="app-menu-label">Quản lý đơn hàng</span></a>
         </li>
-<%--        <li>--%>
-<%--            <a class="app-menu-item <%=c9%>" href="${context}/admin/voucher"><i class='bx bx-task'></i>--%>
-<%--                <span class="app-menu-label">Quản lý voucher</span></a>--%>
-<%--        </li>--%>
         <li>
-            <a class="app-menu-item <%=c4%>" href="${context}/admin/bao-cao-doanh-thu"><i
+            <a class="app-menu-item <%=c4%>" href="#" onclick="funcAjax3()"><i
                     class='bx bx-pie-chart-alt-2'></i>
                 <span class="app-menu-label">Báo cáo doanh thu</span></a>
         </li>
@@ -73,53 +70,50 @@
     Phân quyền chức năng quản lý admin
     Admin nào có id_role = 3 thì được sử dụng chức năng này
     --%>
+    let idRoleAdmin
+    // admin
     function funcAjax() {
-        var idRoleAdmin = <%=admin.getId_role_admin()%>
-            $.ajax({
-                url: '${context}/admin/check-role',
-                type: 'POST',                           //-- mặc định type của ajax là GET
-                data: {IdRoleAdmin: idRoleAdmin},
-                data_type: "text",
-                success: (function (resultData) {
-                    if (resultData.toString() == 'fail') {
-                        swal({
-                            text: 'Bạn không có quyền sử dụng chức năng này',
-                            icon: 'error',
-                            timer: 1000,
-                            buttons: false
-                        });
-                    } else {
-                        // alert(resultData)
-                        window.location = resultData;
-                    }
-                }),
-                error: (function () {
-                    // error no call ajax
-                })
-            })
+        idRoleAdmin = <%=admin.getId_role_admin()%>;
+        checkRoleAndRedirect('${context}/admin/check-role-ad', idRoleAdmin);
     }
+    // logging
     function funcAjax1() {
-        var idRoleAdmin = <%=admin.getId_role_admin()%>
-            $.ajax({
-                url: '${context}/admin/check-role-log',
-                type: 'POST',                           //-- mặc định type của ajax là GET
-                data: {IdRoleAdmin: idRoleAdmin},
-                data_type: "text",
-                success: (function (resultData) {
-                    if (resultData.toString() == 'fail') {
-                        swal({
-                            text: 'Bạn không có quyền sử dụng chức năng này',
-                            icon: 'error',
-                            timer: 1000,
-                            buttons: false
-                        });
-                    } else {
-                        // alert(resultData)
-                        window.location = resultData;
-                    }
-                }),
-                error: (function () {
-                    // error no call ajax
-                })
-            })}
+        idRoleAdmin = <%=admin.getId_role_admin()%>;
+        checkRoleAndRedirect('${context}/admin/check-role-log', idRoleAdmin);
+    }
+
+    // check role for root
+    function funcAjax2() {
+        idRoleAdmin = <%=admin.getId_role_admin()%>;
+        checkRoleAndRedirect('${context}/admin/check-role-bill', idRoleAdmin);
+    }
+
+    function funcAjax3() {
+        idRoleAdmin = <%=admin.getId_role_admin()%>;
+        checkRoleAndRedirect('${context}/admin/check-role-report', idRoleAdmin);
+    }
+
+    function checkRoleAndRedirect(url, idRoleAdmin) {
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: { IdRoleAdmin: idRoleAdmin },
+            data_type: 'text',
+            success: function (resultData) {
+                if (resultData.toString() == 'fail') {
+                    swal({
+                        text: 'Bạn không có quyền sử dụng chức năng này',
+                        icon: 'error',
+                        timer: 1000,
+                        buttons: false,
+                    });
+                } else {
+                    window.location = resultData;
+                }
+            },
+            error: function () {
+                // handle error
+            },
+        });
+    }
 </script>
