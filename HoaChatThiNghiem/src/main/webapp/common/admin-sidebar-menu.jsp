@@ -39,20 +39,20 @@
                 <span class="app-menu-label">Quản lý sản phẩm</span></a>
         </li>
         <li>
-            <a class="app-menu-item <%=c3%>" href="" onclick="funcAjax2()"><i class='bx bx-task'></i>
+            <a class="app-menu-item <%=c3%>" href="#" onclick="funcAjax2()"><i class='bx bx-task'></i>
                 <span class="app-menu-label">Quản lý đơn hàng</span></a>
         </li>
         <li>
-            <a class="app-menu-item <%=c4%>" href="" onclick="funcAjax3()"><i
+            <a class="app-menu-item <%=c4%>" href="#" onclick="funcAjax3()"><i
                     class='bx bx-pie-chart-alt-2'></i>
                 <span class="app-menu-label">Báo cáo doanh thu</span></a>
         </li>
         <li>
-            <a class="app-menu-item <%=c5%>" href="" onclick="funcAjax()"><i class='bx bxs-user-account'></i>
+            <a class="app-menu-item <%=c5%>" href="#" onclick="funcAjax()"><i class='bx bxs-user-account'></i>
                 <span class="app-menu-label">Quản lý admin</span></a>
         </li>
         <li>
-            <a class="app-menu-item <%=c8%>" href="" onclick="funcAjax1()"><i class='bx bxs-edit'></i>
+            <a class="app-menu-item <%=c8%>" href="#" onclick="funcAjax1()"><i class='bx bxs-edit'></i>
                 <span class="app-menu-label">Bảng Logging</span></a>
         </li>
         <li>
