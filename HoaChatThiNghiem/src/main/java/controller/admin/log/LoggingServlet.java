@@ -22,7 +22,8 @@ public class LoggingServlet extends HttpServlet {
         if (admin.getId_role_admin() == 3) {
             // lấy danh sách log sắp xếp giảm dần theo level
             ArrayList<Log> listLog = (ArrayList<Log>) AdminService.getAllLog().
-                    stream().sorted(Comparator.comparing(Log::getId_level).reversed()).collect(Collectors.toList());
+                    stream().sorted(Comparator.comparing(Log::getId_level).reversed().thenComparing(Comparator.comparing(Log::getCreate_at)
+                            .reversed())).collect(Collectors.toList());
             request.setAttribute("ListLog", listLog);
             request.getRequestDispatcher("/admin-jsp/logging.jsp").forward(request, response);
         } else {
