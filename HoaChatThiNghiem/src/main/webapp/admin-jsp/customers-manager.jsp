@@ -183,7 +183,7 @@
                     </div>
                     <div class="form-group col-md-6">
                         <label class="control-label">Họ tên</label>
-                        <input id="Fullname" class="form-control" type="password"
+                        <input id="Fullname" class="form-control" type="text"
                                placeholder="Nhập họ và tên">
                     </div>
 
@@ -253,6 +253,7 @@
         $('#UserStatus').val('0')
         $('#UserRole').val('0')
         $('#InputPassword').nextAll('.text-danger').remove()
+        $('#InputUsername').nextAll('.text-danger').remove()
     })
     $('.btn-add').on('click', function () {
 
@@ -314,7 +315,7 @@
             swalAlert('', 'Chưa có gì để thêm', 'error', 2000)
         } else if (email == '' || pass_admin == '' || repass == '') {
             swalAlert('Cảnh báo !!!', 'Bạn hãy nhập đầy đủ thông tin cho tài khoản này', 'error', 3000)
-        } else if (pass_admin.length < 9) {
+        } else if (pass_admin.length < 8) {
             swalAlert('Cảnh báo !!!', 'Mật khẩu phải lớn hơn 8 ký tự!', 'error', 3000)
         } else {
             $.ajax({
@@ -336,7 +337,7 @@
                             $('#Fullname').val('')
                         })
                         swalAlert('', 'Thêm thành công', 'success', 2000)
-                        $('btnCancel').click()
+                        $('#btnCancel').click()
                         setTimeout(function () {
                             location.replace(location.href);
                         }, 2000);

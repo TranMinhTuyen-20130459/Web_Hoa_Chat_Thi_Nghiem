@@ -48,7 +48,7 @@
                 <span class="app-menu-label">Báo cáo doanh thu</span></a>
         </li>
         <li>
-            <a class="app-menu-item <%=c9%>" href="#" onclick="funcAjax4()"><i class='bx bxs-user-account'></i>
+            <a class="app-menu-item <%=c9%>" href="#" onclick="funcAjax4()"><i class='bx bxs-user'></i>
                 <span class="app-menu-label">Quản lý khách hàng</span></a>
         </li>
         <li>
@@ -72,7 +72,6 @@
 <script>
     <%--
     Phân quyền chức năng quản lý admin
-    Admin nào có id_role = 3 thì được sử dụng chức năng này
     --%>
     let idRoleAdmin
     // admin
@@ -91,12 +90,13 @@
         idRoleAdmin = <%=admin.getId_role_admin()%>;
         checkRoleAndRedirect('${context}/admin/check-role-bill', idRoleAdmin);
     }
-
-
+    // thong ke
     function funcAjax3() {
         idRoleAdmin = <%=admin.getId_role_admin()%>;
         checkRoleAndRedirect('${context}/admin/check-role-report', idRoleAdmin);
-    }function funcAjax4() {
+    }
+    //quan li khach hang
+    function funcAjax4() {
         idRoleAdmin = <%=admin.getId_role_admin()%>;
         checkRoleAndRedirect('${context}/admin/check-role-cus', idRoleAdmin);
     }
