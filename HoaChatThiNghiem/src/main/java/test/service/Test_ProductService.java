@@ -6,9 +6,9 @@ import service.ProductService;
 
 import java.util.List;
 
-public class TestProductService {
+public class Test_ProductService {
 
-    public TestProductService() {
+    public Test_ProductService() {
     }
 
     public void Test_AddNewProduct() {
@@ -41,7 +41,7 @@ public class TestProductService {
 
     public static void main(String[] args) {
 
-        TestProductService test_service = new TestProductService();
+        Test_ProductService test_service = new Test_ProductService();
         // test_service.Test_AddNewProduct();
         // test_service.Test_GetSubTypeAndStatusAndSupplierForProduct();
         //test_service.Test_DeleteProduct();

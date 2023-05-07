@@ -7,7 +7,7 @@ import model.shop.Cart;
 import model.shop.Product;
 import service.CheckoutService;
 
-public class TestCheckoutService {
+public class Test_CheckoutService {
 
 
     public static void TestAddBillAndBillDetail() {

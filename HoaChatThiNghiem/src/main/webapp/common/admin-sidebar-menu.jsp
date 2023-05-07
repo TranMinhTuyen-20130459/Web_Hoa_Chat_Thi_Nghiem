@@ -11,6 +11,7 @@
     if (url.contains("index")) c1 = "haha";
     else if (url.contains("product")) c2 = "haha";
     else if (url.contains("bills")) c3 = "haha";
+    else if (url.contains("bill-detail")) c3 = "haha";
     else if (url.contains("sales")) c4 = "haha";
     else if (url.contains("admins-manager")) c5 = "haha";
     else if (url.contains("settings")) c6 = "haha";

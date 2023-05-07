@@ -76,7 +76,8 @@
                                 <c:when test="${b.getNameStatus() == ''}"><c:set var="bg" value="bg-info"/></c:when>
                             </c:choose>
                             <tr>
-                                <td><a href="">#${b.id_bill}</a></td>
+                                <td><a href="${context}/admin/chi-tiet-don-hang?id_bill=${b.id_bill}">#${b.id_bill}</a>
+                                </td>
                                 <td>${b.nameCustomer}</td>
                                 <td>${b.phoneCustomer}</td>
                                 <td data-ss="${bg}" class="text-center"><span
@@ -295,7 +296,7 @@
                         console.log("Ket qua cua bien checkUpdateInforBill :" + checkUpdateInforBill)
                     })
 
-                if ( response.data.message == 'Registered Transport successfully'  ) {
+                if (response.data.message == 'Registered Transport successfully') {
                     swal({
                         title: 'Thông báo',
                         text: 'Đơn hàng đã được đăng kí vận chuyển ^.^',

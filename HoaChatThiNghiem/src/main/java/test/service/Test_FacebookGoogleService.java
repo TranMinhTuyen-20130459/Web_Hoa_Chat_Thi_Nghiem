@@ -4,12 +4,9 @@ import bean.Log;
 import database.JDBiConnector;
 import model.shop.Customer;
 import model.shop.TypeAcc;
-import org.jdbi.v3.core.Jdbi;
 import service.FacebookGoogleService;
-import utils.FacebookUtils;
-import utils.GoogleUtils;
 
-public class TestFacebookGoogleService {
+public class Test_FacebookGoogleService {
 
     public static void Test_CheckExistAcc() {
 
