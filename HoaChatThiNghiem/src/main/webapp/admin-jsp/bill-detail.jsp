@@ -61,7 +61,7 @@
                         <tbody>
                         <c:forEach var="p" items="${requestScope.BillDetail}">
                             <tr>
-                                <td><img src="${context}/${p.url_img_product}" alt=""></td>
+                                <td><img src="${context}/${p.url_img_product}" alt="" width="100px;"></td>
                                 <td>${p.name_product}</td>
                                 <td>${p.quantity}</td>
                                 <td>${p.listed_price}</td>

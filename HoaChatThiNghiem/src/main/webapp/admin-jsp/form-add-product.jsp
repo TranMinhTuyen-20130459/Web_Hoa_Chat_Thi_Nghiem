@@ -224,20 +224,6 @@
                                         <div class="text-danger">${ErrorUploadImg.toString()}</div>
                                     </c:if>
                                 </a>
-                                <a id="myfileupload2">
-                                    <input type="text" name="UrlImage" style="min-width:300px" value="<%=UrlImg%>"/>
-                                    <c:set var="ErrorUploadImg" value="<%=ErrorUploadImg%>"/>
-                                    <c:if test="${ErrorUploadImg!=null}">
-                                        <div class="text-danger">${ErrorUploadImg.toString()}</div>
-                                    </c:if>
-                                </a>
-                                <a id="myfileupload3">
-                                    <input type="text" name="UrlImage" style="min-width:300px" value="<%=UrlImg%>"/>
-                                    <c:set var="ErrorUploadImg" value="<%=ErrorUploadImg%>"/>
-                                    <c:if test="${ErrorUploadImg!=null}">
-                                        <div class="text-danger">${ErrorUploadImg.toString()}</div>
-                                    </c:if>
-                                </a>
                                 <p style="clear:both"></p>
                             </div>
                         </div>
