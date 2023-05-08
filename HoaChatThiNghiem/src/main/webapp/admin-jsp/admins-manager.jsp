@@ -316,7 +316,7 @@
             swalAlert('', 'Chưa có gì để thêm', 'error', 2000)
         } else if (user_name == '' || pass_admin == '' || id_role_admin == 0 || id_status_acc == 0) {
             swalAlert('Cảnh báo !!!', 'Bạn hãy nhập đầy đủ thông tin cho tài khoản này', 'error', 3000)
-        } else if (pass_admin.length < 9) {
+        } else if (pass_admin.length < 8) {
             swalAlert('Cảnh báo !!!', 'Mật khẩu phải lớn hơn 8 ký tự!', 'error', 3000)
         } else {
             $.ajax({
@@ -378,7 +378,7 @@
         $('#SelectRole').val('0');
         $('#InputFullName').val(fullname_edit);
 
-        $('#InputPassNew').blur(function () {
+        $('#InputPassNew').on('input',function () {
             let passNewAd = $('#InputPassNew').val().trim()
             if (passNewAd.length > 0 && passNewAd.length < 8) {
                 let existingErrorMessages = $('#InputPassNew').nextAll('.text-danger');
@@ -387,23 +387,14 @@
                 }
             } else $('#InputPassNew').nextAll('.text-danger').remove()
         })
-        $('#SelectRole').blur(function () {
-            let roleAd = $('#SelectRole').val()
-            if (roleAd == 0) {
-                let existingErrorMessages = $('#SelectRole').nextAll('.text-danger');
+        $('#InputFullName').on('input',()=>{
+            let fullname = $('#InputFullName').val().trim()
+            if (fullname.length > 255) {
+                let existingErrorMessages = $('#InputFullName').nextAll('.text-danger');
                 if (existingErrorMessages.length == 0) {
-                    $('#SelectRole').after('<div class="text-danger">Vui lòng chọn quyền!</div>')
+                    $('#InputFullName').after('<div class="text-danger">Họ và tên tối đa chỉ được 255 kí tự!</div>');
                 }
-            } else $('#SelectRole').nextAll('.text-danger').remove()
-        })
-        $('#SelectStatus').blur(function () {
-            let sttAd = $('#SelectStatus').val()
-            if (sttAd == 0) {
-                let existingErrorMessages = $('#SelectStatus').nextAll('.text-danger');
-                if (existingErrorMessages.length == 0) {
-                    $('#SelectStatus').after('<div class="text-danger">Vui lòng chọn trạng thái tài khoản!</div>')
-                }
-            } else $('#SelectStatus').nextAll('.text-danger').remove()
+            } else $('#InputFullName').nextAll('.text-danger').remove()
         })
 
     });
@@ -414,9 +405,7 @@
         let id_status_acc = $('#SelectStatus').val()
         let fullname = $('#InputFullName').val()
 
-        if (id_role_admin == 0 || id_status_acc == 0) {
-            swalAlert('Cảnh báo !!!', 'Vui lòng chọn quyền cùng với trạng thái!', 'error', 3000)
-        } else if (pass_admin.length > 0 && pass_admin.length < 8) {
+        if (pass_admin.length > 0 && pass_admin.length < 8) {
             swalAlert('Cảnh báo !!!', 'Vui lòng nhập lại mật khẩu mới đúng yêu cầu!', 'error', 3000)
         } else {
 
