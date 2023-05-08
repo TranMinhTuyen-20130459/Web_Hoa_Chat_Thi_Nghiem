@@ -29,7 +29,7 @@ public class DeleteAccountCustomerServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String username = request.getParameter("Username");
-        String statusLog = "thất bại";
+        String statusLog = "Thất bại";
         Log log = null;
         try {
             Admin ad = (Admin) request.getSession().getAttribute(CommonString.ADMIN_SESSION);
@@ -42,16 +42,17 @@ public class DeleteAccountCustomerServlet extends HttpServlet {
                 } else if (ad.getId_role_admin() == 3) {
                     if (CustomerService.deleteCustomerByUsername(username)) {
                         response.getWriter().write("success");
+                        statusLog = "Thành công";
                         log = new Log(Log.WARNING, 0 + "", ad.getUsername(), "Xóa tài khoản " + username+ " thành công", statusLog);
                         WritingLogUtils.writeLog(request, log);
                     } else {
                         response.getWriter().write("fail");
-                        statusLog = "thất bại";
+                        statusLog = "Thất bại";
                         log = new Log(Log.ALERT, 0 + "",ad.getUsername() , "Xóa tài khoản " + username+ " thất bại", statusLog);
                         WritingLogUtils.writeLog(request, log);
                     }
                 } else {
-                    statusLog = "thất bại";
+                    statusLog = "Thất bại";
                     log = new Log(Log.ALERT, 0 + "",ad.getUsername() , "Xóa tài khoản " + username+ " thất bại . vì không có quyền", statusLog);
                     WritingLogUtils.writeLog(request, log);
                     response.getWriter().write(request.getContextPath() + "/admin/dang-nhap");
@@ -65,7 +66,7 @@ public class DeleteAccountCustomerServlet extends HttpServlet {
                 WritingLogUtils.writeLog(request, log);
             }
         } catch (Exception e) {
-            statusLog = "thất bại";
+            statusLog = "Thất bại";
             response.getWriter().write("fail");
             log = new Log(Log.ALERT, 0 + "","Unknown" , "Xóa tài khoản " + username+ " thất bại", statusLog);
             WritingLogUtils.writeLog(request, log);
