@@ -211,9 +211,8 @@
                             </c:if>
                         </div>
                         <div class="form-group col-md-12">
-                            <label class="control-label">Ảnh sản phẩm</label>
                             <div id="boxchoice">
-                                <a href="javascript:" class="Choicefile" onClick="ChooseImage()">
+                                <a href="javascript:" class="Choicefile" onClick="ChooseImage('UrlImage')">
                                     <i class="fas fa-cloud-upload-alt"></i>
                                     Chọn ảnh
                                 </a>
@@ -227,6 +226,7 @@
                                 <p style="clear:both"></p>
                             </div>
                         </div>
+
                         <div class="form-group col-md-12">
                             <label class="control-label">Mô tả sản phẩm</label>
                             <textarea class="form-control" id="descProduct" name="MoTaSP"><%=DescProduct%></textarea>
@@ -266,16 +266,18 @@
     <%request.getSession().removeAttribute(CommonString.MESS_ALERT);%>
 </script>
 <script>
-    function ChooseImage() {
+    function DienUrlVaoInput(fieldName, fileUrl) {
+        $('input[name=' + fieldName + ']').val(fileUrl);
+    }
+
+    function ChooseImage(fieldName) {
         var finder = new CKFinder();
-        finder.selectActionFunction = DienUrlVaoInput;
+        finder.selectActionFunction = function(fileUrl) {
+            DienUrlVaoInput(fieldName, fileUrl);
+        };
         finder.popup();
     }
 
-    <!--Đưa dường dẫn hình ảnh vào TextField input-->
-    function DienUrlVaoInput(fileUrl) {
-        $('input[name=UrlImage]').val(fileUrl);
-    }
 </script>
 <!-- ================================================================================================== -->
 </body>
