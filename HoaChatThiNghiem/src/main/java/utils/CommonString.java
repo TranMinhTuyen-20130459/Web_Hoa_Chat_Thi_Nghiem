@@ -5,6 +5,11 @@ public class CommonString {
     public static final String ADMIN_SESSION = "ADMIN_SESSION";
     public static final String MESS_ALERT = "MESS_ALERT";
     public static final String UPLOAD_IMG_ERROR = "UPLOAD_IMG_ERROR";
+    public static final String UPLOAD_IMG_SECOND_ERROR = "UPLOAD_IMG_SECOND_ERROR";
+    public static final String UPLOAD_IMG_THIRD_ERROR = "UPLOAD_IMG_THIRD_ERROR";
+    public static final String UPLOAD_IMG_FOURTH_ERROR = "UPLOAD_IMG_FOURTH_ERROR";
+    public static final String UPLOAD_IMG_FIFTH_ERROR = "UPLOAD_IMG_FIFTH_ERROR";
+
 
     public static final String NAME_PRODUCT_ERROR = "NAME_PRODUCT_ERROR";
 
