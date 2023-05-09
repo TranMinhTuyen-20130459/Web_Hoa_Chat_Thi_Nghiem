@@ -1,7 +1,9 @@
 package controller.shop.customer;
 
+import bean.Log;
 import model.shop.CustomerSecurity;
 import service.CustomerService;
+import utils.WritingLogUtils;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -21,6 +23,8 @@ public class VerifyRegisterCustomerServlet extends HttpServlet {
                 String password = cus.getPassword();
                 String hashPassword = CustomerService.hashPass(password);
                 CustomerService.signUp(email,hashPassword);
+                Log verifyCusLog = new Log(Log.INFO, "", "unknown", "Khách hàng đăng ký tài khoản với tên đăng nhập " + cus.getEmail(), "Success");
+                WritingLogUtils.writeLog(request, verifyCusLog);
                 session.invalidate();
                 request.getServletContext().getRequestDispatcher("/shop/login").forward(request, response);
             }else{
