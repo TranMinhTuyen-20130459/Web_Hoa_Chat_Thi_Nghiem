@@ -7,7 +7,7 @@
     Admin admin = (Admin) session.getAttribute(CommonString.ADMIN_SESSION);%>
 <%
     String url = request.getRequestURL().toString(), c1 = "", c2 = "", c3 = "", c4 = "", c5 = "", c6 = "", c7 = "",
-            c8 = "";
+            c8 = "", c9 ="";
     if (url.contains("index")) c1 = "haha";
     else if (url.contains("product")) c2 = "haha";
     else if (url.contains("bills")) c3 = "haha";
@@ -17,6 +17,7 @@
     else if (url.contains("settings")) c6 = "haha";
     else if (url.contains("account")) c7 = "haha";
     else if (url.contains("logging")) c8 = "haha";
+    else if (url.contains("customer")) c9 = "haha";
 %>
 <div class="app-sidebar-overlay" data-toggle="sidebar"></div>
 <aside class="app-sidebar">
@@ -48,6 +49,10 @@
                 <span class="app-menu-label">Báo cáo doanh thu</span></a>
         </li>
         <li>
+            <a class="app-menu-item <%=c9%>" href="#" onclick="funcAjax4()"><i class='bx bxs-user'></i>
+                <span class="app-menu-label">Quản lý khách hàng</span></a>
+        </li>
+        <li>
             <a class="app-menu-item <%=c5%>" href="#" onclick="funcAjax()"><i class='bx bxs-user-account'></i>
                 <span class="app-menu-label">Quản lý admin</span></a>
         </li>
@@ -68,7 +73,6 @@
 <script>
     <%--
     Phân quyền chức năng quản lý admin
-    Admin nào có id_role = 3 thì được sử dụng chức năng này
     --%>
     let idRoleAdmin
     // admin
@@ -87,12 +91,16 @@
         idRoleAdmin = <%=admin.getId_role_admin()%>;
         checkRoleAndRedirect('${context}/admin/check-role-bill', idRoleAdmin);
     }
-
+    // thong ke
     function funcAjax3() {
         idRoleAdmin = <%=admin.getId_role_admin()%>;
         checkRoleAndRedirect('${context}/admin/check-role-report', idRoleAdmin);
     }
-
+    //quan li khach hang
+    function funcAjax4() {
+        idRoleAdmin = <%=admin.getId_role_admin()%>;
+        checkRoleAndRedirect('${context}/admin/check-role-cus', idRoleAdmin);
+    }
     function checkRoleAndRedirect(url, idRoleAdmin) {
         $.ajax({
             url: url,
