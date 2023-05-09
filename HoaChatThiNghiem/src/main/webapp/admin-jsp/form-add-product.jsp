@@ -128,7 +128,7 @@
 
 
     String ErrorDescProduct = (String) request.getAttribute(CommonString.DESC_PRODUCT_ERROR);
-
+    String ErrorSameUrl = (String) request.getAttribute(CommonString.SAME_URL_ERROR);
 %>
 
 <main class="app-content">
@@ -301,6 +301,12 @@
                             <c:set var="ErrorDescProduct" value="<%=ErrorDescProduct%>"/>
                             <c:if test="${ErrorDescProduct!=null}">
                                 <div class="text-danger">${ErrorDescProduct.toString()}</div>
+                            </c:if>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <c:set var="ErrorSameUrl" value="<%=ErrorSameUrl%>"/>
+                            <c:if test="${ErrorSameUrl!=null}">
+                                <div class="text-danger">${ErrorSameUrl.toString()}</div>
                             </c:if>
                         </div>
                         <button class="btn btn-save" type="submit">Lưu lại</button>

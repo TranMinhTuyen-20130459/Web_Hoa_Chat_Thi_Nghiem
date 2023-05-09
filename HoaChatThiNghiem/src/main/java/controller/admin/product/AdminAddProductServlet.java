@@ -1,5 +1,7 @@
 package controller.admin.product;
 
+import bean.Log;
+import database.JDBiConnector;
 import model.admin.Admin;
 import model.admin.StatusProduct;
 import model.admin.SubTypeProduct;
@@ -7,6 +9,7 @@ import model.admin.Supplier;
 import model.shop.Product;
 import service.ProductService;
 import utils.CommonString;
+import utils.WritingLogUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,7 +18,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /*
@@ -73,7 +78,6 @@ public class AdminAddProductServlet extends HttpServlet {
         boolean validateSupplier = true;
         boolean validateUrlImg = true;
         boolean validateDesc = true;
-
 
         if (nameProduct.isEmpty() || nameProduct.length() <= 5) {
 
@@ -282,6 +286,18 @@ public class AdminAddProductServlet extends HttpServlet {
                 images.add(url_img_fifth);
             }
         }
+
+        Set<String> uniqueUrl = new HashSet<>();
+        for(String image : images){
+            uniqueUrl.add(image);
+        }
+        if(uniqueUrl.size() != 5){
+            request.setAttribute(CommonString.SAME_URL_ERROR, "Khi chọn hình ảnh sản phẩm hãy chọn 5 hình khác nhau");
+            validateUrlImg = false;
+            images.clear();
+        }else{
+            validateUrlImg = true;
+        }
         boolean validateAll = validateName && validateQuantity && validateListed && validateCurrent
                 && validateType && validateStatus && validateSupplier && validateUrlImg && validateDesc;
 
@@ -294,6 +310,8 @@ public class AdminAddProductServlet extends HttpServlet {
                 if (checkAddProduct && checkAddImages && checkAddProduct_Images) {
 
                     request.getSession().setAttribute(CommonString.MESS_ALERT, "success");
+                    Log logAddProduct = new Log(Log.INFO, admin.getUsername(), "", "Thêm sản phảm", "");
+                    WritingLogUtils.writeLog(request, logAddProduct);
                     response.sendRedirect(request.getContextPath() + "/admin/them-san-pham");
 
                     /*

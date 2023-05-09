@@ -27,6 +27,8 @@ public class CommonString {
 
     public static final String DESC_PRODUCT_ERROR = "DESC_PRODUCT_ERROR";
 
+    public static final String SAME_URL_ERROR = "SAME_URL_ERROR";
+
     /*
         Author : Minh Tuyên
      */
