@@ -1,7 +1,9 @@
 package controller.shop.customer;
 
+import bean.Log;
 import model.shop.Customer;
 import service.CustomerService;
+import utils.WritingLogUtils;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -33,6 +35,8 @@ public class CustomerChangePassServlet extends HttpServlet {
                 String hashed_new_pass = CustomerService.hashPass(new_pass);
                 if(CustomerService.changePass(hashed_new_pass, customer.getEmail())){
                     request.setAttribute("success","Đổi mật khẩu thành công");
+                    Log chagnePassCusLog = new Log(Log.ALERT, customer.getId()+"", "unknown", "Đổi mật khẩu khách hàng với tên đăng nhập là " + customer.getEmail(), "Success");
+                    WritingLogUtils.writeLog(request, chagnePassCusLog);
                     request.getServletContext().getRequestDispatcher("/shop/change-pass.jsp").forward(request, response);
                 }
             }else{

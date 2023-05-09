@@ -1,9 +1,11 @@
 package controller.shop.customer;
 
+import bean.Log;
 import model.shop.Customer;
 import properties.FacebookProperties;
 import properties.GoogleProperties;
 import service.CustomerService;
+import utils.WritingLogUtils;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -41,6 +43,8 @@ public class DoLoginCustomerServlet extends HttpServlet {
                 HttpSession session = request.getSession(true);
                 request.setAttribute("auth_session_customer", session);
                 session.setAttribute("auth_customer", customer);
+                Log loginCusLog = new Log(Log.INFO,customer.getId()+"", "unknown", "Khách hàng đăng nhập với tên đăng nhập là " + customer.getEmail(), "Success");
+                WritingLogUtils.writeLog(request, loginCusLog);
                 response.sendRedirect(request.getContextPath() + "/shop/home");
             } else if (customer.getId_status_acc() == 2) {
                 request.setAttribute("error", "Tài khoản tạm khóa");
