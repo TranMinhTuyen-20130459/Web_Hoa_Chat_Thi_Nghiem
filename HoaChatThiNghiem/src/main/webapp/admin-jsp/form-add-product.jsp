@@ -108,6 +108,10 @@
     String StatusProduct = request.getParameter("TrangThaiSP") != null ? request.getParameter("TrangThaiSP") : "";
     String Supplier = request.getParameter("NhaCungCap") != null ? request.getParameter("NhaCungCap") : "";
     String UrlImg = request.getParameter("UrlImage") != null ? request.getParameter("UrlImage") : "";
+    String UrlImg_second = request.getParameter("UrlImage_second") != null ? request.getParameter("UrlImage_second") : "";
+    String UrlImg_third = request.getParameter("UrlImage_third") != null ? request.getParameter("UrlImage_third") : "";
+    String UrlImg_fourth = request.getParameter("UrlImage_fourth") != null ? request.getParameter("UrlImage_fourth") : "";
+    String UrlImg_fifth = request.getParameter("UrlImage_fifth") != null ? request.getParameter("UrlImage_fifth") : "";
 
     String ErrorNameProduct = (String) request.getAttribute(CommonString.NAME_PRODUCT_ERROR);
     String ErrorQuantityProduct = (String) request.getAttribute(CommonString.QUANTITY_PRODUCT_ERROR);
@@ -117,8 +121,14 @@
     String ErrorStatusProduct = (String) request.getAttribute(CommonString.STATUS_PRODUCT_ERROR);
     String ErrorSupplier = (String) request.getAttribute(CommonString.SUPPLIER_ERROR);
     String ErrorUploadImg = (String) request.getAttribute(CommonString.UPLOAD_IMG_ERROR);
-    String ErrorDescProduct = (String) request.getAttribute(CommonString.DESC_PRODUCT_ERROR);
+    String ErrorUploadSecondImg = (String) request.getAttribute(CommonString.UPLOAD_IMG_SECOND_ERROR);
+    String ErrorUploadThirdImg = (String) request.getAttribute(CommonString.UPLOAD_IMG_THIRD_ERROR);
+    String ErrorUploadFourthImg = (String) request.getAttribute(CommonString.UPLOAD_IMG_FOURTH_ERROR);
+    String ErrorUploadFifthImg = (String) request.getAttribute(CommonString.UPLOAD_IMG_FIFTH_ERROR);
 
+
+    String ErrorDescProduct = (String) request.getAttribute(CommonString.DESC_PRODUCT_ERROR);
+    String ErrorSameUrl = (String) request.getAttribute(CommonString.SAME_URL_ERROR);
 %>
 
 <main class="app-content">
@@ -211,14 +221,13 @@
                             </c:if>
                         </div>
                         <div class="form-group col-md-12">
-                            <label class="control-label">Ảnh sản phẩm</label>
                             <div id="boxchoice">
-                                <a href="javascript:" class="Choicefile" onClick="ChooseImage()">
+                                <a href="javascript:" class="Choicefile" onClick="ChooseImage('UrlImage')">
                                     <i class="fas fa-cloud-upload-alt"></i>
                                     Chọn ảnh
                                 </a>
                                 <a id="myfileupload">
-                                    <input type="text" name="UrlImage" style="min-width:300px" value="<%=UrlImg%>"/>
+                                    <input readonly type="text" name="UrlImage" style="min-width:300px" value="<%=UrlImg%>"/>
                                     <c:set var="ErrorUploadImg" value="<%=ErrorUploadImg%>"/>
                                     <c:if test="${ErrorUploadImg!=null}">
                                         <div class="text-danger">${ErrorUploadImg.toString()}</div>
@@ -226,13 +235,78 @@
                                 </a>
                                 <p style="clear:both"></p>
                             </div>
+
+
+                            <div id="boxchoice2">
+                                <a href="javascript:" class="Choicefile" onClick="ChooseImage('UrlImage_second')">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    Chọn ảnh
+                                </a>
+                                <a id="myfileupload2">
+                                    <input readonly type="text" name="UrlImage_second" style="min-width:300px" value="<%=UrlImg_second%>"/>
+                                    <c:set var="ErrorUploadSecondImg" value="<%=ErrorUploadSecondImg%>"/>
+                                    <c:if test="${ErrorUploadSecondImg!=null}">
+                                        <div class="text-danger">${ErrorUploadSecondImg.toString()}</div>
+                                    </c:if>
+                                </a>
+                                <p style="clear:both"></p>
+                            </div>
+                            <div id="boxchoice3">
+                                <a href="javascript:" class="Choicefile" onClick="ChooseImage('UrlImage_third')">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    Chọn ảnh
+                                </a>
+                                <a id="myfileupload3">
+                                    <input readonly type="text" name="UrlImage_third" style="min-width:300px" value="<%=UrlImg_third%>"/>
+                                    <c:set var="ErrorUploadThirdImg" value="<%=ErrorUploadThirdImg%>"/>
+                                    <c:if test="${ErrorUploadThirdImg!=null}">
+                                        <div class="text-danger">${ErrorUploadThirdImg.toString()}</div>
+                                    </c:if>
+                                </a>
+                                <p style="clear:both"></p>
+                            </div>
+                            <div id="boxchoice4">
+                                <a href="javascript:" class="Choicefile" onClick="ChooseImage('UrlImage_fourth')">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    Chọn ảnh
+                                </a>
+                                <a id="myfileupload4">
+                                    <input readonly type="text" name="UrlImage_fourth" style="min-width:300px" value="<%=UrlImg_fourth%>"/>
+                                    <c:set var="ErrorUploadFourthImg" value="<%=ErrorUploadFourthImg%>"/>
+                                    <c:if test="${ErrorUploadFourthImg!=null}">
+                                        <div class="text-danger">${ErrorUploadFourthImg.toString()}</div>
+                                    </c:if>
+                                </a>
+                                <p style="clear:both"></p>
+                            </div>
+                            <div id="boxchoice5">
+                                <a href="javascript:" class="Choicefile" onClick="ChooseImage('UrlImage_fifth')">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    Chọn ảnh
+                                </a>
+                                <a id="myfileupload5">
+                                    <input readonly type="text" name="UrlImage_fifth" style="min-width:300px" value="<%=UrlImg_fifth%>"/>
+                                    <c:set var="ErrorUploadFifthImg" value="<%=ErrorUploadFifthImg%>"/>
+                                    <c:if test="${ErrorUploadFifthImg!=null}">
+                                        <div class="text-danger">${ErrorUploadFifthImg.toString()}</div>
+                                    </c:if>
+                                </a>
+                                <p style="clear:both"></p>
+                            </div>
                         </div>
+
                         <div class="form-group col-md-12">
                             <label class="control-label">Mô tả sản phẩm</label>
                             <textarea class="form-control" id="descProduct" name="MoTaSP"><%=DescProduct%></textarea>
                             <c:set var="ErrorDescProduct" value="<%=ErrorDescProduct%>"/>
                             <c:if test="${ErrorDescProduct!=null}">
                                 <div class="text-danger">${ErrorDescProduct.toString()}</div>
+                            </c:if>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <c:set var="ErrorSameUrl" value="<%=ErrorSameUrl%>"/>
+                            <c:if test="${ErrorSameUrl!=null}">
+                                <div class="text-danger">${ErrorSameUrl.toString()}</div>
                             </c:if>
                         </div>
                         <button class="btn btn-save" type="submit">Lưu lại</button>
@@ -266,16 +340,18 @@
     <%request.getSession().removeAttribute(CommonString.MESS_ALERT);%>
 </script>
 <script>
-    function ChooseImage() {
+    function DienUrlVaoInput(fieldName, fileUrl) {
+        $('input[name=' + fieldName + ']').val(fileUrl);
+    }
+
+    function ChooseImage(fieldName) {
         var finder = new CKFinder();
-        finder.selectActionFunction = DienUrlVaoInput;
+        finder.selectActionFunction = function(fileUrl) {
+            DienUrlVaoInput(fieldName, fileUrl);
+        };
         finder.popup();
     }
 
-    <!--Đưa dường dẫn hình ảnh vào TextField input-->
-    function DienUrlVaoInput(fileUrl) {
-        $('input[name=UrlImage]').val(fileUrl);
-    }
 </script>
 <!-- ================================================================================================== -->
 </body>

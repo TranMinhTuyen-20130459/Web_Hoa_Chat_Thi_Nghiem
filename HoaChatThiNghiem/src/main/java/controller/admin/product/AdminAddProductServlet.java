@@ -1,5 +1,7 @@
 package controller.admin.product;
 
+import bean.Log;
+import database.JDBiConnector;
 import model.admin.Admin;
 import model.admin.StatusProduct;
 import model.admin.SubTypeProduct;
@@ -7,6 +9,7 @@ import model.admin.Supplier;
 import model.shop.Product;
 import service.ProductService;
 import utils.CommonString;
+import utils.WritingLogUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,7 +17,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /*
@@ -57,6 +63,10 @@ public class AdminAddProductServlet extends HttpServlet {
         String id_statusProduct = request.getParameter("TrangThaiSP");
         String id_supplier = request.getParameter("NhaCungCap");
         String url_img = request.getParameter("UrlImage");
+        String url_img_second = request.getParameter("UrlImage_second");
+        String url_img_third = request.getParameter("UrlImage_third");
+        String url_img_fourth = request.getParameter("UrlImage_fourth");
+        String url_img_fifth = request.getParameter("UrlImage_fifth");
         String description = request.getParameter("MoTaSP");
 
         boolean validateName = true;
@@ -68,7 +78,6 @@ public class AdminAddProductServlet extends HttpServlet {
         boolean validateSupplier = true;
         boolean validateUrlImg = true;
         boolean validateDesc = true;
-
 
         if (nameProduct.isEmpty() || nameProduct.length() <= 5) {
 
@@ -195,20 +204,100 @@ public class AdminAddProductServlet extends HttpServlet {
             validateSupplier = false;
         }
 
+
+        ArrayList<String> images = new ArrayList<>();
         if (url_img.isEmpty()) {
             request.setAttribute(CommonString.UPLOAD_IMG_ERROR, "Hãy chọn hình ảnh cho sản phẩm !!!");
             validateUrlImg = false;
+            images.clear();
         } else {
             var pattern = Pattern.compile("([^\\s]+(\\.(?i)(jpe?g|png|gif|bmp))$)");
             var matcher = pattern.matcher(url_img);
             if (matcher.matches() == false) {
                 request.setAttribute(CommonString.UPLOAD_IMG_ERROR, "Hình ảnh của sản phẩm không đúng định dạng, hãy chọn lại !!!");
                 validateUrlImg = false;
+                images.clear();
             } else {
                 p.setImgPath(url_img);
+                images.add(url_img);
+            }
+        }
+        if (url_img_second.isEmpty()) {
+            request.setAttribute(CommonString.UPLOAD_IMG_SECOND_ERROR, "Hãy chọn hình ảnh cho sản phẩm !!!");
+            validateUrlImg = false;
+            images.clear();
+        } else {
+            var pattern = Pattern.compile("([^\\s]+(\\.(?i)(jpe?g|png|gif|bmp))$)");
+            var matcher = pattern.matcher(url_img_second);
+            if (matcher.matches() == false) {
+                request.setAttribute(CommonString.UPLOAD_IMG_SECOND_ERROR, "Hình ảnh của sản phẩm không đúng định dạng, hãy chọn lại !!!");
+                validateUrlImg = false;
+                images.clear();
+            } else {
+//                p.setImgPath(url_img);
+                images.add(url_img_second);
+            }
+        }
+        if (url_img_third.isEmpty()) {
+            request.setAttribute(CommonString.UPLOAD_IMG_THIRD_ERROR, "Hãy chọn hình ảnh cho sản phẩm !!!");
+            validateUrlImg = false;
+            images.clear();
+        } else {
+            var pattern = Pattern.compile("([^\\s]+(\\.(?i)(jpe?g|png|gif|bmp))$)");
+            var matcher = pattern.matcher(url_img_third);
+            if (matcher.matches() == false) {
+                request.setAttribute(CommonString.UPLOAD_IMG_THIRD_ERROR, "Hình ảnh của sản phẩm không đúng định dạng, hãy chọn lại !!!");
+                validateUrlImg = false;
+                images.clear();
+            } else {
+//                p.setImgPath(url_img);
+                images.add(url_img_third);
+            }
+        }
+        if (url_img_fourth.isEmpty()) {
+            request.setAttribute(CommonString.UPLOAD_IMG_FOURTH_ERROR, "Hãy chọn hình ảnh cho sản phẩm !!!");
+            validateUrlImg = false;
+            images.clear();
+        } else {
+            var pattern = Pattern.compile("([^\\s]+(\\.(?i)(jpe?g|png|gif|bmp))$)");
+            var matcher = pattern.matcher(url_img_fourth);
+            if (matcher.matches() == false) {
+                request.setAttribute(CommonString.UPLOAD_IMG_FOURTH_ERROR, "Hình ảnh của sản phẩm không đúng định dạng, hãy chọn lại !!!");
+                validateUrlImg = false;
+                images.clear();
+            } else {
+//                p.setImgPath(url_img);
+                images.add(url_img_fourth);
+            }
+        }
+        if (url_img_fifth.isEmpty()) {
+            request.setAttribute(CommonString.UPLOAD_IMG_FIFTH_ERROR, "Hãy chọn hình ảnh cho sản phẩm !!!");
+            validateUrlImg = false;
+            images.clear();
+        } else {
+            var pattern = Pattern.compile("([^\\s]+(\\.(?i)(jpe?g|png|gif|bmp))$)");
+            var matcher = pattern.matcher(url_img_fifth);
+            if (matcher.matches() == false) {
+                request.setAttribute(CommonString.UPLOAD_IMG_FIFTH_ERROR, "Hình ảnh của sản phẩm không đúng định dạng, hãy chọn lại !!!");
+                validateUrlImg = false;
+                images.clear();
+            } else {
+//                p.setImgPath(url_img);
+                images.add(url_img_fifth);
             }
         }
 
+        Set<String> uniqueUrl = new HashSet<>();
+        for(String image : images){
+            uniqueUrl.add(image);
+        }
+        if(uniqueUrl.size() != 5){
+            request.setAttribute(CommonString.SAME_URL_ERROR, "Khi chọn hình ảnh sản phẩm hãy chọn 5 hình khác nhau");
+            validateUrlImg = false;
+            images.clear();
+        }else{
+            validateUrlImg = true;
+        }
         boolean validateAll = validateName && validateQuantity && validateListed && validateCurrent
                 && validateType && validateStatus && validateSupplier && validateUrlImg && validateDesc;
 
@@ -216,9 +305,13 @@ public class AdminAddProductServlet extends HttpServlet {
             try {
                 Admin admin = (Admin) request.getSession().getAttribute(CommonString.ADMIN_SESSION);
                 boolean checkAddProduct = ProductService.addNewProduct(p, admin);
-                if (checkAddProduct) {
+                boolean checkAddImages = ProductService.addImages(images);
+                boolean checkAddProduct_Images = ProductService.addNewProductImages(p, images);
+                if (checkAddProduct && checkAddImages && checkAddProduct_Images) {
 
                     request.getSession().setAttribute(CommonString.MESS_ALERT, "success");
+                    Log logAddProduct = new Log(Log.INFO, admin.getUsername(), "", "Thêm sản phảm", "");
+                    WritingLogUtils.writeLog(request, logAddProduct);
                     response.sendRedirect(request.getContextPath() + "/admin/them-san-pham");
 
                     /*
@@ -232,7 +325,6 @@ public class AdminAddProductServlet extends HttpServlet {
                     response.sendRedirect(request.getContextPath() + "/admin/them-san-pham");
                 }
             } catch (Exception e) {
-
                 response.getWriter().println("Đã xảy ra lỗi");
             }
         } else {

@@ -224,6 +224,28 @@ public final class ProductService {
         }
     }
 
+    public static boolean addImages(ArrayList<String> images){
+        DbConnection connectDB = DbConnection.getInstance();
+        ProductDAO dao = new ProductDAO();
+        boolean checkInsertImages = dao.insertImages(connectDB, images);
+        if(checkInsertImages){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    public static boolean addNewProductImages(Product p, ArrayList<String> images){
+        DbConnection connectDB = DbConnection.getInstance();
+        ProductDAO dao = new ProductDAO();
+        int id_p = dao.getIdProduct(connectDB, p);
+        ArrayList<Integer> list_id_images = dao.getListIDImgaes(connectDB, images);
+        boolean checkInsertNewProductImages = dao.insertProductImages(connectDB, id_p, list_id_images);
+        if(checkInsertNewProductImages){
+            return true;
+        }else{
+            return false;
+        }
+    }
     public static boolean addNewProduct(Product p, Admin admin) {
         /*
         b1: thêm tên,mô tả,hình ảnh,số lượng,mã loại,mã trạng thái,mã nhà cung cấp, tên admin vào bảng products
