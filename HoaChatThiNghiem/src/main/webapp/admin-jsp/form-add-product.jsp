@@ -227,7 +227,7 @@
                                     Chọn ảnh
                                 </a>
                                 <a id="myfileupload">
-                                    <input type="text" name="UrlImage" style="min-width:300px" value="<%=UrlImg%>"/>
+                                    <input readonly type="text" name="UrlImage" style="min-width:300px" value="<%=UrlImg%>"/>
                                     <c:set var="ErrorUploadImg" value="<%=ErrorUploadImg%>"/>
                                     <c:if test="${ErrorUploadImg!=null}">
                                         <div class="text-danger">${ErrorUploadImg.toString()}</div>
@@ -243,7 +243,7 @@
                                     Chọn ảnh
                                 </a>
                                 <a id="myfileupload2">
-                                    <input type="text" name="UrlImage_second" style="min-width:300px" value="<%=UrlImg_second%>"/>
+                                    <input readonly type="text" name="UrlImage_second" style="min-width:300px" value="<%=UrlImg_second%>"/>
                                     <c:set var="ErrorUploadSecondImg" value="<%=ErrorUploadSecondImg%>"/>
                                     <c:if test="${ErrorUploadSecondImg!=null}">
                                         <div class="text-danger">${ErrorUploadSecondImg.toString()}</div>
@@ -257,7 +257,7 @@
                                     Chọn ảnh
                                 </a>
                                 <a id="myfileupload3">
-                                    <input type="text" name="UrlImage_third" style="min-width:300px" value="<%=UrlImg_third%>"/>
+                                    <input readonly type="text" name="UrlImage_third" style="min-width:300px" value="<%=UrlImg_third%>"/>
                                     <c:set var="ErrorUploadThirdImg" value="<%=ErrorUploadThirdImg%>"/>
                                     <c:if test="${ErrorUploadThirdImg!=null}">
                                         <div class="text-danger">${ErrorUploadThirdImg.toString()}</div>
@@ -271,7 +271,7 @@
                                     Chọn ảnh
                                 </a>
                                 <a id="myfileupload4">
-                                    <input type="text" name="UrlImage_fourth" style="min-width:300px" value="<%=UrlImg_fourth%>"/>
+                                    <input readonly type="text" name="UrlImage_fourth" style="min-width:300px" value="<%=UrlImg_fourth%>"/>
                                     <c:set var="ErrorUploadFourthImg" value="<%=ErrorUploadFourthImg%>"/>
                                     <c:if test="${ErrorUploadFourthImg!=null}">
                                         <div class="text-danger">${ErrorUploadFourthImg.toString()}</div>
@@ -285,7 +285,7 @@
                                     Chọn ảnh
                                 </a>
                                 <a id="myfileupload5">
-                                    <input type="text" name="UrlImage_fifth" style="min-width:300px" value="<%=UrlImg_fifth%>"/>
+                                    <input readonly type="text" name="UrlImage_fifth" style="min-width:300px" value="<%=UrlImg_fifth%>"/>
                                     <c:set var="ErrorUploadFifthImg" value="<%=ErrorUploadFifthImg%>"/>
                                     <c:if test="${ErrorUploadFifthImg!=null}">
                                         <div class="text-danger">${ErrorUploadFifthImg.toString()}</div>
