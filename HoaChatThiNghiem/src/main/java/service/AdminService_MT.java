@@ -56,11 +56,11 @@ public class AdminService_MT {
             preState.setString(1, username);
             ResultSet rs = preState.executeQuery();
             while (rs.next()) {
-                String user_name = rs.getString("username");
-                String password = rs.getString("password");
+                String user_name = rs.getString("username")== null?"":rs.getString("username");
+                String password = rs.getString("password")== null?"":rs.getString("password");
                 int id_role_admin = rs.getInt("id_role_admin");
                 int id_status_acc = rs.getInt("id_status_acc");
-                String full_name = rs.getString("full_name");
+                String full_name = rs.getString("full_name")== null?"":rs.getString("full_name");
                 Admin admin = new Admin(user_name, password, id_role_admin, id_status_acc, full_name);
                 admins.add(admin);
             }
