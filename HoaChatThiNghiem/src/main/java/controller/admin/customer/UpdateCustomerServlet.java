@@ -33,11 +33,7 @@ public class UpdateCustomerServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String username = request.getParameter("UserName");
-        String idStatus = "";
-        String password_new = "";
-        String fullname = "";
-        String phone = "";
-        String address = "";
+        String idStatus,password_new ,fullname,phone ,address;
         Log log = null;
         String statusLog = "Thất bại";
         try {
@@ -66,11 +62,9 @@ public class UpdateCustomerServlet extends HttpServlet {
                         password_new = CustomerService.hashPass(password_new);
                     }
                     //dữ liêu nhập đã hợp lệ chưa
-                    if (checkInvalid(username, password_new, status,phone,address)) {
+                    if (checkInvalid(username, password_new, status,phone,address,fullname)) {
                         Customer customer = CustomerService.getCustomerByUsername(username);
                         Customer cus = new Customer(customer.getId(), customer.getEmail(), password_new, status, customer.getId_city(), fullname, phone, address);
-                        System.out.println(customer.toString());
-                        System.out.println(cus.toString());
                         update(customer, cus);
 
                         if (CustomerService.updateCustomer(customer)) { // update
@@ -117,11 +111,12 @@ public class UpdateCustomerServlet extends HttpServlet {
         }
     }
 
-    private boolean checkInvalid(String username, String pass, int status,String phone, String address) {
+    private boolean checkInvalid(String username, String pass, int status,String phone, String address, String fullname) {
         if (CustomerService.checkLogin(username, pass) != null || pass.length() > 8) return true;
         if (status < 4 && status >= 0) return true;
         if(phone.replace(" ","").length() < 16) return true;
         if (address.trim().length() < 256) return true;
+        if (fullname.trim().length() < 256) return true;
         return false;
     }
 
@@ -157,17 +152,5 @@ public class UpdateCustomerServlet extends HttpServlet {
         }
 
     }
-
-//    public static void main(String[] args) {
-//        Customer customer = CustomerService.getCustomerByUsername("vanlenh40@gmail.com");
-//        Customer cus = new Customer(customer.getId(), customer.getEmail(), customer.getPassword(), 1, customer.getId_city(), "Nguyen Van Lenh", "0987654321", "");
-//        System.out.println(customer.toString());
-//        System.out.println(cus.toString());
-//        System.out.println(customer.getFullname().toString().equals(null));
-//        new UpdateCustomerServlet().update(customer, cus);
-//        System.out.println(customer);
-//        if (!customer.getFullname().equals(cus.getFullname()) && !cus.getFullname().equals("")) {
-//            customer.setFullname(cus.getFullname());
-//        }
 }
 

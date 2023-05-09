@@ -38,7 +38,7 @@ public class DeleteAccountCustomerServlet extends HttpServlet {
                 if (!AdminService_MT.checkUsernameWithRole(ad.getUsername(), ad.getId_role_admin())) {
                     request.getSession().invalidate();
                     response.getWriter().write(request.getContextPath() + "/admin/dang-nhap");
-                    // kiểm tra xem phải quyền super-root không
+                    // kiểm tra xem phải quyền super-root không. chỉ super-root mới có quyền xóa
                 } else if (ad.getId_role_admin() == 3) {
                     if (CustomerService.deleteCustomerByUsername(username)) {
                         response.getWriter().write("success");
