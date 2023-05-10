@@ -78,7 +78,7 @@
                             <tr class="rowProduct">
                                 <td class="idProduct">${p.idProduct}</td>
                                 <td class="nameProduct">${p.name}</td>
-                                <td><img src="${context}/${p.imgPath}" alt="" width="100px;"></td>
+                                <td><img class="imageProduct" src="${context}/${p.imgPath}" alt="" width="100px;"></td>
                                 <td class="quantityProduct">${p.quantity}</td>
                                 <td><span class="badge ${bg}">${p.statusP.name_status}</span></td>
                                 <td class="listedPriceProduct">${pu:format(p.listed_price)}</td>
@@ -116,18 +116,22 @@
                     <div class="form-group col-md-6">
                         <label class="control-label">Tên sản phẩm</label>
                         <input id="inNameProduct" class="form-control" type="text" required value="">
+                        <div id="error-inNameProduct" class="text-danger"></div>
                     </div>
                     <div class="form-group  col-md-6">
                         <label class="control-label">Số lượng</label>
                         <input id="inQuantityProduct" class="form-control" type="number" value="">
+                        <div id="error-inQuantityProduct" class="text-danger"></div>
                     </div>
                     <div class="form-group col-md-6">
                         <label class="control-label">Giá niêm yết</label>
                         <input id="inListedPrice" class="form-control" type="number" value="">
+                        <div id="error-inListedPrice" class="text-danger"></div>
                     </div>
                     <div class="form-group col-md-6">
                         <label class="control-label">Giá bán thực tế</label>
                         <input id="inCurrentPrice" class="form-control" type="number" value="">
+                        <div id="error-inCurrentPrice" class="text-danger"></div>
                     </div>
                     <div class="form-group col-md-6 ">
                         <label for="SelectStatusProd" class="control-label">Trạng thái sản phẩm</label>
@@ -137,6 +141,7 @@
                                 <option value="${statusProd.id_status}">${statusProd.name_status}</option>
                             </c:forEach>
                         </select>
+                        <div id="error-SelectStatusProd" class="text-danger"></div>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="SelectStatusProd" class="control-label">Loại sản phẩm</label>
@@ -146,6 +151,61 @@
                                 <option value="${st.id_subtype}">${st.name_type}</option>
                             </c:forEach>
                         </select>
+                        <div id="error-SelectTypeProd" class="text-danger"></div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <div id="boxchoice">
+                            <a href="javascript:" class="Choicefile" onClick="ChooseImage('UrlImage')">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                Chọn ảnh
+                            </a>
+                            <a id="myfileupload">
+                                <input readonly type="text" name="UrlImage" style="min-width:300px"/>
+                            </a>
+                            <p style="clear:both"></p>
+                        </div>
+
+
+                        <div id="boxchoice2">
+                            <a href="javascript:" class="Choicefile" onClick="ChooseImage('UrlImage_second')">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                Chọn ảnh
+                            </a>
+                            <a id="myfileupload2">
+                                <input readonly type="text" name="UrlImage_second" style="min-width:300px"/>
+                            </a>
+                            <p style="clear:both"></p>
+                        </div>
+                        <div id="boxchoice3">
+                            <a href="javascript:" class="Choicefile" onClick="ChooseImage('UrlImage_third')">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                Chọn ảnh
+                            </a>
+                            <a id="myfileupload3">
+                                <input readonly type="text" name="UrlImage_third" style="min-width:300px"/>
+                            </a>
+                            <p style="clear:both"></p>
+                        </div>
+                        <div id="boxchoice4">
+                            <a href="javascript:" class="Choicefile" onClick="ChooseImage('UrlImage_fourth')">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                Chọn ảnh
+                            </a>
+                            <a id="myfileupload4">
+                                <input readonly type="text" name="UrlImage_fourth" style="min-width:300px"/>
+                            </a>
+                            <p style="clear:both"></p>
+                        </div>
+                        <div id="boxchoice5">
+                            <a href="javascript:" class="Choicefile" onClick="ChooseImage('UrlImage_fifth')">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                Chọn ảnh
+                            </a>
+                            <a id="myfileupload5">
+                                <input readonly type="text" name="UrlImage_fifth" style="min-width:300px"/>
+                            </a>
+                            <p style="clear:both"></p>
+                        </div>
                     </div>
                 </div>
                 <div class="d-flex justify-content-end mt-3">
@@ -235,50 +295,48 @@
 
         $('#inNameProduct').blur(function () {
             var nameProd = $('#inNameProduct').val()
-
             if (nameProd.length < 5) {
-                $('#inNameProduct').after('<div class="text-danger">Tên sản phẩm không được để trống và phải lớn hơn 5 kí tự !!!</div>')
-            } else $('#inNameProduct').nextAll('.text-danger').remove()
+                $('#error-inNameProduct').text('Tên sản phẩm không được để trống và phải lớn hơn 5 kí tự !!!')
+            } else $('#error-inNameProduct').text('')
         })
         $('#inQuantityProduct').blur(function () {
             var quantProd = $('#inQuantityProduct').val()
 
             if (quantProd.length == 0) {
-                $('#inQuantityProduct').after('<div class="text-danger">Số lượng sản phẩm không được để trống !!!</div>')
+                $('#error-inQuantityProduct').text('Số lượng sản phẩm không được để trống !!!')
             } else if (quantProd < 0 || quantProd > 10000) {
-                $('#inQuantityProduct').after('<div class="text-danger">Số lượng sản phẩm không được âm và không được vượt quá 10000 sản phẩm !!!</div>')
-            } else $('#inQuantityProduct').nextAll('.text-danger').remove()
+                $('#error-inQuantityProduct').text('Số lượng sản phẩm không được âm và không được vượt quá 10000 sản phẩm')
+            } else $('#error-inQuantityProduct').text('')
         })
         $('#inListedPrice').blur(function () {
             var listedPriceProd = $('#inListedPrice').val()
 
             if (listedPriceProd.length == 0) {
-                $('#inListedPrice').after('<div class="text-danger">Giá sản phẩm không được để trống !!!</div>')
+                $('#error-inListedPrice').text('Giá sản phẩm không được để trống !!!')
             } else if (listedPriceProd < 0 || listedPriceProd > Math.pow(10, 6) * 500) {
-                $('#inListedPrice').after('<div class="text-danger">Giá sản phẩm không được âm và không được vượt quá 500 triệu đồng !!!</div>')
-            } else $('#inListedPrice').nextAll('.text-danger').remove()
+                $('#error-inListedPrice').text('Giá sản phẩm không được âm và không được vượt quá 500 triệu đồng !!!')
+            } else $('#error-inListedPrice').text('')
         })
         $('#inCurrentPrice').blur(function () {
             var currentPriceProd = $('#inCurrentPrice').val()
 
             if (currentPriceProd.length == 0) {
-                $('#inCurrentPrice').after('<div class="text-danger">Giá sản phẩm không được để trống !!!</div>')
+                $('#error-inCurrentPrice').text('Giá sản phẩm không được để trống !!!')
             } else if (currentPriceProd < 0 || currentPriceProd > Math.pow(10, 6) * 500) {
-                $('#inCurrentPrice').after('<div class="text-danger">Giá sản phẩm không được âm và không được vượt quá 500 triệu đồng !!!</div>')
-            } else $('#inCurrentPrice').nextAll('.text-danger').remove()
+                $('#error-inCurrentPrice').text('Giá sản phẩm không được âm và không được vượt quá 500 triệu đồng !!!')
+            } else $('#error-inCurrentPrice').text('')
         })
         $('#SelectStatusProd').blur(function () {
             var idSelect = $('#SelectStatusProd').val()
             if (idSelect == '0') {
-                $('#SelectStatusProd').after('<div class="text-danger">Hãy chọn trạng thái sản phẩm !!!</div>')
-            } else $('#SelectStatusProd').nextAll('.text-danger').remove()
+                $('#error-SelectStatusProd').text('Hãy chọn trạng thái sản phẩm !!!')
+            } else $('#error-SelectStatusProd').text('')
         })
         $('#SelectTypeProd').blur(function () {
-
             var idSelect = $('#SelectTypeProd').val()
             if (idSelect == '0') {
-                $('#SelectTypeProd').after('<div class="text-danger">Hãy chọn loại sản phẩm !!!</div>')
-            } else $('#SelectTypeProd').nextAll('.text-danger').remove()
+                $('#error-SelectTypeProd').text('Hãy chọn loại sản phẩm !!!')
+            } else $('#error-SelectTypeProd').text('')
         })
     });
 
@@ -357,6 +415,22 @@
         });
         return false
     });
+</script>
+<jsp:include page="../common/admin-js.jsp"></jsp:include>
+<script src="../libraries/ckfinder/ckfinder.js"></script>
+<script>
+    function DienUrlVaoInput(fieldName, fileUrl) {
+        $('input[name=' + fieldName + ']').val(fileUrl);
+    }
+
+    function ChooseImage(fieldName) {
+        var finder = new CKFinder();
+        finder.selectActionFunction = function(fileUrl) {
+            DienUrlVaoInput(fieldName, fileUrl);
+        };
+        finder.popup();
+    }
+
 </script>
 </body>
 </html>
