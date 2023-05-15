@@ -326,16 +326,16 @@ public final class ProductService {
     }
 
     public static boolean deleteProductById(int id) {
-
         DbConnection connectDB = DbConnection.getInstance();
         ProductDAO dao = new ProductDAO();
         try {
             connectDB.getConn().setAutoCommit(false);
+            boolean checkDelete4 = dao.deleteProductImages(connectDB, id);
             boolean checkDelete1 = dao.deleteProductByIdOnTable_price_product(connectDB, id);
             boolean checkDelete2 = dao.deleteProductByIdOnTable_sold_product(connectDB, id);
             boolean checkDelete3 = dao.deleteProductByIdOnTable_review_product(connectDB, id);
-            boolean checkDelete4 = dao.deleteProductByIdOnTable_products(connectDB, id);
-            if (checkDelete1 && checkDelete2 && checkDelete3 && checkDelete4) {
+            boolean checkDelete5 = dao.deleteProductByIdOnTable_products(connectDB, id);
+            if (checkDelete1 && checkDelete2 && checkDelete3 && checkDelete4 && checkDelete5) {
                 connectDB.getConn().commit();                           // kết thúc giao tác
                 return true;
             }
