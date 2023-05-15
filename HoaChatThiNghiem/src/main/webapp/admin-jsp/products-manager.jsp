@@ -160,7 +160,7 @@
                                 Chọn ảnh
                             </a>
                             <a id="myfileupload">
-                                <input id="" readonly type="text" name="UrlImage" style="min-width:300px"/>
+                                <input id="" readonly type="text" name="UrlImage" style="min-width:450px"/>
                             </a>
                             <p style="clear:both"></p>
                         </div>
@@ -172,7 +172,7 @@
                                 Chọn ảnh
                             </a>
                             <a id="myfileupload2">
-                                <input readonly type="text" name="UrlImage_second" style="min-width:300px"/>
+                                <input readonly type="text" name="UrlImage_second" style="min-width:450px"/>
                             </a>
                             <p style="clear:both"></p>
                         </div>
@@ -182,7 +182,7 @@
                                 Chọn ảnh
                             </a>
                             <a id="myfileupload3">
-                                <input readonly type="text" name="UrlImage_third" style="min-width:300px"/>
+                                <input readonly type="text" name="UrlImage_third" style="min-width:450px"/>
                             </a>
                             <p style="clear:both"></p>
                         </div>
@@ -192,7 +192,7 @@
                                 Chọn ảnh
                             </a>
                             <a id="myfileupload4">
-                                <input readonly type="text" name="UrlImage_fourth" style="min-width:300px"/>
+                                <input readonly type="text" name="UrlImage_fourth" style="min-width:450px"/>
                             </a>
                             <p style="clear:both"></p>
                         </div>
@@ -202,7 +202,7 @@
                                 Chọn ảnh
                             </a>
                             <a id="myfileupload5">
-                                <input readonly type="text" name="UrlImage_fifth" style="min-width:300px"/>
+                                <input readonly type="text" name="UrlImage_fifth" style="min-width:450px"/>
                             </a>
                             <p style="clear:both"></p>
                         </div>
@@ -396,9 +396,17 @@
         var currentPriceProd = $('#inCurrentPrice').val()
         var statusProd = $('#SelectStatusProd').val()
         var subtypeProd = $('#SelectTypeProd').val()
+        var inputElement = $('input[name="UrlImage"]').val();
+        var inputElement_second = $('input[name="UrlImage_second"]').val();
+        var inputElement_third = $('input[name="UrlImage_third"]').val();
+        var inputElement_fourth = $('input[name="UrlImage_fourth"]').val();
+        var inputElement_fifth = $('input[name="UrlImage_fifth"]').val();
+
 
         if (nameProd.length == 0 || quantProd.length == 0 || listedPriceProd.length == 0 || currentPriceProd.length == 0
-            || statusProd.length == 0 || subtypeProd.length == 0 || statusProd == '0' || subtypeProd == '0') {
+            || statusProd.length == 0 || subtypeProd.length == 0 || statusProd == '0' || subtypeProd == '0'
+            || inputElement.length == 0 || inputElement_second.length == 0 || inputElement_third.length == 0
+            || inputElement_fourth.length == 0 || inputElement_fifth.length == 0) {
             swal({
                 title: 'Cảnh báo !!!',
                 text: 'Bạn hãy nhập đầy đủ thông tin cho sản phẩm này',
@@ -418,7 +426,12 @@
                     GiaNiemYetSP: listedPriceProd,
                     GiaHienTaiSP: currentPriceProd,
                     IdTrangThaiSP: statusProd,
-                    IdLoaiSP: subtypeProd
+                    IdLoaiSP: subtypeProd,
+                    UrlImage: inputElement,
+                    UrlImage_second: inputElement_second,
+                    UrlImage_third: inputElement_third,
+                    UrlImage_fourth: inputElement_fourth,
+                    UrlImage_fifth: inputElement_fifth,
                 },
                 data_type: 'text',
                 success: function (resultData) {
@@ -431,9 +444,10 @@
                         });
                     } else {
                         swal({
-                            text: 'Cập nhật sản phẩm không thành công.',
+                            text: 'Cập nhật sản phẩm không thành công. ' +
+                                'Có thể còn một trường nào hoặc các hình ảnh chọn đã bị giống nhau',
                             icon: 'error',
-                            timer: 1000,
+                            timer: 3000,
                             buttons: false
                         });
                     }

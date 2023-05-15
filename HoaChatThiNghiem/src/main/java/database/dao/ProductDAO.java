@@ -59,6 +59,18 @@ public class ProductDAO {
         }
         return result;
     }
+    public boolean deleteProductImages(DbConnection connectDB, int id_p){
+        String sql = "DELETE FROM product_images WHERE id_product=?";
+        PreparedStatement preState = connectDB.getPreparedStatement(sql);
+        try {
+            preState.setInt(1, id_p);
+            int row = preState.executeUpdate();
+            if (row >= 0) return true;
+            return false;
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+    }
     public boolean insertProductImages(DbConnection connectDB, int id_p, ArrayList<Integer> id_images){
         boolean result = false;
         for (int id_image : id_images){
@@ -384,5 +396,19 @@ public class ProductDAO {
                 e.printStackTrace();
             }
         });
+    }
+    public boolean updateImageMain(DbConnection connectDB,Product p, String url){
+        String sql = "UPDATE products SET url_img_product = ? " +
+                "WHERE id_product = ?";
+        PreparedStatement preState = connectDB.getPreparedStatement(sql);
+        try{
+            preState.setString(1, url);
+            preState.setInt(2, p.getIdProduct());
+            int row = preState.executeUpdate();
+            if (row > 0) return true;
+            return false;
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
     }
 }

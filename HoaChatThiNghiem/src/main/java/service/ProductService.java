@@ -246,6 +246,17 @@ public final class ProductService {
             return false;
         }
     }
+    public static boolean addNewProductImagesWithEdit(Product p, ArrayList<String> images){
+        DbConnection connectDB = DbConnection.getInstance();
+        ProductDAO dao = new ProductDAO();
+        ArrayList<Integer> list_id_images = dao.getListIDImgaes(connectDB, images);
+        boolean checkInsertNewProductImages = dao.insertProductImages(connectDB, p.getIdProduct(), list_id_images);
+        if(checkInsertNewProductImages){
+            return true;
+        }else{
+            return false;
+        }
+    }
     public static List<String> getAllImageOfProduct(int idProduct){
         DbConnection connectDB = DbConnection.getInstance();
         ProductDAO dao = new ProductDAO();
@@ -379,5 +390,23 @@ public final class ProductService {
          /*
         Author : Minh Tuyên
          */
+    }
+    public static boolean updateUrlMain(Product p, String url){
+        DbConnection connectDB = DbConnection.getInstance();
+        ProductDAO dao = new ProductDAO();
+        if(dao.updateImageMain(connectDB, p, url)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    public static boolean deleteProductImages(Product p){
+        DbConnection connectDB = DbConnection.getInstance();
+        ProductDAO dao = new ProductDAO();
+        if(dao.deleteProductImages(connectDB, p.getIdProduct())){
+            return true;
+        }else{
+            return false;
+        }
     }
 }
