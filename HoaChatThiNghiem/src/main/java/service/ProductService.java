@@ -246,6 +246,12 @@ public final class ProductService {
             return false;
         }
     }
+    public static List<String> getAllImageOfProduct(int idProduct){
+        DbConnection connectDB = DbConnection.getInstance();
+        ProductDAO dao = new ProductDAO();
+        List<String> images = dao.getAllImageOfProduct(connectDB, idProduct);
+        return images;
+    }
     public static boolean addNewProduct(Product p, Admin admin) {
         /*
         b1: thêm tên,mô tả,hình ảnh,số lượng,mã loại,mã trạng thái,mã nhà cung cấp, tên admin vào bảng products

@@ -160,7 +160,7 @@
                                 Chọn ảnh
                             </a>
                             <a id="myfileupload">
-                                <input readonly type="text" name="UrlImage" style="min-width:300px"/>
+                                <input id="" readonly type="text" name="UrlImage" style="min-width:300px"/>
                             </a>
                             <p style="clear:both"></p>
                         </div>
@@ -274,6 +274,11 @@
     var quantityProduct;
     var listedPriceProduct;
     var currentPriceProduct;
+    var inputElement = $('input[name="UrlImage"]');
+    var inputElement_second = $('input[name="UrlImage_second"]');
+    var inputElement_third = $('input[name="UrlImage_third"]');
+    var inputElement_fourth = $('input[name="UrlImage_fourth"]');
+    var inputElement_fifth = $('input[name="UrlImage_fifth"]');
 
     <%-- Kiểm lỗi khi người dùng nhập vào các input trong form cập nhật sản phẩm --%>
     $('#sampleTable .edit').on('click', function () {
@@ -287,6 +292,33 @@
         quantityProduct =$(this).closest('tr').find('.quantityProduct').text()
         listedPriceProduct = parseInt($(this).closest('tr').find('.listedPriceProduct').text().replace(',',''))
         currentPriceProduct = parseInt($(this).closest('tr').find('.currentPriceProduct').text().replace(',',''))
+
+        inputElement.val('');
+        inputElement_second.val('');
+        inputElement_third.val('');
+        inputElement_fourth.val('');
+        inputElement_fifth.val('');
+        var listInput = [
+            inputElement,
+        inputElement_second,
+        inputElement_third,
+        inputElement_fourth,
+        inputElement_fifth,
+        ];
+        $.ajax({
+            url: '${context}/LoadAllUrlImageOfProduct',
+            method: 'GET',
+            data: {id: idProduct},
+            success: function (response){
+                var imageUrls = response.split('\n');
+                for(var i = 0; i< imageUrls.length; i++){
+                    listInput[i].val(imageUrls[i]);
+                }
+            },
+            error: function (xhr, status, error){
+                console.error('Lỗi khi truy xuất danh sách hình ảnh:', error);
+            }
+        });
 
         $('#inNameProduct').val(nameProduct)
         $('#inQuantityProduct').val(quantityProduct)
@@ -348,6 +380,11 @@
         $('#inCurrentPrice').val('')
         $('#SelectStatusProd').val('0')
         $('#SelectTypeProd').val('0')
+        inputElement.val('');
+        inputElement_second.val('');
+        inputElement_third.val('');
+        inputElement_fourth.val('');
+        inputElement_fifth.val('');
     });
 
     <%--Cập nhật thông tin sản phẩm sử dụng Ajax --%>

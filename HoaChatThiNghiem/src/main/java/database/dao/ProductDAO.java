@@ -214,7 +214,23 @@ public class ProductDAO {
         Author : Minh Tuyên
          */
     }
-
+    public List<String> getAllImageOfProduct(DbConnection connectDB, int idProduct){
+        List<String> images = new ArrayList<>();
+        String sql = "SELECT images.url_image " +
+                "FROM images INNER JOIN product_images ON images.id_image = product_images.id_image " +
+                "WHERE product_images.id_product = ?";
+        PreparedStatement preparedStatement = connectDB.getPreparedStatement(sql);
+        try {
+            preparedStatement.setInt(1, idProduct);
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()){
+                images.add(rs.getString("url_image"));
+            }
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+        return images;
+    }
     public List<StatusProduct> getStatusProducts(DbConnection connectDB) {
         List<StatusProduct> result = new ArrayList<>();
         String sql = "select id_status_product,name_status_product from status_products";
