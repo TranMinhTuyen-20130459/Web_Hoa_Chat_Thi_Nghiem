@@ -24,6 +24,22 @@ public final class ProductService {
                     "JOIN suppliers s ON p.id_supplier = s.id_supplier " +
                     "JOIN type_products tp ON st.id_type_product = tp.id_type_product\t";
 
+    private static final String QUERY_PRODUCTS2 = "SELECT p.id_product, p.url_img_product, p.name_product, p.description_product, p.quantity_product, " +
+            "       p.date_inserted, sp.name_status_product, tp.name_type_product, st.name_subtype, " +
+            "       s.name_supplier, p.views, pp.current_price, pp.listed_price, pp.date " +
+            "FROM products p " +
+            "JOIN (" +
+            "    SELECT id_product, MAX(date) AS max_date " +
+            "    FROM price_products " +
+            "    GROUP BY id_product " +
+            ") AS pp_max ON p.id_product = pp_max.id_product " +
+            "JOIN price_products pp ON p.id_product = pp.id_product AND pp.date = pp_max.max_date " +
+            "JOIN status_products sp ON p.id_status_product = sp.id_status_product " +
+            "JOIN subtype_products st ON p.id_subtype = st.id_subtype " +
+            "JOIN suppliers s ON p.id_supplier = s.id_supplier " +
+            "JOIN type_products tp ON st.id_type_product = tp.id_type_product\t";
+
+
     public static List<Product> queryProducts(String query, Object... params) {
         try (var ps = DbConnection.getInstance().getPreparedStatement(query)) {
             for (int i = 0; i < params.length; i++)
@@ -82,7 +98,7 @@ public final class ProductService {
 
     // return products added within the last ? days
     public static List<Product> getNewProducts(int day) {
-        return queryProducts(QUERY_PRODUCTS +
+        return queryProducts(QUERY_PRODUCTS2 +
                 "WHERE DATE(date_inserted) > (NOW() - INTERVAL ? DAY) ORDER BY DATE(date_inserted) DESC", day);
     }
 
