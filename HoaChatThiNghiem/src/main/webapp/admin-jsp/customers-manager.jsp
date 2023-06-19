@@ -229,7 +229,16 @@
                                     timer: 1000,
                                     buttons: false
                                 });
-                            } else {
+                            }
+                            else if(resultData.toString() == "permission"){
+                                swal({
+                                    text: 'Bạn không có quyền này!',
+                                    icon: 'error',
+                                    timer: 1000,
+                                    buttons: false
+                                });
+                            }
+                            else {
                                 swal({
                                     text: 'Xóa không thành công.',
                                     icon: 'error',
