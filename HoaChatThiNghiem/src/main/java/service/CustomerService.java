@@ -116,6 +116,7 @@ public class CustomerService {
                 Customer unique = customers.get(0);
                 String hashedInputPass = hashPass(password);
                 if (unique.getPassword().equals(hashedInputPass)) {
+                    resetFailedCount(email);
                     return unique;
                 }else{
                     int count = getFailedCount(unique.getEmail());
@@ -136,6 +137,21 @@ public class CustomerService {
         DbConnection connectDb = DbConnection.getInstance();
         String sql = "UPDATE account_customers " +
                 "SET failed_count = failed_count + 1" +
+                " WHERE username = ?";
+        PreparedStatement preState = connectDb.getPreparedStatement(sql);
+        try{
+            preState.setString(1, email);
+            preState.executeUpdate();
+        }catch (Exception e){
+        }
+        finally {
+            connectDb.close();
+        }
+    }
+    public static void resetFailedCount(String email){
+        DbConnection connectDb = DbConnection.getInstance();
+        String sql = "UPDATE account_customers " +
+                "SET failed_count = 0" +
                 " WHERE username = ?";
         PreparedStatement preState = connectDb.getPreparedStatement(sql);
         try{
