@@ -57,8 +57,8 @@
                              alt="">
                     </div>
                     <ul class="image-list">
-                        <c:forEach var="i" begin="1" end="${ list_image.size() > 0 ? list_image.size() - 1 : 4}">
-                            <li><img src="${context}/${list_image.size() > 0 ? list_image.get(i).url_image:""}" alt="">
+                        <c:forEach var="i" begin="1" end="${ list_image.size() >= 1 ? list_image.size() - 1 : 4}">
+                            <li><img src="${context}/${list_image.size() >= 1 ? list_image.get(i).url_image:""}" alt="">
                             </li>
                         </c:forEach>
                     </ul>

@@ -20,6 +20,74 @@ public class ProductDAO {
     public ProductDAO() {
     }
 
+    public boolean insertImages(DbConnection connectDB, ArrayList<String> images){
+        boolean result = false;
+        for(String image : images){
+            String sql = "INSERT INTO images (id_status_image, url_image) " +
+                    "SELECT 1, ? " +
+                    "WHERE NOT EXISTS (" +
+                    "SELECT url_image FROM images WHERE url_image = ?)";
+            PreparedStatement preStatement = connectDB.getPreparedStatement(sql);
+            try {
+                preStatement.setString(1, image);
+                preStatement.setString(2, image);
+                preStatement.executeUpdate();
+                result = true;
+            }catch (SQLException e){
+                e.printStackTrace();
+                return false;
+            }
+        }
+        return result;
+    }
+
+    public ArrayList<Integer> getListIDImgaes(DbConnection connectDB, ArrayList<String> images){
+        ArrayList<Integer> result = new ArrayList<>();
+        for (String image : images){
+            String sql = "select id_image from images where url_image = ?";
+            PreparedStatement preStatement = connectDB.getPreparedStatement(sql);
+            try {
+                preStatement.setString(1, image);
+                ResultSet rs = preStatement.executeQuery();
+                rs.next();
+                int id = rs.getInt(1);
+                result.add(id);
+            }catch (SQLException e){
+                e.printStackTrace();
+                return null;
+            }
+        }
+        return result;
+    }
+    public boolean deleteProductImages(DbConnection connectDB, int id_p){
+        String sql = "DELETE FROM product_images WHERE id_product=?";
+        PreparedStatement preState = connectDB.getPreparedStatement(sql);
+        try {
+            preState.setInt(1, id_p);
+            int row = preState.executeUpdate();
+            if (row >= 0) return true;
+            return false;
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+    }
+    public boolean insertProductImages(DbConnection connectDB, int id_p, ArrayList<Integer> id_images){
+        boolean result = false;
+        for (int id_image : id_images){
+            String sql = "insert into product_images(id_product, id_image) values(?, ?)";
+            PreparedStatement preStatement = connectDB.getPreparedStatement(sql);
+            try {
+                preStatement.setInt(1, id_p);
+                preStatement.setInt(2, id_image);
+                int rowInserted = preStatement.executeUpdate();
+                if (rowInserted > 0) result = true;
+            }catch (SQLException e){
+                e.printStackTrace();
+                return false;
+            }
+        }
+        return result;
+    }
     public boolean insertProduct(DbConnection connectDB, Product p, String nameAdmin) {
         String sql = "insert into products (name_product,description_product,url_img_product,quantity_product" + ",id_subtype,id_status_product,id_supplier,nameAdmin) " + "values(?,?,?,?,?,?,?,?)";
         PreparedStatement preStatement = connectDB.getPreparedStatement(sql);
@@ -44,7 +112,6 @@ public class ProductDAO {
         Author : Minh Tuyên
          */
     }
-
     public boolean insertPriceProduct(DbConnection connectDB, Product p, String nameAdmin) {
         String sql = "insert into price_products(id_product,listed_price,current_price,nameAdmin) values(?,?,?,?)";
         PreparedStatement preStatement = connectDB.getPreparedStatement(sql);
@@ -159,7 +226,23 @@ public class ProductDAO {
         Author : Minh Tuyên
          */
     }
-
+    public List<String> getAllImageOfProduct(DbConnection connectDB, int idProduct){
+        List<String> images = new ArrayList<>();
+        String sql = "SELECT images.url_image " +
+                "FROM images INNER JOIN product_images ON images.id_image = product_images.id_image " +
+                "WHERE product_images.id_product = ?";
+        PreparedStatement preparedStatement = connectDB.getPreparedStatement(sql);
+        try {
+            preparedStatement.setInt(1, idProduct);
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()){
+                images.add(rs.getString("url_image"));
+            }
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+        return images;
+    }
     public List<StatusProduct> getStatusProducts(DbConnection connectDB) {
         List<StatusProduct> result = new ArrayList<>();
         String sql = "select id_status_product,name_status_product from status_products";
@@ -313,5 +396,19 @@ public class ProductDAO {
                 e.printStackTrace();
             }
         });
+    }
+    public boolean updateImageMain(DbConnection connectDB,Product p, String url){
+        String sql = "UPDATE products SET url_img_product = ? " +
+                "WHERE id_product = ?";
+        PreparedStatement preState = connectDB.getPreparedStatement(sql);
+        try{
+            preState.setString(1, url);
+            preState.setInt(2, p.getIdProduct());
+            int row = preState.executeUpdate();
+            if (row > 0) return true;
+            return false;
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
     }
 }

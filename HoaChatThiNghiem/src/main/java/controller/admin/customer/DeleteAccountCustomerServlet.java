@@ -1,22 +1,25 @@
-package controller.admin.account;
+package controller.admin.customer;
 
 import bean.Log;
 import model.admin.Admin;
 import service.AdminService_MT;
+import service.CustomerService;
 import utils.CommonString;
 import utils.WritingLogUtils;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.*;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name = "DeleteAccountAdminServlet", value = "/admin/delete-account")
-public class DeleteAccountAdminServlet extends HttpServlet {
+@WebServlet(name = "DeleteAccountCustomerServlet", value = "/admin/delete-account-cus")
+public class DeleteAccountCustomerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Admin ad = (Admin) request.getSession().getAttribute(CommonString.ADMIN_SESSION);
-        if (ad.getId_role_admin() != 3) {
+        if (ad.getId_role_admin() != 2 ||ad.getId_role_admin() != 3) {
             response.sendRedirect(request.getContextPath() + "/admin/dang-nhap");
         } else {
             doPost(request, response);
@@ -35,11 +38,11 @@ public class DeleteAccountAdminServlet extends HttpServlet {
                 if (!AdminService_MT.checkUsernameWithRole(ad.getUsername(), ad.getId_role_admin())) {
                     request.getSession().invalidate();
                     response.getWriter().write(request.getContextPath() + "/admin/dang-nhap");
-                    // kiểm tra xem phải quyền super-root không
+                    // kiểm tra xem phải quyền super-root không. chỉ super-root mới có quyền xóa
                 } else if (ad.getId_role_admin() == 3) {
-                    if (AdminService_MT.deleteAdminByUsername(username)) {
-                        statusLog = "Thành công";
+                    if (CustomerService.deleteCustomerByUsername(username)) {
                         response.getWriter().write("success");
+                        statusLog = "Thành công";
                         log = new Log(Log.WARNING, 0 + "", ad.getUsername(), "Xóa tài khoản " + username+ " thành công", statusLog);
                         WritingLogUtils.writeLog(request, log);
                     } else {

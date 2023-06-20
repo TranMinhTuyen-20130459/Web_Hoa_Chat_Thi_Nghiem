@@ -1,7 +1,9 @@
 package controller.shop.customer;
 
+import bean.Log;
 import model.shop.CustomerSecurity;
 import service.CustomerService;
+import utils.WritingLogUtils;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -18,6 +20,8 @@ public class ChangePassForForgot extends HttpServlet {
         try{
             if(request.getQueryString().equals("key="+customer_forgot.getId())){
                 CustomerService.changePass(customer_forgot.getPassword(), customer_forgot.getEmail());
+                Log fogotPassCusLog = new Log(Log.ALERT, "", "unknown", "Khách hàng thực hiện đổi mật khẩu khi quên với tên đăng nhập " + customer_forgot.getEmail(), "Success");
+                WritingLogUtils.writeLog(request, fogotPassCusLog);
                 session.invalidate();
                 request.getServletContext().getRequestDispatcher("/shop/login").forward(request,response);
             }else{
