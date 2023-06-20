@@ -24,6 +24,22 @@ public final class ProductService {
                     "JOIN suppliers s ON p.id_supplier = s.id_supplier " +
                     "JOIN type_products tp ON st.id_type_product = tp.id_type_product\t";
 
+    private static final String QUERY_PRODUCTS2 = "SELECT p.id_product, p.url_img_product, p.name_product, p.description_product, p.quantity_product, " +
+            "       p.date_inserted, sp.name_status_product, tp.name_type_product, st.name_subtype, " +
+            "       s.name_supplier, p.views, pp.current_price, pp.listed_price, pp.date " +
+            "FROM products p " +
+            "JOIN (" +
+            "    SELECT id_product, MAX(date) AS max_date " +
+            "    FROM price_products " +
+            "    GROUP BY id_product " +
+            ") AS pp_max ON p.id_product = pp_max.id_product " +
+            "JOIN price_products pp ON p.id_product = pp.id_product AND pp.date = pp_max.max_date " +
+            "JOIN status_products sp ON p.id_status_product = sp.id_status_product " +
+            "JOIN subtype_products st ON p.id_subtype = st.id_subtype " +
+            "JOIN suppliers s ON p.id_supplier = s.id_supplier " +
+            "JOIN type_products tp ON st.id_type_product = tp.id_type_product\t";
+
+
     public static List<Product> queryProducts(String query, Object... params) {
         try (var ps = DbConnection.getInstance().getPreparedStatement(query)) {
             for (int i = 0; i < params.length; i++)
@@ -69,7 +85,7 @@ public final class ProductService {
     }
 
     public static Product getProductById(int id) {
-        return queryProducts(QUERY_PRODUCTS + "WHERE p.id_product=?", id).get(0);
+        return queryProducts(QUERY_PRODUCTS + "WHERE p.id_product=? ORDER BY pp.date desc", id).get(0);
     }
 
     public static List<Product> getProductsByType(int type) {
@@ -82,7 +98,7 @@ public final class ProductService {
 
     // return products added within the last ? days
     public static List<Product> getNewProducts(int day) {
-        return queryProducts(QUERY_PRODUCTS +
+        return queryProducts(QUERY_PRODUCTS2 +
                 "WHERE DATE(date_inserted) > (NOW() - INTERVAL ? DAY) ORDER BY DATE(date_inserted) DESC", day);
     }
 
@@ -246,6 +262,23 @@ public final class ProductService {
             return false;
         }
     }
+    public static boolean addNewProductImagesWithEdit(Product p, ArrayList<String> images){
+        DbConnection connectDB = DbConnection.getInstance();
+        ProductDAO dao = new ProductDAO();
+        ArrayList<Integer> list_id_images = dao.getListIDImgaes(connectDB, images);
+        boolean checkInsertNewProductImages = dao.insertProductImages(connectDB, p.getIdProduct(), list_id_images);
+        if(checkInsertNewProductImages){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    public static List<String> getAllImageOfProduct(int idProduct){
+        DbConnection connectDB = DbConnection.getInstance();
+        ProductDAO dao = new ProductDAO();
+        List<String> images = dao.getAllImageOfProduct(connectDB, idProduct);
+        return images;
+    }
     public static boolean addNewProduct(Product p, Admin admin) {
         /*
         b1: thêm tên,mô tả,hình ảnh,số lượng,mã loại,mã trạng thái,mã nhà cung cấp, tên admin vào bảng products
@@ -309,16 +342,16 @@ public final class ProductService {
     }
 
     public static boolean deleteProductById(int id) {
-
         DbConnection connectDB = DbConnection.getInstance();
         ProductDAO dao = new ProductDAO();
         try {
             connectDB.getConn().setAutoCommit(false);
+            boolean checkDelete4 = dao.deleteProductImages(connectDB, id);
             boolean checkDelete1 = dao.deleteProductByIdOnTable_price_product(connectDB, id);
             boolean checkDelete2 = dao.deleteProductByIdOnTable_sold_product(connectDB, id);
             boolean checkDelete3 = dao.deleteProductByIdOnTable_review_product(connectDB, id);
-            boolean checkDelete4 = dao.deleteProductByIdOnTable_products(connectDB, id);
-            if (checkDelete1 && checkDelete2 && checkDelete3 && checkDelete4) {
+            boolean checkDelete5 = dao.deleteProductByIdOnTable_products(connectDB, id);
+            if (checkDelete1 && checkDelete2 && checkDelete3 && checkDelete4 && checkDelete5) {
                 connectDB.getConn().commit();                           // kết thúc giao tác
                 return true;
             }
@@ -373,5 +406,23 @@ public final class ProductService {
          /*
         Author : Minh Tuyên
          */
+    }
+    public static boolean updateUrlMain(Product p, String url){
+        DbConnection connectDB = DbConnection.getInstance();
+        ProductDAO dao = new ProductDAO();
+        if(dao.updateImageMain(connectDB, p, url)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    public static boolean deleteProductImages(Product p){
+        DbConnection connectDB = DbConnection.getInstance();
+        ProductDAO dao = new ProductDAO();
+        if(dao.deleteProductImages(connectDB, p.getIdProduct())){
+            return true;
+        }else{
+            return false;
+        }
     }
 }
