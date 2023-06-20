@@ -388,7 +388,7 @@ public class CustomerService {
 
     public static Map<Integer, String> getCities() {
         Map<Integer, String> map = new HashMap<>();
-        try (var ps = DbConnection.getInstance().getPreparedStatement("SELECT id_city, name_city FROM city")) {
+        try (var ps = DbConnection.getInstance().getPreparedStatement("SELECT id_city, name_city FROM cities")) {
             var rs = ps.executeQuery();
             while (rs.next()) map.put(rs.getInt("id_city"), rs.getString("name_city"));
             return map;
@@ -439,9 +439,9 @@ public class CustomerService {
     public static List<Order> getOrderByUser(int userId) {
         List<Order> orders = new ArrayList<>();
         try (PreparedStatement ps = DbConnection.getInstance().getPreparedStatement(
-                "SELECT DISTINCT b.id_bill, s.name_status_bill, time_order, total_price " +
-                        "FROM bills b JOIN bill_detail bd ON b.id_bill = bd.id_bill " +
-                        "JOIN status_bill s ON s.id_status_bill = b.id_status_bill " +
+                "SELECT DISTINCT b.id_bill, s.name_status_bill, b.time_order, b.bill_price_after " +
+                        "FROM bills b JOIN bill_details bd ON b.id_bill = bd.id_bill " +
+                        "JOIN status_bills s ON s.id_status_bill = b.id_status_bill " +
                         "WHERE id_user = ?")) {
             ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
@@ -449,7 +449,7 @@ public class CustomerService {
                 int billId = rs.getInt("id_bill");
                 List<CartItem> items = getCartItemsByBillId(billId);
                 Order order = new Order(billId, items, rs.getTimestamp("time_order"),
-                        rs.getDouble("total_price"),
+                        rs.getDouble("bill_price_after"),
                         rs.getString("name_status_bill"));
                 orders.add(order);
             }
@@ -462,7 +462,7 @@ public class CustomerService {
     public static List<CartItem> getCartItemsByBillId(int billId) {
         List<CartItem> result = new ArrayList<>();
         try (var ps = DbConnection.getInstance().getPreparedStatement(
-                "SELECT id_product, quantity FROM bill_detail WHERE id_bill = ?")) {
+                "SELECT id_product, quantity FROM bill_details WHERE id_bill = ?")) {
             ps.setInt(1, billId);
             var rs = ps.executeQuery();
             while (rs.next()) {
