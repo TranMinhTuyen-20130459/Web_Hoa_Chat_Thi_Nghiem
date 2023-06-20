@@ -50,8 +50,7 @@ public class UpdateAdminServlet extends HttpServlet {
             if (ad != null) {
                 // kiểm tra xem quyền hiện tại có giống quyền lúc đăng nhập vào không
                 if (!AdminService_MT.checkUsernameWithRole(ad.getUsername(), ad.getId_role_admin())) {
-                    request.getSession().invalidate();
-                    response.getWriter().write(request.getContextPath() + "/admin/dang-nhap");
+                    response.getWriter().write("permission");
                     // kiểm tra xem phải quyền super-root và
                 } else if (ad.getId_role_admin() == 3) {
                     int roleOld = AdminService_MT.checkUsername(username).getId_status_acc();

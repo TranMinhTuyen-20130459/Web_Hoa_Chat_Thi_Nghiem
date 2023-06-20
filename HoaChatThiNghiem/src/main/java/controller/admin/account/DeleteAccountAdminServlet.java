@@ -33,8 +33,7 @@ public class DeleteAccountAdminServlet extends HttpServlet {
             if (ad != null) {
                 // kiểm tra xem quyền hiện tại có giống quyền lúc đăng nhập vào không
                 if (!AdminService_MT.checkUsernameWithRole(ad.getUsername(), ad.getId_role_admin())) {
-                    request.getSession().invalidate();
-                    response.getWriter().write(request.getContextPath() + "/admin/dang-nhap");
+                    response.getWriter().write("permission");
                     // kiểm tra xem phải quyền super-root không
                 } else if (ad.getId_role_admin() == 3) {
                     if (AdminService_MT.deleteAdminByUsername(username)) {
@@ -50,10 +49,9 @@ public class DeleteAccountAdminServlet extends HttpServlet {
                     }
                 } else {
                     statusLog = "Thất bại";
-                    log = new Log(Log.ALERT, 0 + "",ad.getUsername() , "Xóa tài khoản " + username+ " thất bại . vì không có quyền", statusLog);
+                    response.getWriter().write("permission");
+                    log = new Log(Log.ALERT, 0 + "",ad.getUsername() , "Xóa tài khoản admin" + username+ " thất bại . vì không có quyền", statusLog);
                     WritingLogUtils.writeLog(request, log);
-                    response.getWriter().write(request.getContextPath() + "/admin/dang-nhap");
-                    response.sendRedirect(request.getContextPath() + "/admin/dang-nhap");
                 }
             } else {
                 response.getWriter().write(request.getContextPath() + "/admin/dang-nhap");

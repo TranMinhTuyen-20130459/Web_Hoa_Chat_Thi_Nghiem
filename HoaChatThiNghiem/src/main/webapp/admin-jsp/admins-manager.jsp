@@ -234,7 +234,23 @@
                                     timer: 1000,
                                     buttons: false
                                 });
-                            } else {
+                            }
+                            else if(resultData.toString() == "fail"){
+                                swal({
+                                    text: 'Xóa không thành công!',
+                                    icon: 'error',
+                                    timer: 1000,
+                                    buttons: false
+                                });
+                            } else if(resultData.toString() == "permission"){
+                                swal({
+                                    text: 'Bạn không có quyền này!.',
+                                    icon: 'error',
+                                    timer: 1000,
+                                    buttons: false
+                                });
+                            }
+                            else {
                                 swal({
                                     text: 'Xóa không thành công.',
                                     icon: 'error',
@@ -351,7 +367,10 @@
                         swalAlert('', 'Thêm thất bại', 'error', 2000)
                     } else if (resultData.toString() == 'invalid') {
                         swalAlert('', 'Lỗi nhập dữ liệu', 'error', 2000)
-                    } else {
+                    }else if(resultData.toString() == "permission"){
+                        swalAlert('', 'Bạn không có quyền này', 'error', 2000)
+                    }
+                    else {
                         window.location = resultData;
                     }
                 },
@@ -434,8 +453,10 @@
                         swalAlert('', 'Nhập sai dữ liệu', 'error', 1500)
                     } else if (resultData.toString() == 'seal') {
                         swalAlert('', 'Tài khoản này đã bị khóa vĩnh viễn!', 'error', 1500)
+                    } else if (resultData.toString() == 'permission') {
+                        swalAlert('', 'Bạn không có quyền cập nhật!', 'error', 1500)
                     } else {
-                        swalAlert('', 'Bạn không có quyền cập nhật!', 'error', 1800)
+                       window.location = resultData
                     }
                 },
                 error: function () {
