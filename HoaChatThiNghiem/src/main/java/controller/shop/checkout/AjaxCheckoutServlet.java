@@ -43,9 +43,10 @@ public class AjaxCheckoutServlet extends HttpServlet {
 
         boolean addBillAndBillDetail = CheckoutService.addBillAndBillDetail(bill, cart, cus.getId() + "");
 
-        if (addBillAndBillDetail)
+        if (addBillAndBillDetail) {
+            request.getSession().removeAttribute("cart");
             response.getWriter().write("true");
-        else
+        } else
             response.getWriter().write("false");
 
     }
