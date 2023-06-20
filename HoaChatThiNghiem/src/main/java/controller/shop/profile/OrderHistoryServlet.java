@@ -58,12 +58,12 @@ public class OrderHistoryServlet extends HttpServlet {
         req.setAttribute("all_orders", orders);
 
         List<Order> progressOrders = new ArrayList<>(orders).stream()
-                .filter(order -> order.getStatus().equalsIgnoreCase("Chờ xử lý"))
+                .filter(order -> order.getStatus().equalsIgnoreCase("Chờ xác nhận"))
                 .collect(Collectors.toList());
         req.setAttribute("progress_orders", progressOrders);
 
         List<Order> transportOrders = new ArrayList<>(orders).stream()
-                .filter(order -> order.getStatus().equalsIgnoreCase("Đang vận chuyển"))
+                .filter(order -> order.getStatus().equalsIgnoreCase("Đang giao hàng"))
                 .collect(Collectors.toList());
         req.setAttribute("transport_orders", transportOrders);
 
@@ -73,7 +73,7 @@ public class OrderHistoryServlet extends HttpServlet {
         req.setAttribute("completed_orders", completedOrders);
 
         List<Order> canceledOrders = new ArrayList<>(orders).stream()
-                .filter(order -> order.getStatus().equalsIgnoreCase("Đã hủy"))
+                .filter(order -> order.getStatus().equalsIgnoreCase("Hủy đơn hàng"))
                 .collect(Collectors.toList());
         req.setAttribute("canceled_orders", canceledOrders);
     }
