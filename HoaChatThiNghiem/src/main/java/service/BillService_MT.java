@@ -65,9 +65,6 @@ public class BillService_MT {
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
-        } finally {
-            Log log = new Log(1, "-1", "Bảng bills", "Cập nhật trạng thái của đơn hàng", "", "", "");
-            log.insert(jdbi);
         }
         return false;
     }

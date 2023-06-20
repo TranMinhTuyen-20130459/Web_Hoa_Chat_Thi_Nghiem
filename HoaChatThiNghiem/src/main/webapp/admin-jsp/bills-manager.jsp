@@ -361,6 +361,9 @@
             } else {
 
                 infor_transport.id_bill = getNumberFromString(table.cell(selectedRow, table.column(0).index()).data())
+
+                // console.log("Cell: " + table.cell(selectedRow, table.column(0).index()).data())
+
                 infor_transport.id_status_bill = value_status_bill
 
                 console.log("IdBill : " + infor_transport.id_bill)
@@ -512,10 +515,14 @@
     }
 
     function getNumberFromString(str) {
-        const regex = /\d+/;
-        const matches = str.match(regex);
-        const number = matches ? matches[0] : null;
-        return number;
+
+        const regex = /#(\d+)/; // sử dụng regex để tìm chuỗi con chứa số
+        const match = str.match(regex); // tìm chuỗi con trong chuỗi ban đầu
+        if (match && match.length > 1) { // kiểm tra nếu có chuỗi con chứa số và số lượng phần tử trong mảng match lớn hơn 1
+            return match[1]; // trả về số đầu tiên trong chuỗi con
+        }
+        return null; // trả về null nếu không tìm thấy số
+
     }
 
 </script>
