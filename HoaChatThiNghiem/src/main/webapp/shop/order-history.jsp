@@ -55,10 +55,10 @@
     <div class="container">
         <div class="container order-tab d-flex justify-content-between mb-5 p-0">
             <button class="order-tab-links active" data-tab="#all_orders">Tất cả</button>
-            <button class="order-tab-links" data-tab="#progress_orders">Đang xử lý</button>
-            <button class="order-tab-links" data-tab="#transport_orders">Vận chuyển</button>
+            <button class="order-tab-links" data-tab="#progress_orders">Chờ xác nhận</button>
+            <button class="order-tab-links" data-tab="#transport_orders">Đang giao hàng</button>
             <button class="order-tab-links" data-tab="#completed_orders">Đã giao</button>
-            <button class="order-tab-links" data-tab="#canceled_orders">Đã hủy</button>
+            <button class="order-tab-links" data-tab="#canceled_orders">Hủy đơn hàng</button>
         </div>
     </div>
     <div id="order-tab-contents" class="mt-5">
@@ -77,9 +77,9 @@
                 <c:forEach var="order" items="${order_items}" varStatus="i">
                     <c:choose>
                         <c:when test="${order.status == 'Đã giao'}"><c:set var="bg" value="bought"/></c:when>
-                        <c:when test="${order.status == 'Đang vận chuyển'}"><c:set var="bg" value="transporting"/></c:when>
-                        <c:when test="${order.status == 'Đã hủy'}"><c:set var="bg" value="canceled"/></c:when>
-                        <c:when test="${order.status == 'Chờ xử lý'}"><c:set var="bg" value="progressing"/></c:when>
+                        <c:when test="${order.status == 'Đang giao hàng'}"><c:set var="bg" value="transporting"/></c:when>
+                        <c:when test="${order.status == 'Hủy đơn hàng'}"><c:set var="bg" value="canceled"/></c:when>
+                        <c:when test="${order.status == 'Chờ xác nhận'}"><c:set var="bg" value="progressing"/></c:when>
                     </c:choose>
                     <div data-order-id="${order.id}" class="item <c:if test="${!i.last}">mb-5</c:if>">
                         <div class="item-header w-100 px-4 py-3 d-flex justify-content-between align-items-center">
