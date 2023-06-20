@@ -85,7 +85,7 @@ public final class ProductService {
     }
 
     public static Product getProductById(int id) {
-        return queryProducts(QUERY_PRODUCTS + "WHERE p.id_product=?", id).get(0);
+        return queryProducts(QUERY_PRODUCTS + "WHERE p.id_product=? ORDER BY pp.date desc", id).get(0);
     }
 
     public static List<Product> getProductsByType(int type) {
