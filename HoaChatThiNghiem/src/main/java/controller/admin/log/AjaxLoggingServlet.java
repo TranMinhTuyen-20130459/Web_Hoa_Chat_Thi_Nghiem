@@ -22,9 +22,9 @@ public class AjaxLoggingServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String idRole = request.getParameter("IdRoleAdmin");
         try {
-            Integer idRoleAdmin = Integer.parseInt(idRole);
+            Admin ad = (Admin) request.getSession().getAttribute(CommonString.ADMIN_SESSION);
+            Integer idRoleAdmin = ad.getId_role_admin();
             if (idRoleAdmin == 3) {
                 response.getWriter().write(request.getContextPath() + "/admin/logging-super");
             } else {
