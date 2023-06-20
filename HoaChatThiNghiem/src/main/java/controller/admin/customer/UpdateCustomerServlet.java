@@ -33,14 +33,14 @@ public class UpdateCustomerServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String username = request.getParameter("UserName");
-        String idStatus,password_new ,fullname,phone ,address;
+        String idStatus, password_new, fullname, phone, address;
         Log log = null;
         String statusLog = "Thất bại";
         try {
             password_new = request.getParameter("PassAd").replace(" ", "");
 
-            idStatus = request.getParameter("IdStatus") ;
-            fullname = request.getParameter("Fullname").trim() ;
+            idStatus = request.getParameter("IdStatus");
+            fullname = request.getParameter("Fullname").trim();
             phone = request.getParameter("Phone").trim();
             address = request.getParameter("Address").trim();
             Integer status = 0;
@@ -56,41 +56,49 @@ public class UpdateCustomerServlet extends HttpServlet {
                     response.getWriter().write(request.getContextPath() + "/admin/dang-nhap");
                     // kiểm tra xem phải quyền super-root hoặc root
                 } else if (ad.getId_role_admin() >= 2) {
-                    // kiểm tra xem mật khẩu có bị đổi không
-                    if (isChangePass(username, password_new)) { //bi doi
-                        // nếu bị đổi thì gán mật khẩu mới, mã hóa
-                        password_new = CustomerService.hashPass(password_new);
-                    }
-                    //dữ liêu nhập đã hợp lệ chưa
-                    if (checkInvalid(username, password_new, status,phone,address,fullname)) {
-                        Customer customer = CustomerService.getCustomerByUsername(username);
-                        Customer cus = new Customer(customer.getId(), customer.getEmail(), password_new, status, customer.getId_city(), fullname, phone, address);
-                        update(customer, cus);
+                    // kiểm tra xem tai khoan nay có bị khóa vĩnh viễn không
+                    if (CustomerService.getCustomerByUsername(username).getId_status_acc() != 3) {
+                        // kiểm tra xem mật khẩu có bị đổi không
+                        if (isChangePass(username, password_new)) { //bi doi
+                            // nếu bị đổi thì gán mật khẩu mới, mã hóa
+                            password_new = CustomerService.hashPass(password_new);
+                        }
+                        //dữ liêu nhập đã hợp lệ chưa
+                        if (checkInvalid(username, password_new, status, phone, address, fullname)) {
+                            Customer customer = CustomerService.getCustomerByUsername(username);
+                            Customer cus = new Customer(customer.getId(), customer.getEmail(), password_new, status, customer.getId_city(), fullname, phone, address);
+                            update(customer, cus);
 
-                        if (CustomerService.updateCustomer(customer)) { // update
-                            response.getWriter().write("success");
-                            statusLog = "Thành công";
-                            if (status == 3) { // nếu trạng thái khóa vĩnh viễn
-                                log = new Log(Log.WARNING, 0 + "", ad.getUsername(), "Sửa tài khoản " + username + "' sang trạng thái KHÓA VĨNH VIỄN", statusLog);
-                                WritingLogUtils.writeLog(request, log);
-                            }
-                            if (status == 2) {// nếu trạng thái tạm khóa
-                                log = new Log(Log.WARNING, 0 + "", ad.getUsername(), "Sửa tài khoản " + username + "' sang trạng thái TẠM KHÓA", statusLog);
-                                WritingLogUtils.writeLog(request, log);
+                            if (CustomerService.updateCustomer(customer)) { // update
+                                response.getWriter().write("success");
+                                statusLog = "Thành công";
+                                if (status == 3) { // nếu trạng thái khóa vĩnh viễn
+                                    log = new Log(Log.WARNING, 0 + "", ad.getUsername(), "Sửa tài khoản " + username + "' sang trạng thái KHÓA VĨNH VIỄN", statusLog);
+                                    WritingLogUtils.writeLog(request, log);
+                                }
+                                if (status == 2) {// nếu trạng thái tạm khóa
+                                    log = new Log(Log.WARNING, 0 + "", ad.getUsername(), "Sửa tài khoản " + username + "' sang trạng thái TẠM KHÓA", statusLog);
+                                    WritingLogUtils.writeLog(request, log);
+                                } else {
+                                    log = new Log(Log.ALERT, 0 + "", ad.getUsername(), "Sửa tài khoản " + username, statusLog);
+                                    WritingLogUtils.writeLog(request, log);
+                                }
                             } else {
-                                log = new Log(Log.ALERT, 0 + "", ad.getUsername(), "Sửa tài khoản " + username, statusLog);
+                                response.getWriter().write("fail");
+                                statusLog = "Thất bại";
+                                log = new Log(Log.INFO, 0 + "", ad.getUsername(), "Sửa tài khoản " + username, statusLog);
                                 WritingLogUtils.writeLog(request, log);
                             }
                         } else {
-                            response.getWriter().write("fail");
+                            response.getWriter().write("wrong");
                             statusLog = "Thất bại";
-                            log = new Log(Log.INFO, 0 + "", ad.getUsername(), "Sửa tài khoản " + username, statusLog);
+                            log = new Log(Log.WARNING, 0 + "", ad.getUsername(), "Nhập sai dữ liệu", statusLog);
                             WritingLogUtils.writeLog(request, log);
                         }
                     } else {
-                        response.getWriter().write("wrong");
+                        response.getWriter().write("seal");
                         statusLog = "Thất bại";
-                        log = new Log(Log.WARNING, 0 + "", ad.getUsername(), "Nhập sai dữ liệu", statusLog);
+                        log = new Log(Log.WARNING, 0 + "", ad.getUsername(), "Sửa tài khoản đã bị khóa", statusLog);
                         WritingLogUtils.writeLog(request, log);
                     }
 
@@ -111,10 +119,10 @@ public class UpdateCustomerServlet extends HttpServlet {
         }
     }
 
-    private boolean checkInvalid(String username, String pass, int status,String phone, String address, String fullname) {
+    private boolean checkInvalid(String username, String pass, int status, String phone, String address, String fullname) {
         if (CustomerService.checkLogin(username, pass) != null || pass.length() > 8) return true;
         if (status < 4 && status >= 0) return true;
-        if(phone.replace(" ","").length() < 16) return true;
+        if (phone.replace(" ", "").length() < 16) return true;
         if (address.trim().length() < 256) return true;
         if (fullname.trim().length() < 256) return true;
         return false;
