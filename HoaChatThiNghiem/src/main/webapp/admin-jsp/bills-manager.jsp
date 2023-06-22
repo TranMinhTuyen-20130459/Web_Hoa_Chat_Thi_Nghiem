@@ -316,6 +316,18 @@
 
             .catch((error) => {
                 console.error(error)
+                swal({
+                    title: 'Thông báo',
+                    text: 'Đơn hàng không được đăng kí vận chuyển do lỗi API của bên thứ 3 !!!',
+                    icon: 'error',
+                    timer: 4000,
+                    buttons: false
+                }).then(() => {
+                    window.location.href = "<%=request.getContextPath()%>/admin/quan-ly-don-hang-root";
+                }).onClose(() => {
+                    // Xử lý tại đây nếu người dùng tắt cửa sổ thông báo trước khi nó đóng tự động
+                    window.location.href = "<%=request.getContextPath()%>/admin/quan-ly-don-hang-root";
+                });
             }) // => được gọi khi Promise bị từ chối và trả về lỗi từ API endpoint
     }
 
