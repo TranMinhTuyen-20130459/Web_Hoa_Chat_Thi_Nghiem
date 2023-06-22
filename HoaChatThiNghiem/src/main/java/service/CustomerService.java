@@ -238,6 +238,9 @@ public class CustomerService {
             preState.setString(6, cus.getEmail());
             int update = preState.executeUpdate();
             if (update > 0) {
+                if(cus.getId_status_acc() == 1){
+                    resetFailedCount(cus.getEmail());
+                }
                 return true;
             }
         } catch (Exception e) {
