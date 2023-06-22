@@ -93,11 +93,11 @@ public class AddAccountCustomerServlet extends HttpServlet {
     }
 
     private boolean checkInvalid(String email, String pass, String repass, String fullname) {
-        if (isValidEmail(email)) return true;
-        if (pass.equals(repass)) return true;
-        if (!(pass.contains(" ") || pass.length() < 8)) return true;
-        if (fullname.trim().length() < 256) return true;
-        return false;
+        if (!isValidEmail(email)) return false;
+        if (!pass.equals(repass)) return false;
+        if (pass.contains(" ") || pass.length() < 8) return false;
+        if (fullname.trim().length() >= 256) return false;
+        return true;
     }
 
     private boolean isNumber(String textnum) {

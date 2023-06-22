@@ -20,7 +20,7 @@
 
 <body>
 <style>
-    .nice-select .list{
+    .nice-select .list {
         max-height: 250px;
         overflow-y: auto !important;
     }
@@ -610,6 +610,8 @@
             })
 
         } else {
+
+            if (feeShip == null || feeShip == undefined) feeShip = 0
 
             $.ajax({
                 url: '${context}/AjaxCheckoutServlet', // -- địa chỉ của server

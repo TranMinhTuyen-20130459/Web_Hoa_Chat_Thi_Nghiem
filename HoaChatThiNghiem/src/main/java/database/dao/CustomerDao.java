@@ -99,7 +99,7 @@ public class CustomerDao {
     public void cancelOrder(int idBill) {
         Executors.newSingleThreadExecutor().execute(() -> {
             try (PreparedStatement ps = DbConnection.getInstance().getPreparedStatement(
-                    "UPDATE bills SET id_status_bill = 3 WHERE id_bill = ?"
+                    "UPDATE bills SET id_status_bill = 4 WHERE id_bill = ?"
             )) {
                 ps.setInt(1, idBill);
                 ps.executeUpdate();
