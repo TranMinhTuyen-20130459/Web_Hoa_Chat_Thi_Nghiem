@@ -356,8 +356,8 @@ public class CustomerService {
         List<Customer> customers = new ArrayList<>();
         try (var ps = DbConnection.getInstance().getPreparedStatement("SELECT id_user_customer, full_name, " +
                 "sex, phone_customer, address, time_created, s.name_status_acc " +
-                        "FROM account_customers a JOIN status_acc s ON a.id_status_acc = s.id_status_acc " +
-                        "WHERE DATE(time_created) > (NOW() - INTERVAL ? DAY)")) {
+                "FROM account_customers a JOIN status_accs s ON a.id_status_acc = s.id_status_acc " +
+                "WHERE DATE(time_created) > (NOW() - INTERVAL ? DAY)")) {
             ps.setInt(1, day);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {

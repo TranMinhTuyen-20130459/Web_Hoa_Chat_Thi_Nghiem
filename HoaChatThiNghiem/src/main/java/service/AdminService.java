@@ -138,7 +138,7 @@ public class AdminService {
 
     public static double getRevenueFor(int month) {
         try (var ps = DbConnection.getInstance().getPreparedStatement(
-                "SELECT SUM(total_price) FROM bills " +
+                "SELECT SUM(bill_price_after) FROM bills " +
                         "WHERE MONTH(time_order) = ? AND YEAR(time_order) = YEAR(CURRENT_DATE) " +
                         "GROUP BY MONTH(time_order)")) {
             ps.setInt(1, month);
